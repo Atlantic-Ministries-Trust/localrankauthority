@@ -1,5 +1,5 @@
 // POST /api/unlock: saves the lead, emails the full report to the visitor and the lead to the owner, and returns the full report.
-import { esc, json, reportEmailHtml, sendEmail } from "../../lib/audit.js";
+import { completeRankings, esc, json, reportEmailHtml, sendEmail } from "../../lib/audit.js";
 
 export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.REPORTS) return json({ error: "The audit isn't set up yet." }, 503);
@@ -13,8 +13,14 @@ export async function onRequestPost({ request, env, waitUntil }) {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(lead.email)) return json({ error: "That email address looks incomplete. Check it and try again." }, 400);
   if (lead.phone.replace(/\D/g, "").length < 10) return json({ error: "Enter a phone number with area code." }, 400);
 
-  const report = await env.REPORTS.get(`report:${clean(b.id)}`, "json");
+  let report = await env.REPORTS.get(`report:${clean(b.id)}`, "json");
   if (!report) return json({ error: "This audit has expired. Run a new one and it'll take about a minute." }, 404);
+
+  // Bing rankings are part of the unlocked report, so they only spend searches on real leads
+  if (!report.rankingsCompleted) {
+    report = await completeRankings(report, env).catch(() => report);
+    await env.REPORTS.put(`report:${report.id}`, JSON.stringify(report), { expirationTtl: 30 * 86400 });
+  }
 
   const record = { ...lead, reportId: report.id, site: report.input.host, overall: report.overall, at: new Date().toISOString(), ip: request.headers.get("cf-connecting-ip") || "" };
   await env.REPORTS.put(`lead:${record.at}:${report.id}`, JSON.stringify(record));
