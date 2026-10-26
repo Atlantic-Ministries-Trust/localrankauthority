@@ -30,19 +30,12 @@ export async function onRequestPost({ request, env }) {
     if (cached) return json(teaser(cached));
   }
 
-  // Each audit spends 3 ranking searches; stop before the monthly free allowance runs out
-  const month = today.slice(0, 7);
-  const serpKey = `serp:${month}`;
-  const serpUsed = +(await env.REPORTS.get(serpKey)) || 0;
-  const allowRankings = serpUsed + 3 <= (+env.SERP_MONTHLY_LIMIT || 240);
-
-  const report = await runAudit({ url, business, service, city }, env, { allowRankings });
+  const report = await runAudit({ url, business, service, city }, env);
 
   await Promise.all([
     env.REPORTS.put(`report:${report.id}`, JSON.stringify(report), { expirationTtl: 30 * DAY }),
     env.REPORTS.put(cacheKey, report.id, { expirationTtl: DAY }),
-    env.REPORTS.put(rlKey, String(used + 1), { expirationTtl: DAY }),
-    allowRankings && env.SERPAPI_KEY ? env.REPORTS.put(serpKey, String(serpUsed + 3), { expirationTtl: 40 * DAY }) : null
+    env.REPORTS.put(rlKey, String(used + 1), { expirationTtl: DAY })
   ]);
   return json(teaser(report));
 }
