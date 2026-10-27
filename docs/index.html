@@ -47,7 +47,6 @@ a{color:inherit}
 .btn-amber:hover{filter:brightness(1.06)}
 .btn-ghost{background:transparent;color:inherit;border-color:currentColor}
 .btn-sign{background:var(--sign);color:var(--sign-ink)}
-.draft{background:var(--amber);color:var(--amber-ink);font:500 .8rem var(--mono);text-align:center;padding:6px 16px}
 
 /* header */
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sign-deep);color:var(--sign-ink)}
@@ -242,12 +241,125 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .unlock .err,.unlock .fine{grid-column:1/-1}
 .unlock .err{color:var(--amber)}
 .unlock .fine{font-size:.78rem}
+/* offer bar */
+.offer{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--amber);color:var(--amber-ink);text-decoration:none;font:500 .92rem var(--body);padding-block:9px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));text-align:center}
+.offer-tag{font:800 .7rem var(--mono);letter-spacing:.1em;text-transform:uppercase;background:var(--amber-ink);color:var(--amber);padding:3px 8px;border-radius:4px;flex:none}
+.offer b{font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.offer-go{font-weight:800;transition:transform .2s}
+.offer:hover .offer-go{transform:translateX(4px)}
+@media (max-width:560px){.offer{font-size:.84rem;justify-content:flex-start;text-align:left}}
+
+/* report v2 */
+.rep-hero{display:grid;grid-template-columns:auto 1fr minmax(0,1.1fr);gap:28px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+@media (max-width:1020px){.rep-hero{grid-template-columns:auto 1fr}.rep-shots{grid-column:1/-1}}
+@media (max-width:640px){.rep-hero{grid-template-columns:1fr;justify-items:stretch}.rep-score{justify-self:center}}
+.rep-score{display:flex;flex-direction:column;align-items:center;gap:8px}
+.gauge-wrap{position:relative;width:220px;max-width:100%}
+.gauge{width:100%;height:auto;display:block;overflow:visible}
+.g-track{fill:none;stroke:var(--line);stroke-width:16;stroke-linecap:round}
+.g-zone{fill:none;stroke-width:16}
+.g-zone.bad{stroke:var(--pin)}.g-zone.ok{stroke:var(--amber)}.g-zone.good{stroke:var(--good)}
+.needle{transform-origin:100px 100px;transform-box:view-box;transform:rotate(-90deg);transition:transform 1.3s cubic-bezier(.2,.9,.3,1.15)}
+.needle line{stroke:var(--ink);stroke-width:4;stroke-linecap:round}.needle circle{fill:var(--ink)}
+.g-tick{font:500 10px var(--mono);fill:var(--muted)}
+.gauge-num{position:absolute;left:0;right:0;bottom:2px;text-align:center;display:flex;justify-content:center;align-items:baseline;gap:4px}
+.gauge-num b{font:900 2.6rem var(--display);font-variant-numeric:tabular-nums;line-height:1}
+.gauge-num span{font:500 .85rem var(--mono);color:var(--muted)}
+.rep-grade{font:800 .9rem var(--display);padding:5px 14px;border-radius:999px;color:#fff}
+.rep-grade.g-good{background:var(--good)}.rep-grade.g-ok{background:var(--warn)}.rep-grade.g-bad{background:var(--pin)}.rep-grade.g-none{background:var(--muted)}
+.rep-id{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rep-id h3{font-size:1.9rem}
+.bars{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 34px;gap:10px;align-items:center;background:none;border:0;padding:4px 0;color:inherit;font:600 .88rem var(--body);cursor:pointer;text-align:left}
+.bar-row:hover span:first-child{text-decoration:underline;text-underline-offset:3px}
+.b-track{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.b-track i{display:block;height:100%;width:0;border-radius:6px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.b-track i.good{background:var(--good)}.b-track i.ok{background:var(--amber)}.b-track i.bad{background:var(--pin)}.b-track i.none{background:var(--muted)}
+.bar-row b{font:800 .95rem var(--display);font-variant-numeric:tabular-nums;text-align:right}
+.rep-shots{position:relative;min-width:0;padding-right:54px;padding-bottom:18px}
+.frame{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);box-shadow:0 14px 34px rgba(0,0,0,.14)}
+.frame img{display:block;width:100%;height:auto}
+.frame.desktop img{aspect-ratio:16/10;object-fit:cover;object-position:top}
+.dots{display:flex;align-items:center;gap:5px;padding:7px 10px;border-bottom:1px solid var(--line);background:var(--surface)}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots span{font:500 .7rem var(--mono);color:var(--muted);margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frame.phone{position:absolute;right:0;bottom:0;width:30%;max-width:120px;border-radius:16px;border:4px solid var(--ink)}
+.frame.phone img{aspect-ratio:390/844;object-fit:cover;object-position:top}
+.frame.noimg{display:none}
+.rep-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:720px){.rep-tabs{grid-template-columns:repeat(2,1fr)}}
+.rep-tabs button{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);font:700 .95rem var(--display);text-align:left}
+.rep-tabs button[aria-selected="true"]{border-color:var(--sign);box-shadow:0 0 0 3px color-mix(in srgb,var(--sign) 18%,transparent)}
+.rep-tabs .ring{width:46px;height:46px}.rep-tabs .ring span{font-size:.95rem}
+.ring.good{background:conic-gradient(var(--good) calc(var(--p)*1%),var(--line) 0)}
+.ring.ok{background:conic-gradient(var(--amber) calc(var(--p)*1%),var(--line) 0)}
+.ring.bad{background:conic-gradient(var(--pin) calc(var(--p)*1%),var(--line) 0)}
+.ring.none{background:var(--line)}
+.rep-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:18px}
+.p-top{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.p-sum{min-width:0;flex:1}
+.p-sum h4{font:800 1.25rem var(--display)}
+.donut{display:flex;align-items:center;gap:14px}
+.donut svg{width:86px;height:86px;transform:rotate(0deg)}
+.donut circle{fill:none;stroke-width:6}
+.d-track{stroke:var(--line)}.d-fail{stroke:var(--pin)}.d-warn{stroke:var(--amber)}.d-pass{stroke:var(--good)}
+.donut ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:.88rem}
+.donut li::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:middle}
+.donut li.fail::before{background:var(--pin)}.donut li.warn::before{background:var(--amber)}.donut li.pass::before{background:var(--good)}
+.donut b{font-variant-numeric:tabular-nums}
+.viz{border:1px dashed var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+.metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.metric{display:flex;flex-direction:column;gap:6px;min-width:0}
+.m-top{display:flex;justify-content:space-between;gap:8px;font-size:.88rem}
+.m-top b{font:800 1rem var(--display);font-variant-numeric:tabular-nums}
+.m-top b.good{color:var(--good)}.m-top b.ok{color:var(--warn)}.m-top b.bad{color:var(--pin)}
+.m-bar{position:relative;display:flex;height:10px;border-radius:6px;overflow:visible}
+.m-bar i{display:block;height:100%}
+.m-bar .z-good{background:color-mix(in srgb,var(--good) 55%,transparent);border-radius:6px 0 0 6px}
+.m-bar .z-ok{background:color-mix(in srgb,var(--amber) 60%,transparent)}
+.m-bar .z-bad{flex:1;background:color-mix(in srgb,var(--pin) 50%,transparent);border-radius:0 6px 6px 0}
+.m-bar em{position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.m-goal{font:400 .74rem var(--mono);color:var(--muted)}
+.ladders{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.ladder{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ladder h4{font:800 1rem var(--display)}
+.ladder ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:.9rem}
+.ladder li{overflow-wrap:anywhere}
+.ladder li.you{list-style:none;margin-left:-22px;padding:6px 10px;border-radius:8px;font-weight:700}
+.ladder li.you.out{background:color-mix(in srgb,var(--pin) 14%,transparent);color:var(--pin)}
+.ladder li.you.in{background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good)}
+.pack{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--line);padding-top:8px;font-size:.88rem}
+.pin::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--pin);margin-right:8px}
+.bubble{background:var(--surface);border:1px solid var(--line);border-radius:12px 12px 12px 4px;padding:14px}
+.bubble p{margin-top:6px;font-size:.9rem;white-space:pre-line;color:var(--ink)}
+.bubble mark{background:color-mix(in srgb,var(--amber) 45%,transparent);color:inherit;padding:0 2px;border-radius:3px}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{font:600 .84rem var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fd{display:block}
+.fd details{border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--surface)}
+.fd.s-fail details{border-left-color:var(--pin)}.fd.s-warn details{border-left-color:var(--amber)}.fd.s-pass details{border-left-color:var(--good)}
+.fd summary{display:flex;align-items:center;gap:10px;font:inherit;cursor:pointer;list-style:none}
+.fd summary::after{content:"▾";margin-left:auto;color:var(--muted);font-family:var(--body)}
+.fd details[open] summary::after{content:"▴"}
+.fd summary b{font-size:.95rem}
+.fd details p{margin-top:8px;font-size:.92rem}
+.fd .fix{display:flex;flex-direction:column;gap:2px;background:color-mix(in srgb,var(--sign) 8%,transparent);border-radius:8px;padding:8px 10px;color:var(--ink)}
+.fd .fix span{font:600 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sign)}
+.fd.locked details{filter:blur(3px);opacity:.7}
+.fd .pill{flex:none;min-width:86px}
+.more-cta{font:700 .95rem var(--display);color:var(--sign);text-decoration:none;align-self:flex-start}
+.more-cta:hover{text-decoration:underline;text-underline-offset:3px}
+.na{padding:8px 0}
+.perks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;color:rgba(255,255,255,.9);font-size:.95rem}
+.perks li::before{content:"✓";color:var(--amber);font-weight:800;margin-right:8px}
+.small{font-size:.82rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
-<div class="draft">Test site · the AI receptionist demo line connects before launch</div>
+<a class="offer" href="#check"><span class="offer-tag">Free</span><span class="offer-text">Is Google recommending you, or your competitors? <b>Get your Local Visibility Score in 60 seconds</b></span><span class="offer-go" aria-hidden="true">→</span></a>
 
 <header class="top">
   <div class="wrap">
@@ -476,34 +588,87 @@ function runSteps(){
   const li=[...ol.children];let i=0;li[0].className="now";
   stepTimer=setInterval(()=>{if(i<li.length-1){li[i].className="done";li[++i].className="now";}},8000);
 }
-const ring=(n,big)=>`<div class="ring${big?" big":""}" style="--p:${n??0}"><span>${n??"–"}</span></div>`;
-const findingHtml=f=>`<li class="fd"><span class="pill ${f.status}">${ST[f.status]}</span><div><b>${esc(f.title)}</b><p>${esc(f.detail)}</p>${f.fix&&f.status!=="pass"?`<p class="fix">How to fix: ${esc(f.fix)}</p>`:""}</div></li>`;
-const lockedRows=n=>Array.from({length:Math.min(n,4)},()=>`<li class="fd locked" aria-hidden="true"><span class="pill">Locked</span><div><b>Finding hidden</b><p>Unlock your full report to see this result and how to fix it.</p></div></li>`).join("");
-function extraHtml(sec){
-  const x=sec.extra||{};
-  if(sec.key==="rankings"&&x.engines)return `<div class="tbl"><table><thead><tr><th>Engine</th><th>Your position</th><th>Top results</th></tr></thead><tbody>${x.engines.map(e=>`<tr><td>${esc(e.engine)}</td><td>${e.error?"Not checked":e.position?"#"+e.position:"Not in top 10"}</td><td>${(e.competitors||[]).map(c=>esc(c.domain)).join("<br>")}</td></tr>`).join("")}</tbody></table></div>`;
-  if(sec.key==="ai"&&x.answers)return [["recommend","What Google's AI recommends"],["about","What Google's AI says about you"],["model","What Llama says, without searching"]].filter(([k])=>x.answers[k]).map(([k,l])=>`<details class="ans"><summary>${l}</summary><p>${esc(x.answers[k])}</p></details>`).join("");
-  if(sec.key==="website"&&x.seo!=null)return `<p class="muted">Google's own SEO score for this page: ${x.seo}/100</p>`;
-  return "";
+const tone=n=>n==null?"none":n>=80?"good":n>=50?"ok":"bad";
+const ring=(n,big)=>`<div class="ring ${tone(n)}${big?" big":""}" style="--p:${n??0}"><span>${n??"–"}</span></div>`;
+const plain=t=>String(t||"").replace(/\*\*/g,"").replace(/^\s*[\*\-]\s+/gm,"• ");
+const shot=(url,mobile)=>`https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url${mobile?"&viewport.isMobile=true&viewport.width=390&viewport.height=844&viewport.deviceScaleFactor=2":""}`;
+function gauge(n){
+  const L=Math.PI*80,v=n??0,arc="M20 100 A80 80 0 0 1 180 100";
+  return `<div class="gauge-wrap"><svg viewBox="0 0 200 118" class="gauge" role="img" aria-label="Overall score ${n??"not available"} out of 100">
+    <path d="${arc}" class="g-track"/>
+    <path d="${arc}" class="g-zone bad" stroke-dasharray="${L*.5} ${L}"/>
+    <path d="${arc}" class="g-zone ok" stroke-dasharray="0 ${L*.5} ${L*.3} ${L}"/>
+    <path d="${arc}" class="g-zone good" stroke-dasharray="0 ${L*.8} ${L*.2} ${L}"/>
+    <g class="needle" data-angle="${v*1.8-90}"><line x1="100" y1="100" x2="100" y2="34"/><circle cx="100" cy="100" r="7"/></g>
+    <text x="16" y="116" class="g-tick">0</text><text x="184" y="116" class="g-tick" text-anchor="end">100</text>
+  </svg><div class="gauge-num"><b data-count="${v}">${v}</b><span>/100</span></div></div>`;
+}
+function donut(c){
+  const t=(c.pass+c.warn+c.fail)||1;let off=25;
+  const seg=(k,v)=>{const p=v/t*100,el=`<circle r="15.915" cx="20" cy="20" class="d-${k}" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${off}"/>`;off-=p;return el;};
+  return `<div class="donut"><svg viewBox="0 0 40 40" aria-hidden="true"><circle r="15.915" cx="20" cy="20" class="d-track"/>${seg("fail",c.fail)}${seg("warn",c.warn)}${seg("pass",c.pass)}</svg><ul><li class="fail"><b>${c.fail}</b> ${c.fail===1?"problem":"problems"}</li><li class="warn"><b>${c.warn}</b> need work</li><li class="pass"><b>${c.pass}</b> good</li></ul></div>`;
+}
+const counts=sec=>sec.counts||(sec.findings||[]).reduce((c,f)=>(c[f.status]++,c),{pass:0,warn:0,fail:0});
+const findingHtml=f=>`<li class="fd s-${f.status}" data-status="${f.status}"><details${f.status==="fail"?" open":""}><summary><span class="pill ${f.status}">${ST[f.status]}</span><b>${esc(f.title)}</b></summary><p>${esc(f.detail)}</p>${f.fix&&f.status!=="pass"?`<p class="fix"><span>How to fix</span>${esc(f.fix)}</p>`:""}</details></li>`;
+const lockedRows=n=>Array.from({length:Math.min(n,4)},()=>`<li class="fd locked" aria-hidden="true"><details><summary><span class="pill">Locked</span><b>Finding hidden until you unlock</b></summary></details></li>`).join("");
+const METRIC_INFO={lcp:["Main content loads",2500,4000,"ms"],fcp:["First content appears",1800,3000,"ms"],tbt:["Page frozen",200,600,"ms"],cls:["Layout shift",.1,.25,""],si:["Visual load speed",3400,5800,"ms"]};
+const fmtMetric=(v,u)=>u==="ms"?(v>=1000?(v/1000).toFixed(1)+" s":Math.round(v)+" ms"):(+v).toFixed(2);
+function metricBars(m){
+  const rows=Object.entries(METRIC_INFO).filter(([k])=>m[k]!=null).map(([k,[label,good,poor,u]])=>{
+    const max=poor*1.6,v=m[k],cls=v<=good?"good":v<=poor?"ok":"bad";
+    return `<div class="metric"><div class="m-top"><span>${label}</span><b class="${cls}">${fmtMetric(v,u)}</b></div><div class="m-bar"><i class="z-good" style="width:${good/max*100}%"></i><i class="z-ok" style="width:${(poor-good)/max*100}%"></i><i class="z-bad"></i><em style="left:${Math.min(98,v/max*100)}%"></em></div><div class="m-goal">Goal: under ${fmtMetric(good,u)}</div></div>`;
+  });
+  return rows.length?`<div class="viz"><p class="eyebrow">Mobile speed, measured by Google</p><div class="metrics">${rows.join("")}</div></div>`:"";
+}
+function rankViz(x){
+  const live=x.engines.filter(e=>!e.error),notes=x.engines.filter(e=>e.error);
+  return `<div class="viz"><p class="eyebrow">Who shows up for "${esc(x.keyword)}"</p><div class="ladders">${live.map(e=>`<div class="ladder"><h4>${esc(e.engine)}</h4><ol>${(e.competitors||[]).map(c=>`<li><span class="dom">${esc(c.domain)}</span></li>`).join("")}<li class="you ${e.position?"in":"out"}"><span class="dom">${e.position?`You: #${e.position}`:"You: not in the top 10"}</span></li></ol>${e.places&&e.places.length?`<div class="pack"><span class="eyebrow">Google Maps top 3</span>${e.places.map(p=>`<div class="pin">${esc(p)}</div>`).join("")}</div>`:""}</div>`).join("")}</div>${notes.map(e=>`<p class="muted small">${esc(e.engine)}</p>`).join("")}</div>`;
+}
+function aiViz(x,name){
+  const re=new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi");
+  const hl=t=>esc(plain(t)).replace(re,m=>`<mark>${m}</mark>`);
+  const items=[["recommend","We asked Google's AI: who would you recommend?"],["about",`We asked Google's AI: what is ${name}?`]].filter(([k])=>x.answers&&x.answers[k]);
+  return items.length?`<div class="viz">${items.map(([k,l])=>`<div class="bubble"><span class="eyebrow">${esc(l)}</span><p>${hl(x.answers[k])}</p></div>`).join("")}</div>`:"";
+}
+function animate(root){
+  const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(()=>{
+    root.querySelectorAll(".needle").forEach(n=>n.style.transform=`rotate(${n.dataset.angle}deg)`);
+    root.querySelectorAll("[data-w]").forEach(b=>b.style.width=b.dataset.w+"%");
+    if(still) return;
+    root.querySelectorAll("[data-count]").forEach(el=>{const to=+el.dataset.count,t0=performance.now();const step=t=>{const p=Math.min(1,(t-t0)/1100);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step);};el.textContent="0";requestAnimationFrame(step);});
+  },60);
 }
 function renderReport(d){
-  const full=!d.locked,i=d.input;
-  const secs=d.sections.map(sec=>{
-    let body;
-    if(!sec.available)body=`<p class="muted">${esc(sec.note||sec.summary)}</p>`;
-    else if(full)body=`<ul class="fds">${sec.findings.map(findingHtml).join("")}</ul>${extraHtml(sec)}`;
-    else{
-      const shown=sec.preview&&sec.preview.status!=="pass"?1:0,moreIssues=sec.issues-shown,moreChecks=sec.checks-(sec.preview?1:0);
-      body=`<ul class="fds">${sec.preview?findingHtml(sec.preview):""}${lockedRows(moreChecks)}</ul><p class="more">${moreIssues>0?`${moreIssues} more ${moreIssues===1?"issue":"issues"} found`:"Other checks look good"} · unlock to see the details</p>`;
+  const full=!d.locked,i=d.input,secs=d.sections,root=$("#audit-out");
+  const head=`<div class="rep-hero">
+    <div class="rep-score">${gauge(d.overall)}<div class="rep-grade g-${tone(d.overall)}">Grade ${esc(d.grade)}</div></div>
+    <div class="rep-id"><p class="eyebrow">Local Visibility Report</p><h3>${esc(i.business)}</h3><p class="muted">${esc(i.host)} · ${esc(i.service)} in ${esc(i.city)}</p>
+      <div class="bars">${secs.map(s=>`<button type="button" class="bar-row" data-tab="${s.key}"><span>${esc(s.label)}</span><span class="b-track"><i class="${tone(s.score)}" data-w="${s.score??0}"></i></span><b>${s.score??"–"}</b></button>`).join("")}</div></div>
+    <div class="rep-shots" aria-label="Screenshots of ${esc(i.host)}">
+      <figure class="frame desktop"><div class="dots"><i></i><i></i><i></i><span>${esc(i.host)}</span></div><img loading="lazy" alt="${esc(i.host)} on a computer" src="${shot(i.url)}" onerror="this.closest('figure').classList.add('noimg')"></figure>
+      <figure class="frame phone"><img loading="lazy" alt="${esc(i.host)} on a phone" src="${shot(i.url,1)}" onerror="this.closest('figure').classList.add('noimg')"></figure>
+    </div></div>`;
+  const tabs=`<div class="rep-tabs" role="tablist">${secs.map((s,ix)=>`<button type="button" role="tab" aria-selected="${ix===0}" data-tab="${s.key}">${ring(s.score)}<span>${esc(s.label)}</span></button>`).join("")}</div>`;
+  const panels=secs.map((s,ix)=>{
+    const c=counts(s);let body;
+    const top=`<div class="p-top">${donut(c)}<div class="p-sum"><h4>${esc(s.label)}: ${s.score??"–"}/100</h4><p class="muted">${esc(s.summary||"")}</p></div></div>`;
+    if(!s.available) body=`<div class="na"><p>${esc(s.note||s.summary)}</p></div>`;
+    else if(full){
+      const x=s.extra||{};
+      const viz=s.key==="website"&&x.metrics?metricBars(x.metrics):s.key==="rankings"&&x.engines?rankViz(x):s.key==="ai"&&x.answers?aiViz(x,i.business):"";
+      body=`${top}${viz}<div class="filters" role="group" aria-label="Filter findings"><button type="button" class="on" data-f="all">All ${s.findings.length}</button><button type="button" data-f="fail">Problems ${c.fail}</button><button type="button" data-f="warn">Needs work ${c.warn}</button><button type="button" data-f="pass">Good ${c.pass}</button></div><ul class="fds">${s.findings.map(findingHtml).join("")}</ul>`;
+    }else{
+      const shown=s.preview&&s.preview.status!=="pass"?1:0,more=s.issues-shown,rest=s.checks-(s.preview?1:0);
+      body=`${top}<ul class="fds">${s.preview?findingHtml(s.preview):""}${lockedRows(rest)}</ul><a href="#unlock-form" class="more-cta">${more>0?`See ${more} more ${more===1?"issue":"issues"} and exactly how to fix them`:"See the full checklist"} →</a>`;
     }
-    return `<article class="sec"><header>${ring(sec.score)}<div><h3>${esc(sec.label)}</h3><p class="muted">${esc(sec.summary||"")}</p></div></header>${body}</article>`;
+    return `<section class="rep-panel" role="tabpanel" data-panel="${s.key}"${ix?" hidden":""}>${body}</section>`;
   }).join("");
-  $("#audit-out").innerHTML=`<div class="report">
-    <div class="rep-head">${ring(d.overall,true)}<div><p class="eyebrow">Overall visibility score · Grade ${esc(d.grade)}</p><h3>${esc(i.business)}</h3><p class="muted">${esc(i.host)} · ${esc(i.service)} in ${esc(i.city)}</p></div></div>
-    <div class="rep-grid">${secs}</div>
-    ${full?`<div class="unlock"><div class="stack" style="gap:8px"><h3>Want these fixed?</h3><p>${d.emailed?"A copy of this report is on its way to your inbox. ":""}Book a free call and we'll walk through your results and the fastest wins.</p></div><a class="btn btn-amber" href="#contact" id="cta-call" style="justify-self:start">Book my free call</a></div>`
+  const foot=full
+    ?`<div class="unlock done"><div class="stack" style="gap:8px"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Next step</p><h3>Want these fixed for you?</h3><p>${d.emailed?"A copy of this report is on its way to your inbox. ":""}Book a free 20-minute strategy call. We'll walk through your report and show you the three fastest wins.</p></div><a class="btn btn-amber" href="#contact" id="cta-call" style="justify-self:start">Book my free strategy call</a></div>`
     :`<form class="unlock" id="unlock-form" novalidate>
-      <div class="stack" style="gap:8px"><h3>See your full report</h3><p>Get every finding, how to fix each one, who's outranking you, and what AI assistants say about your business. We'll email you a copy.</p></div>
+      <div class="stack" style="gap:10px"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Your full report is ready</p><h3>Unlock every finding, free</h3>
+        <ul class="perks"><li>Every issue we found, with step-by-step fixes</li><li>Your Google and Bing rankings and who's beating you</li><li>What Google's AI says when customers ask for your service</li><li>A copy emailed to you to keep</li></ul></div>
       <div class="ufields">
         <div class="field"><label for="u-name">Your name</label><input type="text" id="u-name" autocomplete="name"></div>
         <div class="field"><label for="u-phone">Phone</label><input type="tel" id="u-phone" autocomplete="tel"></div>
@@ -512,12 +677,16 @@ function renderReport(d){
         <button class="btn btn-amber" type="submit" id="u-go">Unlock my full report</button>
       </div>
       <p class="err" id="u-err" role="alert" hidden></p>
-      <p class="fine">We use your details to send your report and follow up about it. No spam, ever.</p>
-    </form>`}
-  </div>`;
+      <p class="fine">Free. We use your details to send your report and follow up about it. No spam, ever.</p>
+    </form>`;
+  root.innerHTML=`<div class="report">${head}${tabs}<div class="panels">${panels}</div>${foot}</div>`;
+  const show=k=>{root.querySelectorAll(".rep-tabs [role=tab]").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===k));root.querySelectorAll("[data-panel]").forEach(p=>p.hidden=p.dataset.panel!==k);};
+  root.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.tab);if(b.classList.contains("bar-row"))root.querySelector(".rep-tabs").scrollIntoView({behavior:"smooth",block:"nearest"});}));
+  root.querySelectorAll(".filters").forEach(g=>g.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));const f=b.dataset.f;g.nextElementSibling.querySelectorAll(".fd").forEach(li=>li.hidden=f!=="all"&&li.dataset.status!==f);}));
   if(full)$("#cta-call").addEventListener("click",()=>{$("#f-topic").value="Help with my audit results";});
   else $("#unlock-form").addEventListener("submit",unlock);
-  $("#audit-out").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  animate(root);
+  root.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
 }
 async function post(path,data){
   let r;
