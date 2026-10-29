@@ -128,7 +128,7 @@ function page(slug, s) {
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Local Rank Authority">
 <meta property="og:title" content="${esc(s.title)}"><meta property="og:description" content="${esc(s.desc)}">
-<meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/og-image">
+<meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cpath d='M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z' fill='%23F2A900'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
