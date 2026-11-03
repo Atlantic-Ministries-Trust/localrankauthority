@@ -113,8 +113,10 @@ async function coupon(b, env) {
   if (!env.REPORTS) return json({ error: "Storage (REPORTS) isn't set up." }, 503);
   const offer = (await readOffer(env)) || DEFAULT_OFFER;
   if (b.action === "create") {
-    const c = newCoupon(b);
+    let c = newCoupon(b);
     if (c.error) return json(c, 400);
+    // Generated codes retry on the (rare) collision; named codes need replace: true to overwrite
+    for (let i = 0; !b.code && i < 5 && await readCoupon(env, c.code); i++) c = newCoupon(b);
     if (await readCoupon(env, c.code) && !b.replace) return json({ error: `${c.code} already exists. Disable it first, or send replace: true.` }, 409);
     await env.REPORTS.put(`coupon:${c.code}`, JSON.stringify(c));
     return json({ created: c, preview: quote(offer, c), share_link: `https://localrankauthority.com/audit-intake?code=${c.code}` });

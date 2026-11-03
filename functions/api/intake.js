@@ -1,7 +1,7 @@
 // POST /api/intake: the form clients fill in to start the Comprehensive Local Visibility Audit (after checkout, an
 // invoice request, or with a discount code). Stores the intake, counts a code use, emails the owner and the client.
 import { esc, json, sendEmail } from "../../lib/audit.js";
-import { DEFAULT_OFFER, couponProblem, money, normCode, quote, readCoupon, readOffer } from "../../lib/offer.js";
+import { DEFAULT_OFFER, couponProblem, money, normCode, quote, readCoupon, readOffer, useKeys } from "../../lib/offer.js";
 
 const ACCESS = { gbp: "Google Business Profile", search_console: "Search Console", analytics: "Google Analytics", ads: "Ads accounts" };
 
@@ -30,13 +30,18 @@ export async function onRequestPost({ request, env, waitUntil }) {
   const code = normCode(b.code);
   if (code) {
     const c = await readCoupon(env, code);
-    const problem = couponProblem(c);
+    const keys = c ? useKeys(c.code, f.website, f.email) : [];
+    const usedBefore = (await Promise.all(keys.map(k => env.REPORTS.get(k)))).some(Boolean);
+    const problem = couponProblem(c) || (usedBefore ? "this business has already used it" : "");
     if (problem) pricing = `List price ${money(offer.price)} · code ${code} was NOT valid (${problem}) · confirm the price before starting`;
     else {
       const q = quote(offer, c);
       pricing = q.complimentary ? `${q.label} · no invoice` : `${q.label} · ${f.session_id ? "paid through Stripe" : `invoice ${money(q.you_pay)}`}`;
       clientPricing = q.complimentary ? `your ${money(q.list_price)} Comprehensive Local Visibility Audit, complimentary with code ${q.code}` : `your ${money(q.list_price)} Comprehensive Local Visibility Audit (code ${q.code} applied: you pay ${money(q.you_pay)})`;
-      await env.REPORTS.put(`coupon:${c.code}`, JSON.stringify({ ...c, used: (c.used || 0) + 1, last_used: at, last_used_by: f.business }));
+      await Promise.all([
+        env.REPORTS.put(`coupon:${c.code}`, JSON.stringify({ ...c, used: (c.used || 0) + 1, last_used: at, last_used_by: f.business })),
+        ...keys.map(k => env.REPORTS.put(k, at))
+      ]);
     }
   }
   const record = { ...f, access, code, pricing, at };
