@@ -27,7 +27,7 @@ main{padding-block:24px 64px}.stack{display:flex;flex-direction:column;gap:18px}
 .eyebrow{font:500 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .muted{color:var(--muted)}.small{font-size:.88rem}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.spread{justify-content:space-between}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}.tile b{display:block;font:900 1.9rem var(--display)}.tile span{color:var(--muted);font-size:.88rem}
 @media(max-width:560px){.tiles{grid-template-columns:repeat(3,1fr);gap:8px}.tile{padding:10px}.tile b{font-size:1.4rem}.tile span{font-size:.75rem;line-height:1.3;display:block}}
 .tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);overflow-x:auto;scrollbar-width:none}
@@ -61,6 +61,24 @@ table.t{width:100%;border-collapse:collapse;font-size:.9rem}table.t th{text-alig
 .msg-ok{color:var(--good);font-weight:600}.msg-err{color:var(--pin);font-weight:600}
 .empty{padding:28px;text-align:center;color:var(--muted)}
 blockquote{margin:6px 0 0;padding:8px 12px;border-left:3px solid var(--amber);background:var(--bg);border-radius:0 6px 6px 0;white-space:pre-wrap}
+/* pipeline */
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(232px,1fr);gap:10px;overflow-x:auto;padding-bottom:8px;align-items:start}
+.col{background:color-mix(in srgb,var(--line) 35%,transparent);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:120px}
+.col.over{outline:3px dashed var(--amber);outline-offset:-3px}
+.col-h{display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:2px 4px}.col-h b{font:900 .95rem var(--display)}.col-h span{font-size:.78rem;color:var(--muted);text-align:right}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%;display:flex;flex-direction:column;gap:4px}
+.pcard:hover{border-color:var(--sign)}.pcard[draggable=true]{cursor:grab}.pcard .nm{font:800 .98rem var(--display)}
+.pcard .meta{font-size:.8rem;color:var(--muted)}.due{color:var(--pin);font-weight:700}
+.money{font:700 .85rem var(--body)}
+dialog{border:1px solid var(--line);border-radius:14px;padding:0;background:var(--surface);color:var(--ink);width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg{padding:18px;display:flex;flex-direction:column;gap:12px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
+.fgrid label,.dlg label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;font-weight:600;color:var(--muted)}
+.dlg input,.dlg select,.dlg textarea{font:inherit;font-weight:400;padding:9px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);color:var(--ink)}
+.notes{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto}
+.notes div{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:.92rem;white-space:pre-wrap}.notes small{display:block;color:var(--muted);font-size:.75rem}
+.dueList li{list-style:none;display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);align-items:center}.dueList{margin:0;padding:0}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -106,11 +124,25 @@ function group(D){
     touch(c,[p.last_seen,a.updated,a.published].filter(Boolean).sort().pop()||"",p.email);});
   D.messages.forEach(m=>{const k=byEmail[mail(m.email)]||keyFor("",m.business,m.email);const c=co(k,m.business);c.messages.push(m);touch(c,m.at,m.email);});
   D.uses.forEach(u=>{const k=u.kind==="site"?u.value:(byEmail[mail(u.value)]||"");if(cos[k]&&!cos[k].codes.includes(u.code))cos[k].codes.push(u.code);});
+  // Pipeline records join by the same key; a prospect you added by hand gets its own card until activity arrives
+  (D.crm||[]).forEach(r=>{const c=cos[r.key]||co(r.key,r.business,r.website);c.crm=r;if(!c.latest)c.latest=r.created||"";if(r.email)c.emails.add(mail(r.email));});
   return Object.values(cos).sort((a,b)=>b.latest.localeCompare(a.latest));
 }
 
-let D,COS,tab="companies",filter="all",query="";
+let D,COS,tab="pipeline",filter="all",query="";
+const STAGES=["New lead","Contacted","Call booked","Audit sold","Audit delivered","Proposal sent","Won","Lost"];
+const PACKAGES=[["Comprehensive Growth Audit",1000],["Get Found",7500],["Win the Conversation",19000],["Market Authority",25000]];
+const RETAINERS=[["Essentials",2500],["Growth",5000],["Authority",7500],["Dominate",10000]];
+const money=n=>"$"+Math.round(+n||0).toLocaleString();
+const today=()=>new Date().toLocaleDateString("en-CA");
+const coName=c=>c.crm?.business||c.names[c.names.length-1]||c.site||[...c.emails][0]||"Unknown";
+const stageOf=c=>c.crm?.stage||(c.clients.length?"Audit delivered":c.intakes.length?"Audit sold":"New lead");
+const sourceOf=c=>c.crm?.source||(c.leads.length?"Free score":c.intakes.length?"Audit request":c.contacts.length?"Contact form":c.clients.length?"Portal client":"Added by you");
+const isOpen=c=>!["Won","Lost"].includes(stageOf(c));
+const keyFrom=(website,business)=>host(website)||(business?"name:"+business.trim().toLowerCase():"");
 const isNew=at=>D.seen_before&&at&&at>D.seen_before;
+const hasActivity=c=>!!(c.leads.length||c.intakes.length||c.contacts.length||c.clients.length||c.messages.length);
+const newCo=c=>hasActivity(c)&&isNew(c.latest); // prospects you add yourself aren't "new"
 
 function badges(c){const b=[];
   if(c.clients.length){const a=c.clients[0].audits.slice(-1)[0];b.push(`<span class="pill sign">Portal${a?` · ${a.overall??"–"}/100`:""}</span>`);}
@@ -119,12 +151,12 @@ function badges(c){const b=[];
   if(c.contacts.length)b.push(`<span class="pill na">Contact form${c.contacts.length>1?" ×"+c.contacts.length:""}</span>`);
   if(c.messages.length)b.push(`<span class="pill na">${c.messages.length} portal message${c.messages.length>1?"s":""}</span>`);
   if(c.codes.length)b.push(`<span class="pill na">Code ${esc(c.codes.join(", "))}</span>`);
-  if(isNew(c.latest))b.push(`<span class="pill new">New</span>`);
+  if(newCo(c))b.push(`<span class="pill new">New</span>`);
   return b.join("");}
 
 const contactLine=x=>[x.name,x.email&&`<a href="mailto:${esc(x.email)}">${esc(x.email)}</a>`,x.phone&&`<a href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`].filter(Boolean).map((v,i)=>i?v:esc(v)).join(" · ");
 
-function companyBody(c){let h="";
+function companyBody(c){let h=`<div class="item row spread"><p><b>Pipeline:</b> ${esc(stageOf(c))}${c.crm?.follow_up?` · follow up ${esc(when(c.crm.follow_up+"T12:00:00"))}`:""}</p><button class="btn btn-amber btn-sm" data-edit="${esc(c.key)}">Edit in pipeline</button></div>`;
   c.clients.forEach(p=>p.audits.slice().reverse().forEach(a=>{const pct=a.plan_total?Math.round(a.plan_done/a.plan_total*100):0;
     h+=`<div class="item"><div class="row spread"><h3>Client portal · Comprehensive Growth Audit</h3><button class="btn btn-ghost btn-sm" data-viewas="${esc(p.email)}">Open their portal</button></div>
     <dl class="kv"><dt>Client</dt><dd>${contactLine(p)}</dd><dt>Audit</dt><dd>${esc(a.date||"")} · <b>${a.overall??"–"}/100</b>${a.grade?` (${esc(a.grade)})`:""}${a.has_pdf?" · PDF attached":""}</dd>
@@ -143,14 +175,14 @@ function companyBody(c){let h="";
     <dl class="kv"><dt>Contact</dt><dd>${contactLine(m)}</dd>${m.website?`<dt>Website</dt><dd>${esc(m.website)}</dd>`:""}</dl>${m.message?`<blockquote>${esc(m.message)}</blockquote>`:""}</div>`;});
   return h;}
 
-function companyCard(c){const name=c.names[c.names.length-1]||c.site||[...c.emails][0]||"Unknown";
+function companyCard(c){const name=coName(c);
   return `<details class="co" data-key="${esc(c.key)}"><summary><div><div class="co-name">${esc(name)}</div><div class="small muted">${esc([c.site,c.names.length>1?"also: "+c.names.slice(0,-1).join(", "):""].filter(Boolean).join(" · "))}</div><div class="badges">${badges(c)}</div></div>
   <div class="small muted">${when(c.latest)}</div></summary><div class="co-body"></div></details>`;}
 
 const FILTERS={all:"All",portal:"Portal clients",intake:"Audit requests",lead:"Free score leads",contact:"Contact forms",new:"New"};
 function matches(c){
   if(filter==="portal"&&!c.clients.length)return false;if(filter==="intake"&&!c.intakes.length)return false;
-  if(filter==="lead"&&!c.leads.length)return false;if(filter==="contact"&&!c.contacts.length)return false;if(filter==="new"&&!isNew(c.latest))return false;
+  if(filter==="lead"&&!c.leads.length)return false;if(filter==="contact"&&!c.contacts.length)return false;if(filter==="new"&&!newCo(c))return false;
   if(!query)return true;const q=query.toLowerCase();
   return [c.site,...c.names,...c.emails].some(v=>String(v||"").toLowerCase().includes(q));}
 
@@ -175,11 +207,77 @@ function couponsView(){if(!D.coupons.length)return '<div class="panel empty">No 
     const st=!c.active?["na","Off"]:exp?["na","Expired"]:full?["na","Used up"]:["good","Active"];
     return `<tr><td><b style="font-family:var(--mono)">${esc(c.code)}</b><br><span class="small muted">${when(c.created)}</span></td><td>${c.percent_off?esc(c.percent_off)+"% off":c.amount_off?"$"+esc(c.amount_off)+" off":"–"}</td><td>${c.used||0} / ${c.max_uses??"∞"}</td><td><span class="pill ${st[0]}">${st[1]}</span>${c.expires?`<br><span class="small muted">ends ${when(c.expires)}</span>`:""}</td><td>${esc(c.note||"")}</td><td class="small">${esc(used(c.code).join(", "))||'<span class="muted">–</span>'}</td></tr>`;}).join("")}</table></div>`;}
 
+function pcard(c){const r=c.crm||{},due=r.follow_up&&r.follow_up<=today()&&isOpen(c);
+  return `<button class="pcard" draggable="true" data-edit="${esc(c.key)}" data-key="${esc(c.key)}"><span class="nm">${esc(coName(c))}</span>
+  ${c.site||r.contact_name?`<span class="meta">${esc([c.site,r.contact_name].filter(Boolean).join(" · "))}</span>`:""}
+  ${r.package||r.retainer?`<span class="money">${[r.package&&`${esc(r.package)} ${money(r.value)}`,r.retainer&&`${esc(r.retainer)} ${money(r.monthly)}/mo`].filter(Boolean).join(" + ")}</span>`:""}
+  <span class="meta">${esc(sourceOf(c))}${r.follow_up?` · <span class="${due?"due":""}">follow up ${esc(when(r.follow_up+"T12:00:00"))}</span>`:""}</span></button>`;}
+
+function pipelineView(){
+  const list=COS.filter(c=>!query||[c.site,coName(c),...c.names,...c.emails].some(v=>String(v||"").toLowerCase().includes(query.toLowerCase())));
+  const due=COS.filter(c=>c.crm?.follow_up&&c.crm.follow_up<=today()&&isOpen(c)).sort((a,b)=>a.crm.follow_up.localeCompare(b.crm.follow_up));
+  return `<div class="tools"><input type="search" id="q" placeholder="Search the pipeline" value="${esc(query)}" aria-label="Search the pipeline"><button class="btn btn-amber" id="addp">+ Add prospect</button></div>
+  ${due.length?`<section class="panel"><p class="eyebrow">Follow-ups due</p><ul class="dueList">${due.map(c=>`<li><span><b>${esc(coName(c))}</b> <span class="small muted">${esc(stageOf(c))}</span></span><span class="row"><span class="small due">${esc(when(c.crm.follow_up+"T12:00:00"))}</span><button class="btn btn-ghost btn-sm" data-edit="${esc(c.key)}">Open</button></span></li>`).join("")}</ul></section>`:""}
+  <p class="small muted">Drag a card to another stage, or tap it to update the stage, deal, follow-up date, and notes.</p>
+  <div class="board">${STAGES.map(st=>{const cs=list.filter(c=>stageOf(c)===st),v=cs.reduce((n,c)=>n+(+c.crm?.value||0),0),m=cs.reduce((n,c)=>n+(+c.crm?.monthly||0),0);
+    return `<div class="col" data-stage="${esc(st)}"><div class="col-h"><b>${esc(st)} · ${cs.length}</b><span>${v?money(v):""}${m?`${v?" + ":""}${money(m)}/mo`:""}</span></div>${cs.map(pcard).join("")}</div>`;}).join("")}</div>`;}
+
+function editor(c){
+  const r=c?.crm||{},isNewP=!c,dlg=document.createElement("dialog");
+  const opt=(list,val,blank)=>`<option value="">${blank}</option>`+list.map(([n,p])=>`<option value="${esc(n)}" data-price="${p}"${n===val?" selected":""}>${esc(n)} (${money(p)}${list===RETAINERS?"/mo":""})</option>`).join("");
+  const first=c&&(c.leads[0]||c.intakes[0]||c.contacts[0]||c.clients[0])||{};
+  dlg.innerHTML=`<form class="dlg" method="dialog"><div class="row spread"><h2>${isNewP?"Add a prospect":esc(coName(c))}</h2><button class="btn btn-ghost btn-sm" type="button" id="dclose">Close</button></div>
+  ${c?`<p class="small muted">${esc([c.site,sourceOf(c)].filter(Boolean).join(" · "))}</p>`:""}
+  <div class="fgrid">
+   ${isNewP?`<label>Business name<input name="business" required></label><label>Website<input name="website" placeholder="example.com"></label>`:`<label>Business name<input name="business" value="${esc(r.business||coName(c))}"></label><label>Website<input value="${esc(c.site)}" disabled></label>`}
+   <label>Contact name<input name="contact_name" value="${esc(r.contact_name||first.name||"")}"></label>
+   <label>Phone<input name="phone" type="tel" value="${esc(r.phone||first.phone||"")}"></label>
+   <label>Email<input name="email" type="email" value="${esc(r.email||first.email||[...(c?.emails||[])][0]||"")}"></label>
+   <label>Stage<select name="stage">${STAGES.map(s=>`<option${s===(c?stageOf(c):"New lead")?" selected":""}>${esc(s)}</option>`).join("")}</select></label>
+   <label>Setup package<select name="package">${opt(PACKAGES,r.package,"None yet")}</select></label>
+   <label>Setup value ($)<input name="value" inputmode="numeric" value="${esc(r.value||"")}"></label>
+   <label>Monthly retainer<select name="retainer">${opt(RETAINERS,r.retainer,"None yet")}</select></label>
+   <label>Monthly value ($)<input name="monthly" inputmode="numeric" value="${esc(r.monthly||"")}"></label>
+   <label>Next follow-up<input name="follow_up" type="date" value="${esc(r.follow_up||"")}"></label>
+   <label>Source<input name="source" value="${esc(r.source||(isNewP?"":sourceOf(c)))}" placeholder="Referral, cold call, networking…"></label>
+   <label class="lost" style="grid-column:1/-1">Why lost<input name="lost_reason" value="${esc(r.lost_reason||"")}"></label>
+  </div>
+  <label>Add a note<textarea name="note" rows="3" placeholder="Call notes, what they said, next step…"></textarea></label>
+  ${(r.notes||[]).length?`<div class="notes">${r.notes.slice().reverse().map(n=>`<div><small>${esc(whenT(n.at))}</small>${esc(n.text)}</div>`).join("")}</div>`:""}
+  ${(r.history||[]).length?`<p class="small muted">Stage history: ${r.history.slice(-6).map(h=>`${esc(h.to)} (${esc(when(h.at))})`).join(" → ")}</p>`:""}
+  <p class="msg-err small" id="derr" role="alert"></p>
+  <div class="row spread"><div class="row">${c&&hasActivity(c)?`<button class="btn btn-ghost btn-sm" type="button" id="dact">See all activity</button>`:""}${c&&c.crm?.manual&&!hasActivity(c)?`<button class="btn btn-ghost btn-sm" type="button" id="ddel">Delete prospect</button>`:""}</div>
+  <button class="btn btn-amber" type="submit" value="save" id="dsave">Save</button></div></form>`;
+  document.body.appendChild(dlg);dlg.showModal();
+  const f=dlg.querySelector("form"),E=f.elements,lost=dlg.querySelector(".lost"),showLost=()=>lost.hidden=E.stage.value!=="Lost";showLost();E.stage.onchange=showLost;
+  dlg.querySelector("#dclose").onclick=()=>dlg.close();
+  const autofill=(sel,inp)=>sel.onchange=()=>{const o=sel.selectedOptions[0];if(o?.dataset.price)inp.value=o.dataset.price;};
+  autofill(E.package,E.value);autofill(E.retainer,E.monthly);
+  dlg.addEventListener("close",()=>dlg.remove());
+  dlg.querySelector("#dact")?.addEventListener("click",()=>{dlg.close();tab="companies";filter="all";query="";render();openCompany(c.key);});
+  dlg.querySelector("#ddel")?.addEventListener("click",async()=>{if(!confirm("Delete this prospect and its notes?"))return;await api("crm-delete",{method:"POST",body:JSON.stringify({key:c.key})});D.crm=D.crm.filter(x=>x.key!==c.key);dlg.close();refresh();});
+  f.addEventListener("submit",async e=>{e.preventDefault();
+    const key=isNewP?keyFrom(E.website.value,E.business.value):c.key;if(!key){dlg.querySelector("#derr").textContent="Add a business name.";return;}
+    const patch={};["business","contact_name","phone","email","stage","package","value","retainer","monthly","follow_up","source","lost_reason"].forEach(k=>{if(E[k])patch[k]=E[k].value;});
+    if(isNewP)patch.website=E.website.value;
+    const b=dlg.querySelector("#dsave");b.disabled=true;
+    try{const res=await api("crm",{method:"POST",body:JSON.stringify({key,patch,note:E.note.value,manual:isNewP&&!COS.some(x=>x.key===key)})});
+      D.crm=[...(D.crm||[]).filter(x=>x.key!==key),res.record];dlg.close();refresh();}
+    catch(x){dlg.querySelector("#derr").textContent=x.message;b.disabled=false;}});
+}
+
+async function moveStage(key,stage){const c=COS.find(x=>x.key===key);if(!c||stageOf(c)===stage)return;
+  try{const res=await api("crm",{method:"POST",body:JSON.stringify({key,patch:{stage}})});D.crm=[...(D.crm||[]).filter(x=>x.key!==key),res.record];refresh();}catch(x){alert(x.message);}}
+
+function refresh(){COS=group(D);render();}
+function openCompany(key){const d=[...document.querySelectorAll("details.co")].find(d=>d.dataset.key===key);if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"});}}
+
 function render(){
-  const newCount=COS.filter(c=>isNew(c.latest)).length;
+  const newCount=COS.filter(c=>newCo(c)).length;
   app.innerHTML=`<div class="row spread"><div><p class="eyebrow">Local Rank Authority</p><h1>Owner dashboard</h1><p class="small muted">${D.seen_before?`Your last visit: ${whenT(D.seen_before)}`:"First visit"}</p></div>
   <div class="row"><button class="btn btn-ghost btn-sm" id="rf">Refresh</button><button class="btn btn-ghost btn-sm" id="so">Sign out</button></div></div>
   <div class="tiles">
+   <div class="tile"><b>${money(COS.filter(isOpen).reduce((n,c)=>n+(+c.crm?.value||0),0))}</b><span>Open pipeline${(()=>{const m=COS.filter(isOpen).reduce((n,c)=>n+(+c.crm?.monthly||0),0);return m?` + ${money(m)}/mo`:"";})()}</span></div>
    <div class="tile"><b>${COS.length}</b><span>Companies</span></div>
    <div class="tile"><b>${newCount}</b><span>With new activity</span></div>
    <div class="tile"><b>${D.free_scores_30d}</b><span>Free scores (30 days)</span></div>
@@ -187,21 +285,26 @@ function render(){
    <div class="tile"><b>${D.intakes.length}</b><span>Audit requests</span></div>
    <div class="tile"><b>${D.clients.length}</b><span>Portal clients</span></div>
   </div>
-  <div class="tabs" role="tablist">${[["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
+  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
   <div id="view"></div>`;
   $("#rf").onclick=load;
   $("#so").onclick=async()=>{await fetch("/api/admin/logout",{method:"POST"});location.href="/admin/";};
   app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
   draw();}
 
-function draw(){const v=$("#view");v.innerHTML=tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
+function draw(){const v=$("#view");v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
+  v.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.preventDefault();editor(COS.find(c=>c.key===b.dataset.edit));});
+  $("#addp")?.addEventListener("click",()=>editor(null));
+  v.querySelectorAll(".pcard").forEach(p=>p.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",p.dataset.key);e.dataTransfer.effectAllowed="move";}));
+  v.querySelectorAll(".col").forEach(col=>{col.addEventListener("dragover",e=>{e.preventDefault();col.classList.add("over");});col.addEventListener("dragleave",()=>col.classList.remove("over"));
+    col.addEventListener("drop",e=>{e.preventDefault();col.classList.remove("over");moveStage(e.dataTransfer.getData("text/plain"),col.dataset.stage);});});
   const q=$("#q");if(q){q.oninput=()=>{query=q.value;const pos=q.selectionStart;draw();const n=$("#q");n.focus();n.setSelectionRange(pos,pos);};}
   v.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{filter=b.dataset.filter;draw();});
   v.querySelectorAll("details.co").forEach(d=>d.addEventListener("toggle",()=>{if(d.open&&!d.dataset.filled){d.dataset.filled=1;d.querySelector(".co-body").innerHTML=companyBody(COS.find(c=>c.key===d.dataset.key));wire(d);}}));
-  v.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const c=COS.find(c=>c.emails.has(mail(b.dataset.open)));if(!c)return;tab="companies";filter="all";query="";render();
-    const d=[...document.querySelectorAll("details.co")].find(d=>d.dataset.key===c.key);if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"});}});}
+  v.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const c=COS.find(c=>c.emails.has(mail(b.dataset.open)));if(!c)return;tab="companies";filter="all";query="";render();openCompany(c.key);});}
 
 function wire(root){
+  root.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.preventDefault();editor(COS.find(c=>c.key===b.dataset.edit));});
   root.querySelectorAll("[data-report]").forEach(b=>b.onclick=async()=>{const out=root.querySelector(`[data-report-out="${CSS.escape(b.dataset.report)}"]`);b.disabled=true;
     try{const r=await api("report?id="+encodeURIComponent(b.dataset.report));out.innerHTML=`<p class="small muted" style="margin-top:8px">Searched: ${esc([r.input?.service,r.input?.city].filter(Boolean).join(" in "))}</p><div class="secs">${r.sections.map(s=>`<div><b>${esc(s.label)}</b> <span class="pill ${tone(s.score)}">${s.score??"–"}</span><br><span class="muted">${esc(s.summary||"")}</span></div>`).join("")}</div>`;b.hidden=true;}
     catch(x){out.innerHTML=`<p class="msg-err small">${esc(x.message)}</p>`;b.disabled=false;}});

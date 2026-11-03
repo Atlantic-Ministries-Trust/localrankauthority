@@ -1,5 +1,5 @@
 // /api/admin/*: the owner dashboard. Only the OWNER_EMAIL address can sign in (one-time email link, like the
-// client portal, but with its own cookie and signing key). Read-only except "view as client".
+// client portal, but with its own cookie and signing key). Writes: the sales pipeline, and "view as client".
 import { json, sendEmail } from "../../../lib/audit.js";
 import { clearSessionCookie, getClient, makeSessionCookie, normEmail, randomToken, sessionEmail, validEmail } from "../../../lib/portal.js";
 
@@ -53,11 +53,11 @@ async function listAll(env, prefix, max = 2000) {
 const getAll = (env, keys) => Promise.all(keys.map(k => env.REPORTS.get(k, "json"))).then(v => v.filter(Boolean));
 
 async function data(env) {
-  const [leadKeys, intakeKeys, contactKeys, clientKeys, couponKeys, msgKeys, useKeys, reportKeys] = await Promise.all(
-    ["lead:", "intake:", "contact:", "client:", "coupon:", "msg:", "coupon-use:", "report:"].map(p => listAll(env, p)));
-  const [leads, intakes, contacts, clientRecs, coupons, messages] = await Promise.all([
+  const [leadKeys, intakeKeys, contactKeys, clientKeys, couponKeys, msgKeys, useKeys, reportKeys, crmKeys] = await Promise.all(
+    ["lead:", "intake:", "contact:", "client:", "coupon:", "msg:", "coupon-use:", "report:", "crm:"].map(p => listAll(env, p)));
+  const [leads, intakes, contacts, clientRecs, coupons, messages, crm] = await Promise.all([
     getAll(env, leadKeys.slice(-400)), getAll(env, intakeKeys.slice(-400)), getAll(env, contactKeys.slice(-400)),
-    getAll(env, clientKeys), getAll(env, couponKeys), getAll(env, msgKeys.slice(-400))
+    getAll(env, clientKeys), getAll(env, couponKeys), getAll(env, msgKeys.slice(-400)), getAll(env, crmKeys)
   ]);
 
   const clients = await Promise.all(clientRecs.map(async c => {
@@ -91,7 +91,7 @@ async function data(env) {
     seen_before: seenBefore,
     free_scores_30d: reportKeys.length,
     leads: leads.map(({ ip, ...l }) => l),
-    intakes, contacts, clients, coupons, uses, messages
+    intakes, contacts, clients, coupons, uses, messages, crm
   });
 }
 
@@ -101,6 +101,40 @@ async function report(url, env) {
   const r = id ? await env.REPORTS.get(`report:${id}`, "json") : null;
   if (!r) return json({ error: "This free report has expired (they're kept 30 days)." }, 404);
   return json({ id: r.id, input: r.input, overall: r.overall, sections: (r.sections || []).map(s => ({ label: s.label, score: s.score, summary: s.summary })) });
+}
+
+// Sales pipeline. One record per company, keyed the same way the dashboard groups companies
+// (website domain, else "name:<business>"), so a manually added prospect joins their later free score or request.
+const STAGES = ["New lead", "Contacted", "Call booked", "Audit sold", "Audit delivered", "Proposal sent", "Won", "Lost"];
+const CRM_FIELDS = { stage: 40, business: 160, website: 300, contact_name: 120, email: 200, phone: 40, source: 120, package: 80, retainer: 80, value: 12, monthly: 12, follow_up: 10, lost_reason: 300 };
+
+async function crmSave(request, env) {
+  const b = await request.json().catch(() => ({}));
+  const key = String(b.key || "").trim().toLowerCase().slice(0, 200);
+  if (!key) return json({ error: "Missing company." }, 400);
+  const rec = (await env.REPORTS.get(`crm:${key}`, "json")) || { key, created: new Date().toISOString(), notes: [], history: [] };
+  if (b.manual && !rec.manual) rec.manual = true;
+  for (const [f, max] of Object.entries(CRM_FIELDS)) {
+    if (!(f in (b.patch || {}))) continue;
+    let v = String(b.patch[f] ?? "").trim().slice(0, max);
+    if (f === "stage" && !STAGES.includes(v)) return json({ error: "Unknown stage." }, 400);
+    if ((f === "value" || f === "monthly") && v) v = String(Math.max(0, Math.round(Number(v.replace(/[$,]/g, ""))) || 0));
+    if (f === "follow_up" && v && !/^\d{4}-\d{2}-\d{2}$/.test(v)) return json({ error: "Follow-up must be a date." }, 400);
+    if (f === "stage" && v !== rec.stage) rec.history = [...(rec.history || []), { at: new Date().toISOString(), from: rec.stage || null, to: v }].slice(-50);
+    rec[f] = v;
+  }
+  const note = String(b.note || "").trim().slice(0, 3000);
+  if (note) rec.notes = [...(rec.notes || []), { at: new Date().toISOString(), text: note }].slice(-200);
+  rec.updated = new Date().toISOString();
+  await env.REPORTS.put(`crm:${key}`, JSON.stringify(rec));
+  return json({ ok: true, record: rec });
+}
+
+async function crmDelete(request, env) {
+  const b = await request.json().catch(() => ({}));
+  const key = String(b.key || "").trim().toLowerCase().slice(0, 200);
+  if (key) await env.REPORTS.delete(`crm:${key}`);
+  return json({ ok: true });
 }
 
 // Sign this browser in to a client's portal for an hour, without emailing them or updating their last visit
@@ -124,9 +158,13 @@ export async function onRequest({ request, env, params }) {
     if (route === "logout" && method === "POST") return new Response(JSON.stringify({ ok: true }), { headers: { "content-type": "application/json", "set-cookie": clearSessionCookie("admin") } });
     const email = await sessionEmail(request, env, "admin");
     if (!isOwner(env, email)) return json({ error: "Please sign in." }, 401);
+    // Changes only from the dashboard itself
+    if (method === "POST" && request.headers.get("origin") && request.headers.get("origin") !== url.origin) return json({ error: "Forbidden" }, 403);
     if (route === "data" && method === "GET") return await data(env);
     if (route === "report" && method === "GET") return await report(url, env);
     if (route === "view-as" && method === "POST") return await viewAs(request, env);
+    if (route === "crm" && method === "POST") return await crmSave(request, env);
+    if (route === "crm-delete" && method === "POST") return await crmDelete(request, env);
     return json({ error: "Not found" }, 404);
   } catch (e) {
     return json({ error: "Something went wrong. Please try again." }, 500);
