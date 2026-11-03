@@ -29,8 +29,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
   waitUntil(Promise.allSettled([
     sendEmail(env, {
       to: lead.email,
-      subject: `Your audit: ${report.input.host} scored ${report.overall ?? "–"}/100`,
-      html: reportEmailHtml(report, `Hi ${esc(lead.name.split(" ")[0])}, here's your full Local Rank Authority audit.`),
+      subject: `Your Local Visibility Score: ${report.input.host} scored ${report.overall ?? "–"}/100`,
+      html: reportEmailHtml(report, `Hi ${esc(lead.name.split(" ")[0])}, here's your full Local Visibility Score report.`),
       replyTo: env.OWNER_EMAIL
     }),
     env.OWNER_EMAIL && sendEmail(env, {

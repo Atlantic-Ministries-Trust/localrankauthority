@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Start your audit | Local Rank Authority</title>
-<meta name="description" content="Tell us about your business so we can start your Comprehensive Local Visibility Audit.">
+<meta name="description" content="Tell us about your business so we can start your Comprehensive Growth Audit.">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://localrankauthority.com/audit-intake">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Local Rank Authority">
-<meta property="og:title" content="Start your audit | Local Rank Authority"><meta property="og:description" content="Tell us about your business so we can start your Comprehensive Local Visibility Audit.">
+<meta property="og:title" content="Start your audit | Local Rank Authority"><meta property="og:description" content="Tell us about your business so we can start your Comprehensive Growth Audit.">
 <meta property="og:url" content="https://localrankauthority.com/audit-intake"><meta property="og:image" content="https://localrankauthority.com/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cpath d='M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z' fill='%23F2A900'/%3E%3C/svg%3E">
@@ -66,10 +66,10 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 <header><div class="wrap">
   <a class="logo" href="/"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z" fill="#F2A900"/><path d="M17 8a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6zm0 8.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4z" fill="#073F2B"/></svg>LOCAL RANK AUTHORITY</a>
   <a class="top-call" href="tel:+15184601010" data-event="click_to_call" aria-label="Call (518) 460-1010"><span class="tc-full">(518) 460-1010</span><span class="tc-short">Call</span></a>
-  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free audit</a>
+  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free score</a>
 </div></header>
 <section class="hero"><div class="wrap">
-  <span class="lane">Comprehensive audit · thank you</span>
+  <span class="lane">Comprehensive Growth Audit · thank you</span>
   <h1>Let's get your audit started</h1>
   <p>This takes about 5 minutes. The more you tell us, the more useful your audit will be. Your 5 business days start when we receive this form.</p>
 </div></section>
@@ -111,7 +111,7 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 (()=>{const $=s=>document.querySelector(s),v=id=>$("#"+id).value.trim(),c=id=>$("#"+id).checked;
 const code=new URLSearchParams(location.search).get("code");
 if(code)fetch("/api/redeem",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})}).then(r=>r.json().then(d=>({ok:r.ok,d}))).then(({ok,d})=>{const b=$("#i-code");const f=n=>"$"+Number(n).toLocaleString("en-US");
-b.innerHTML=ok?`<b>Code ${d.code} applied.</b> Comprehensive Local Visibility Audit, list price ${f(d.list_price)}: ${d.complimentary?"complimentary for you.":"you pay "+f(d.you_pay)+". We'll send your invoice."}`:`<b>Your code couldn't be applied:</b> ${d.error||"it isn't valid"}. You can still send this form and we'll sort it out.`;b.hidden=false;}).catch(()=>{});
+b.innerHTML=ok?`<b>Code ${d.code} applied.</b> Comprehensive Growth Audit, list price ${f(d.list_price)}: ${d.complimentary?"complimentary for you.":"you pay "+f(d.you_pay)+". We'll send your invoice."}`:`<b>Your code couldn't be applied:</b> ${d.error||"it isn't valid"}. You can still send this form and we'll sort it out.`;b.hidden=false;}).catch(()=>{});
 $("#intake").addEventListener("submit",async e=>{e.preventDefault();const err=$("#i-err"),btn=$("#i-send");
 const need=[["i-name","your name"],["i-email","your email"],["i-phone","your phone"],["i-biz","your business name"],["i-site","your website"],["i-svc","your services"],["i-towns","your towns"]].filter(([id])=>!v(id));
 if(need.length){err.textContent="Add "+need.map(n=>n[1]).join(", ")+".";err.hidden=false;return;}

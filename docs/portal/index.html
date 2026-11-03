@@ -88,7 +88,7 @@ button.btn{cursor:pointer}
 <header><div class="wrap">
   <a class="logo" href="/"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z" fill="#F2A900"/><path d="M17 8a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6zm0 8.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4z" fill="#073F2B"/></svg>LOCAL RANK AUTHORITY</a>
   <a class="top-call" href="tel:+15184601010" data-event="click_to_call" aria-label="Call (518) 460-1010"><span class="tc-full">(518) 460-1010</span><span class="tc-short">Call</span></a>
-  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free audit</a>
+  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free score</a>
 </div></header>
 <main><div class="pwrap" id="app" aria-live="polite"><p style="color:var(--muted)">Loading your portal…</p></div></main>
 <script>
@@ -117,7 +117,7 @@ ${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--amber)"/><text
 function loginView(note){app.innerHTML=`<div class="login panel"><p class="eyebrow">Client portal</p><h2>Sign in to see your audit</h2>
 ${note?`<p class="msg-err">${esc(note)}</p>`:""}<p style="color:var(--muted);margin:6px 0 16px">Enter the email you gave us. We'll send a one-time sign-in link, so there's no password to remember.</p>
 <form id="lf" class="field"><label for="le">Email</label><input id="le" type="email" autocomplete="email" required><button class="btn btn-amber" type="submit" id="lb" style="justify-content:center;margin-top:8px">Email me a sign-in link</button><p id="lm" role="status"></p></form>
-<p style="color:var(--muted);font-size:.9rem;margin-top:14px">Don't have an audit yet? <a href="/comprehensive-audit">See the Comprehensive Audit</a> or <a href="/#check">run the free one</a>.</p></div>`;
+<p style="color:var(--muted);font-size:.9rem;margin-top:14px">Don't have an audit yet? <a href="/comprehensive-audit">See the Comprehensive Growth Audit</a> or <a href="/#check">get your free score</a>.</p></div>`;
 $("#lf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#lb"),m=$("#lm");b.disabled=true;b.textContent="Sending…";
 try{const d=await api("login",{method:"POST",body:JSON.stringify({email:$("#le").value})});m.className="msg-ok";m.textContent=d.message;}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;b.textContent="Email me a sign-in link";}});}
 
@@ -126,7 +126,7 @@ function section(title,eyebrow,inner,id=""){return `<section class="panel"${id?`
 function render(me,a){const d=a.data||{},biz=d.business||{},plan=d.action_plan||[],done=a.progress||{};
 const doneN=plan.filter(x=>done[x.id]).length,pct=plan.length?Math.round(doneN/plan.length*100):0;
 const PH={critical:"Fix first",quick:"Quick wins",30:"Days 1–30",60:"Days 31–60",90:"Days 61–90"};
-let h=`<div class="row spread"><div><p class="eyebrow">Comprehensive Local Visibility Audit · ${esc(d.date||"")}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(biz.name||me.business)}</h1><p style="color:var(--muted)">${esc([biz.website,biz.city].filter(Boolean).join(" · "))}</p></div>
+let h=`<div class="row spread"><div><p class="eyebrow">Comprehensive Growth Audit · ${esc(d.date||"")}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(biz.name||me.business)}</h1><p style="color:var(--muted)">${esc([biz.website,biz.city].filter(Boolean).join(" · "))}</p></div>
 <div class="row">${a.has_pdf?`<a class="btn btn-ghost" href="/api/portal/pdf?id=${encodeURIComponent(a.id)}">Download PDF</a>`:""}<a class="btn btn-amber" href="tel:+15184601010">Book a call · (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
 h+=`<section class="panel hero-p"><div>${gauge(d.overall?.score)}<p style="text-align:center;font-weight:700">Grade ${esc(d.overall?.grade||"–")}</p></div><div><h2>${esc(d.summary?.headline||"Your audit")}</h2>
 <div class="grid2" style="margin-top:12px"><div><h3>What's working</h3><ul>${(d.summary?.strengths||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>

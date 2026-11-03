@@ -19,7 +19,7 @@ export async function onRequestPost({ request, env }) {
   const rlKey = `rl:${ip}:${today}`;
   const used = +(await env.REPORTS.get(rlKey)) || 0;
   if (used >= (+env.DAILY_LIMIT_PER_VISITOR || 5)) {
-    return json({ error: "You've run the maximum number of free audits for today. Contact us and we'll run more for you." }, 429);
+    return json({ error: "You've reached the maximum number of free scores for today. Contact us and we'll run more for you." }, 429);
   }
 
   // Reuse a recent report for the same site and search so repeat runs don't spend free quota

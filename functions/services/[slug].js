@@ -173,7 +173,7 @@ footer{padding-block:28px;font-size:.88rem;color:var(--muted)}footer .wrap{displ
 <header><div class="wrap">
   <a class="logo" href="/"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z" fill="#F2A900"/><path d="M17 8a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6zm0 8.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4z" fill="#073F2B"/></svg>LOCAL RANK AUTHORITY</a>
   <a class="top-call" href="tel:+15184601010" data-event="click_to_call" aria-label="Call (518) 460-1010"><span class="tc-full">(518) 460-1010</span><span class="tc-short">Call</span></a>
-  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free audit</a>
+  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free score</a>
 </div></header>
 
 <section class="hero"><div class="wrap">
@@ -181,7 +181,7 @@ footer{padding-block:28px;font-size:.88rem;color:var(--muted)}footer .wrap{displ
   <span class="lane">${LANE[s.lane]}</span>
   <h1>${esc(s.name)}</h1>
   <p>${esc(s.intro)}</p>
-  <div class="ctas"><a class="btn btn-amber" href="/#check">Run your free audit</a><a class="btn btn-ghost" href="/#contact">Discuss your project</a></div>
+  <div class="ctas"><a class="btn btn-amber" href="/#check">Get your free score</a><a class="btn btn-ghost" href="/#contact">Discuss your project</a></div>
 </div></section>
 
 <section class="band"><div class="wrap cols">
@@ -201,8 +201,8 @@ footer{padding-block:28px;font-size:.88rem;color:var(--muted)}footer .wrap{displ
 
 <section class="band cta"><div class="wrap">
   <h2>See where you stand first</h2>
-  <p>The free Local Visibility Audit checks your website speed, SEO, Google and Bing rankings, and AI recommendations in about a minute.</p>
-  <div class="ctas"><a class="btn btn-amber" href="/#check">Run your free audit</a><a class="btn btn-ghost" href="/#contact">Tell Michael about your project</a></div>
+  <p>The free Local Visibility Score checks your website speed, SEO, Google and Bing rankings, and AI recommendations in about a minute.</p>
+  <div class="ctas"><a class="btn btn-amber" href="/#check">Get your free score</a><a class="btn btn-ghost" href="/#contact">Tell Michael about your project</a></div>
 </div></section>
 
 <footer><div class="wrap"><span>© 2026 Local Rank Authority · Based in New York's Capital Region · <a href="/local-seo-albany-ny">Local SEO in Albany, NY</a></span><span><a href="tel:+15184601010">(518) 460-1010</a> · <a href="mailto:mike@localrankauthority.com">mike@localrankauthority.com</a></span></div></footer>
