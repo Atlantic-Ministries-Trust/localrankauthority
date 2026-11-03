@@ -15,10 +15,10 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cpath d='M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z' fill='%23F2A900'/%3E%3C/svg%3E">
+<link rel="icon" href="/assets/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="apple-touch-icon" href="/assets/icon-180.png"><link rel="manifest" href="/assets/site.webmanifest"><meta name="theme-color" content="#075139">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
- {"@type":"ProfessionalService","@id":"https://localrankauthority.com/#business","name":"Local Rank Authority","url":"https://localrankauthority.com/","image":"https://localrankauthority.com/og-image.jpg","email":"mike@localrankauthority.com","telephone":"+1-518-460-1010",
+ {"@type":"ProfessionalService","@id":"https://localrankauthority.com/#business","name":"Local Rank Authority","url":"https://localrankauthority.com/","image":"https://localrankauthority.com/og-image.jpg","logo":"https://localrankauthority.com/assets/lra-primary-color.png","email":"mike@localrankauthority.com","telephone":"+1-518-460-1010",
   "description":"Local SEO, AI search visibility, website design, lead capture, AI chat and voice agents, review systems, and custom jingles for local businesses.",
   "slogan":"Get found. Win the conversation. Stay remembered.",
   "address":{"@type":"PostalAddress","addressRegion":"NY","addressCountry":"US"},
@@ -45,8 +45,8 @@
 /* Layout: highway-sign vernacular. Green sign bands carry the big promises; white "roadside" sections hold the detail. Left-aligned, wide gutters. */
 :root{
   --bg:#F5F7F4; --surface:#FFFFFF; --ink:#11201A; --muted:#55645C; --line:#D8DFDA;
-  --sign:#0B5D3F; --sign-ink:#FFFFFF; --sign-deep:#073F2B;
-  --amber:#F2A900; --amber-ink:#2A1E00; --pin:#C8432B; --good:#1B7F4C; --warn:#B87400;
+  --sign:#0B5D3F; --sign-ink:#FFFFFF; --sign-deep:#075139;
+  --amber:#FFBE00; --amber-ink:#2A1E00; --pin:#C8432B; --good:#1B7F4C; --warn:#B87400;
   --display:"Overpass","Arial Narrow",Arial,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -55,11 +55,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0D1512; --surface:#15201B; --ink:#E8EEEA; --muted:#9AAAA1; --line:#2A3832;
   --sign:#0E6B49; --sign-ink:#FFFFFF; --sign-deep:#08442F;
-  --amber:#F5B82A; --amber-ink:#2A1E00; --pin:#E66A52; --good:#4CC489; --warn:#E5A53A; color-scheme:dark}}
+  --amber:#FFBE00; --amber-ink:#2A1E00; --pin:#E66A52; --good:#4CC489; --warn:#E5A53A; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0D1512; --surface:#15201B; --ink:#E8EEEA; --muted:#9AAAA1; --line:#2A3832;
   --sign:#0E6B49; --sign-ink:#FFFFFF; --sign-deep:#08442F;
-  --amber:#F5B82A; --amber-ink:#2A1E00; --pin:#E66A52; --good:#4CC489; --warn:#E5A53A; color-scheme:dark}
+  --amber:#FFBE00; --amber-ink:#2A1E00; --pin:#E66A52; --good:#4CC489; --warn:#E5A53A; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{margin:0}img{max-width:100%}[hidden]{display:none!important}
@@ -414,10 +414,7 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#top">
-      <svg class="shield" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 2 31 7v9c0 8-6 13.5-14 16C9 29.5 3 24 3 16V7z" fill="#F2A900"/><path d="M17 8a6 6 0 0 0-6 6c0 4.5 6 11 6 11s6-6.5 6-11a6 6 0 0 0-6-6zm0 8.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4z" fill="#073F2B"/></svg>
-      LOCAL RANK AUTHORITY
-    </a>
+    <a class="logo" href="#top"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="134" height="48" style="display:block;height:48px;width:auto"></a>
     <nav class="links" aria-label="Main">
       <a href="#services">Services</a><a href="#ai-search">AI search</a><a href="#demos">Try the demos</a><a href="#about">About</a><a href="#faq">FAQ</a><a href="/portal/">Client login</a>
     </nav>
