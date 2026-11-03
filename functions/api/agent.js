@@ -2,6 +2,7 @@
 // accounts so in-depth audits don't need their own keys. Requires "Authorization: Bearer <AGENT_TOKEN>"; disabled when the secret isn't set.
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, mergeOffer, newCoupon, normCode, offerView, quote, readCoupon, readOffer } from "../../lib/offer.js";
+import { createSignInLink, emailSignInLink, getClient, normEmail, validEmail } from "../../lib/portal.js";
 
 const clean = (v, n = 200) => String(v || "").trim().slice(0, n);
 const monthKey = () => `serp:${new Date().toISOString().slice(0, 7)}`;
@@ -135,12 +136,82 @@ async function coupon(b, env) {
   return json({ error: "action must be create, list, or disable." }, 400);
 }
 
+// Client portal management. Publishing, next steps, and invites happen only when Michael asks.
+//   publish:   { email, name, business, audit_id?, data (portal.json), pdf_base64? } → creates/updates the client and audit
+//   next_step: { audit_id, title, body, cta_label, cta_href, price_label? } or { audit_id, clear: true }
+//   invite:    { email } → emails the client a welcome sign-in link
+//   preview:   { email } → a one-time sign-in link to view the portal as that client (not emailed)
+//   list:      clients with audits, checklist progress, last visit, and recent messages
+//   delete:    { email } → removes the client, their audits, and portal data
+async function portal(b, env) {
+  if (!env.REPORTS) return json({ error: "Storage (REPORTS) isn't set up." }, 503);
+  const email = normEmail(b.email);
+  if (b.action === "publish") {
+    if (!validEmail(email)) return json({ error: "Send the client's email." }, 400);
+    const data = typeof b.data === "string" ? JSON.parse(b.data) : b.data;
+    if (!data || typeof data !== "object" || !data.business?.name) return json({ error: "Send data: the portal.json object (business.name is required)." }, 400);
+    const id = String(b.audit_id || crypto.randomUUID()).replace(/[^a-zA-Z0-9-]/g, "").slice(0, 64);
+    const existing = await env.REPORTS.get(`paudit:${id}`, "json");
+    if (existing && existing.email !== email) return json({ error: "That audit_id belongs to a different client." }, 409);
+    const client = (await getClient(env, email)) || { email, created: new Date().toISOString(), audits: [] };
+    client.name = String(b.name || client.name || "").slice(0, 120);
+    client.business = String(b.business || data.business.name).slice(0, 160);
+    if (!client.audits.includes(id)) client.audits.push(id);
+    const hasPdf = !!b.pdf_base64 || !!existing?.has_pdf;
+    if (b.pdf_base64) await env.REPORTS.put(`ppdf:${id}`, String(b.pdf_base64).replace(/\s+/g, ""));
+    await Promise.all([
+      env.REPORTS.put(`paudit:${id}`, JSON.stringify({ id, email, business: client.business, data, has_pdf: hasPdf, published: existing?.published || new Date().toISOString(), updated: new Date().toISOString() })),
+      env.REPORTS.put(`client:${email}`, JSON.stringify(client))
+    ]);
+    return json({ published: id, client: email, has_pdf: hasPdf, portal: "https://localrankauthority.com/portal/" });
+  }
+  if (b.action === "next_step") {
+    const a = b.audit_id ? await env.REPORTS.get(`paudit:${b.audit_id}`, "json") : null;
+    if (!a) return json({ error: "Unknown audit_id." }, 404);
+    if (b.clear) { await env.REPORTS.delete(`nextstep:${a.id}`); return json({ cleared: a.id }); }
+    const step = { title: String(b.title || "").slice(0, 120), body: String(b.body || "").slice(0, 600), cta_label: String(b.cta_label || "Book a call with Michael").slice(0, 60),
+      cta_href: String(b.cta_href || "/#contact").slice(0, 300), price_label: b.price_label ? String(b.price_label).slice(0, 60) : null, approved_at: new Date().toISOString() };
+    if (!step.title || !step.body) return json({ error: "Send title and body." }, 400);
+    await env.REPORTS.put(`nextstep:${a.id}`, JSON.stringify(step));
+    return json({ next_step: step, audit: a.id });
+  }
+  if (b.action === "invite" || b.action === "preview") {
+    const client = await getClient(env, email);
+    if (!client) return json({ error: "No portal client with that email. Publish an audit first." }, 404);
+    if (b.action === "preview") return json({ link: await createSignInLink(env, email), note: "One-time link, valid 20 minutes. Opening it signs that browser in as the client." });
+    const sent = await emailSignInLink(env, client, { welcome: true });
+    return json({ invited: email, emailed: sent });
+  }
+  if (b.action === "list") {
+    const keys = (await env.REPORTS.list({ prefix: "client:" })).keys;
+    const clients = (await Promise.all(keys.map(k => env.REPORTS.get(k.name, "json")))).filter(Boolean);
+    const out = await Promise.all(clients.map(async c => ({
+      email: c.email, name: c.name, business: c.business, last_seen: c.last_seen || null,
+      audits: await Promise.all((c.audits || []).map(async id => {
+        const [a, p, n, s] = await Promise.all([env.REPORTS.get(`paudit:${id}`, "json"), env.REPORTS.get(`progress:${id}`, "json"), env.REPORTS.get(`nextstep:${id}`, "json"), env.REPORTS.get(`scans:${id}`, "json")]);
+        return { id, date: a?.data?.date, overall: a?.data?.overall?.score, checklist_done: Object.keys(p || {}).length, checklist_total: (a?.data?.action_plan || []).length, next_step: n?.title || null, scans: (s || []).map(x => ({ date: x.date.slice(0, 10), overall: x.overall })) };
+      })),
+      messages: (await Promise.all((await env.REPORTS.list({ prefix: `msg:${c.email}:` })).keys.slice(-5).map(k => env.REPORTS.get(k.name, "json")))).filter(Boolean)
+    })));
+    return json({ clients: out });
+  }
+  if (b.action === "delete") {
+    const client = await getClient(env, email);
+    if (!client) return json({ error: "No portal client with that email." }, 404);
+    const msgs = (await env.REPORTS.list({ prefix: `msg:${email}:` })).keys.map(k => k.name);
+    const keys = [`client:${email}`, ...msgs, ...(client.audits || []).flatMap(id => [`paudit:${id}`, `ppdf:${id}`, `progress:${id}`, `nextstep:${id}`, `scans:${id}`, `scanlock:${id}`])];
+    await Promise.all(keys.map(k => env.REPORTS.delete(k)));
+    return json({ deleted: email, keys: keys.length });
+  }
+  return json({ error: "action must be publish, next_step, invite, preview, list, or delete." }, 400);
+}
+
 async function usage(env) {
   return json({ serp_used_this_month: +(await env.REPORTS?.get(monthKey())) || 0, serp_monthly_limit: +env.SERP_MONTHLY_LIMIT || 240,
     tools: { pagespeed: !!env.PSI_KEY, search: !!env.SERPAPI_KEY, gemini: !!env.GEMINI_KEY, workers_ai: !!env.AI } });
 }
 
-const TOOLS = { audit, search, pagespeed, ask, offer, coupon };
+const TOOLS = { audit, search, pagespeed, ask, offer, coupon, portal };
 
 export async function onRequestPost({ request, env }) {
   if (!env.AGENT_TOKEN) return json({ error: "Agent access isn't enabled." }, 503);
