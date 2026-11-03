@@ -1,5 +1,7 @@
 // POST /api/agent: private toolbox for the Local Growth Audit agent. Reuses this site's PageSpeed, SerpApi, and Gemini
-// accounts so in-depth audits don't need their own keys. Requires "Authorization: Bearer <AGENT_TOKEN>"; disabled when the secret isn't set.
+// accounts so in-depth audits don't need their own keys. Requires "Authorization: Bearer <token>"; disabled when AGENT_TOKEN isn't set.
+// AGENT_TOKEN can use every tool. AGENT_TOKEN_RESEARCH (for cloud sessions that read untrusted websites) can only research:
+// it can't publish to portals, send invites, change the offer, or create discount codes.
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, mergeOffer, newCoupon, normCode, offerView, quote, readCoupon, readOffer } from "../../lib/offer.js";
 import { createSignInLink, emailSignInLink, getClient, normEmail, validEmail } from "../../lib/portal.js";
@@ -7,10 +9,17 @@ import { createSignInLink, emailSignInLink, getClient, normEmail, validEmail } f
 const clean = (v, n = 200) => String(v || "").trim().slice(0, n);
 const monthKey = () => `serp:${new Date().toISOString().slice(0, 7)}`;
 
-async function authorized(request, env) {
+const RESEARCH_TOOLS = new Set(["audit", "search", "pagespeed", "ask", "usage"]);
+
+// "full", "research", or null
+async function tokenRole(request, env) {
   const got = new TextEncoder().encode((request.headers.get("authorization") || "").replace(/^Bearer\s+/i, ""));
-  const want = new TextEncoder().encode(env.AGENT_TOKEN);
-  return got.byteLength === want.byteLength && crypto.subtle.timingSafeEqual(got, want);
+  const same = secret => {
+    if (!secret) return false;
+    const want = new TextEncoder().encode(secret);
+    return got.byteLength === want.byteLength && crypto.subtle.timingSafeEqual(got, want);
+  };
+  return same(env.AGENT_TOKEN) ? "full" : same(env.AGENT_TOKEN_RESEARCH) ? "research" : null;
 }
 
 // Full audit, same scoring as the public form, with Bing included. No lead, no email, no visitor limit.
@@ -215,9 +224,13 @@ const TOOLS = { audit, search, pagespeed, ask, offer, coupon, portal };
 
 export async function onRequestPost({ request, env }) {
   if (!env.AGENT_TOKEN) return json({ error: "Agent access isn't enabled." }, 503);
-  if (!(await authorized(request, env))) return json({ error: "Unauthorized" }, 401);
+  const role = await tokenRole(request, env);
+  if (!role) return json({ error: "Unauthorized" }, 401);
   let b;
   try { b = await request.json(); } catch { return json({ error: "Send a JSON body." }, 400); }
+  if (role === "research" && !RESEARCH_TOOLS.has(b.tool)) {
+    return json({ error: `This is a research-only token: "${b.tool}" needs the full token on Michael's Mac.`, research_only: true }, 403);
+  }
   try {
     if (b.tool === "usage") return await usage(env);
     const fn = TOOLS[b.tool];
