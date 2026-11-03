@@ -15,6 +15,8 @@ const RESEARCH_TOOLS = new Set(["audit", "search", "pagespeed", "ask", "usage"])
 async function tokenRole(request, env) {
   const got = new TextEncoder().encode((request.headers.get("authorization") || "").replace(/^Bearer\s+/i, ""));
   const same = secret => {
+    // Secrets pasted into the dashboard can pick up a trailing newline
+    secret = (secret || "").trim();
     if (!secret) return false;
     const want = new TextEncoder().encode(secret);
     return got.byteLength === want.byteLength && crypto.subtle.timingSafeEqual(got, want);
