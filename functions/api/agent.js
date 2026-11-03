@@ -1,7 +1,7 @@
 // POST /api/agent: private toolbox for the Local Growth Audit agent. Reuses this site's PageSpeed, SerpApi, and Gemini
 // accounts so in-depth audits don't need their own keys. Requires "Authorization: Bearer <AGENT_TOKEN>"; disabled when the secret isn't set.
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
-import { DEFAULT_OFFER, mergeOffer, offerView, readOffer } from "../../lib/offer.js";
+import { DEFAULT_OFFER, couponProblem, mergeOffer, newCoupon, normCode, offerView, quote, readCoupon, readOffer } from "../../lib/offer.js";
 
 const clean = (v, n = 200) => String(v || "").trim().slice(0, n);
 const monthKey = () => `serp:${new Date().toISOString().slice(0, 7)}`;
@@ -96,11 +96,11 @@ async function ask(b, env) {
   return json(out);
 }
 
-// Read or change the Comprehensive Audit offer shown on /comprehensive-audit. Send any of mode, price, was, note, stripe_link to change it.
+// Read or change the Comprehensive Audit offer shown on /comprehensive-audit. Send mode, price (list price), or stripe_link to change it.
 async function offer(b, env) {
   if (!env.REPORTS) return json({ error: "Storage (REPORTS) isn't set up." }, 503);
   const current = (await readOffer(env)) || DEFAULT_OFFER;
-  const changes = ["mode", "price", "was", "note", "stripe_link"].filter(k => b[k] !== undefined);
+  const changes = ["mode", "price", "stripe_link"].filter(k => b[k] !== undefined);
   if (!changes.length) return json({ offer: current, shows: offerView(current) });
   const next = mergeOffer(current, b);
   if (next.error) return json(next, 400);
@@ -108,12 +108,37 @@ async function offer(b, env) {
   return json({ offer: next, previous: current, shows: offerView(next) });
 }
 
+// Discount codes for the Comprehensive Audit: action create | list | disable. The list price on the page never changes.
+async function coupon(b, env) {
+  if (!env.REPORTS) return json({ error: "Storage (REPORTS) isn't set up." }, 503);
+  const offer = (await readOffer(env)) || DEFAULT_OFFER;
+  if (b.action === "create") {
+    const c = newCoupon(b);
+    if (c.error) return json(c, 400);
+    if (await readCoupon(env, c.code) && !b.replace) return json({ error: `${c.code} already exists. Disable it first, or send replace: true.` }, 409);
+    await env.REPORTS.put(`coupon:${c.code}`, JSON.stringify(c));
+    return json({ created: c, preview: quote(offer, c), share_link: `https://localrankauthority.com/audit-intake?code=${c.code}` });
+  }
+  if (b.action === "disable") {
+    const c = await readCoupon(env, b.code);
+    if (!c) return json({ error: `No code ${normCode(b.code)}.` }, 404);
+    await env.REPORTS.put(`coupon:${c.code}`, JSON.stringify({ ...c, active: false, disabled: new Date().toISOString() }));
+    return json({ disabled: c.code, used: c.used || 0 });
+  }
+  if (b.action === "list") {
+    const keys = (await env.REPORTS.list({ prefix: "coupon:" })).keys;
+    const all = (await Promise.all(keys.map(k => env.REPORTS.get(k.name, "json")))).filter(Boolean);
+    return json({ list_price: offer.price, coupons: all.map(c => ({ ...c, status: couponProblem(c) || "usable", preview: quote(offer, c).label })) });
+  }
+  return json({ error: "action must be create, list, or disable." }, 400);
+}
+
 async function usage(env) {
   return json({ serp_used_this_month: +(await env.REPORTS?.get(monthKey())) || 0, serp_monthly_limit: +env.SERP_MONTHLY_LIMIT || 240,
     tools: { pagespeed: !!env.PSI_KEY, search: !!env.SERPAPI_KEY, gemini: !!env.GEMINI_KEY, workers_ai: !!env.AI } });
 }
 
-const TOOLS = { audit, search, pagespeed, ask, offer };
+const TOOLS = { audit, search, pagespeed, ask, offer, coupon };
 
 export async function onRequestPost({ request, env }) {
   if (!env.AGENT_TOKEN) return json({ error: "Agent access isn't enabled." }, 503);

@@ -59,6 +59,7 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 .field input,.field textarea,.field select{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)}
 .checks{display:flex;flex-direction:column;gap:8px}.checks label{font-weight:400;display:flex;gap:8px;align-items:flex-start}
 .err{color:var(--pin);font-weight:600}.ok{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--good);border-radius:var(--r);padding:16px}
+.ok[hidden],form[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -74,6 +75,7 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 </div></section>
 
 <section class="band"><div class="wrap">
+  <div class="ok" id="i-code" hidden></div>
   <form class="intake" id="intake" novalidate>
     <div class="field"><label for="i-name">Your name</label><input id="i-name" autocomplete="name" required></div>
     <div class="field"><label for="i-email">Email</label><input id="i-email" type="email" autocomplete="email" required><small>Use the email you paid with.</small></div>
@@ -107,13 +109,16 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 <footer><div class="wrap"><span>© 2026 Local Rank Authority · Based in New York's Capital Region · <a href="/local-seo-albany-ny">Local SEO in Albany, NY</a></span><span><a href="tel:+15184601010">(518) 460-1010</a> · <a href="mailto:mike@localrankauthority.com">mike@localrankauthority.com</a></span></div></footer>
 <script>
 (()=>{const $=s=>document.querySelector(s),v=id=>$("#"+id).value.trim(),c=id=>$("#"+id).checked;
+const code=new URLSearchParams(location.search).get("code");
+if(code)fetch("/api/redeem",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})}).then(r=>r.json().then(d=>({ok:r.ok,d}))).then(({ok,d})=>{const b=$("#i-code");const f=n=>"$"+Number(n).toLocaleString("en-US");
+b.innerHTML=ok?`<b>Code ${d.code} applied.</b> Comprehensive Local Visibility Audit, list price ${f(d.list_price)}: ${d.complimentary?"complimentary for you.":"you pay "+f(d.you_pay)+". We'll send your invoice."}`:`<b>Your code couldn't be applied:</b> ${d.error||"it isn't valid"}. You can still send this form and we'll sort it out.`;b.hidden=false;}).catch(()=>{});
 $("#intake").addEventListener("submit",async e=>{e.preventDefault();const err=$("#i-err"),btn=$("#i-send");
 const need=[["i-name","your name"],["i-email","your email"],["i-phone","your phone"],["i-biz","your business name"],["i-site","your website"],["i-svc","your services"],["i-towns","your towns"]].filter(([id])=>!v(id));
 if(need.length){err.textContent="Add "+need.map(n=>n[1]).join(", ")+".";err.hidden=false;return;}
 if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("i-email"))){err.textContent="That email address looks incomplete.";err.hidden=false;return;}
 err.hidden=true;btn.disabled=true;btn.textContent="Sending…";
 const data={name:v("i-name"),email:v("i-email"),phone:v("i-phone"),business:v("i-biz"),website:v("i-site"),business_phone:v("i-bizphone"),address:v("i-addr"),services:v("i-svc"),towns:v("i-towns"),competitors:v("i-comp"),goal:v("i-goal"),job_value:v("i-value"),social:v("i-social"),ads:v("i-ads"),notes:v("i-notes"),
-access:{gbp:c("a-gbp"),search_console:c("a-gsc"),analytics:c("a-ga4"),ads:c("a-ads")},session_id:new URLSearchParams(location.search).get("session_id")||"",_gotcha:v("i-gotcha")};
+access:{gbp:c("a-gbp"),search_console:c("a-gsc"),analytics:c("a-ga4"),ads:c("a-ads")},session_id:new URLSearchParams(location.search).get("session_id")||"",code:new URLSearchParams(location.search).get("code")||"",_gotcha:v("i-gotcha")};
 try{const r=await fetch("/api/intake",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"We couldn't send your form. Try again, or call (518) 460-1010.");
 $("#intake").hidden=true;$("#i-ok").hidden=false;$("#i-ok").scrollIntoView({behavior:"smooth"});}
 catch(x){err.textContent=x.message;err.hidden=false;btn.disabled=false;btn.textContent="Start my audit";}});})();

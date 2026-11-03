@@ -58,6 +58,10 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 .field input,.field textarea,.field select{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)}
 .checks{display:flex;flex-direction:column;gap:8px}.checks label{font-weight:400;display:flex;gap:8px;align-items:flex-start}
 .err{color:var(--pin);font-weight:600}.ok{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--good);border-radius:var(--r);padding:16px}
+.codebox{display:flex;flex-direction:column;gap:8px;max-width:420px;margin-top:6px}.codebox label{font-weight:700}
+.coderow{display:flex;gap:8px}.coderow input{flex:1;font:inherit;padding:11px 12px;border-radius:var(--r);border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;text-transform:uppercase}
+.coderow input::placeholder{color:rgba(255,255,255,.6);text-transform:none}.codebox .btn-ghost{color:#fff;background:transparent;cursor:pointer}
+.codebox [hidden]{display:none!important}#c-msg{font-weight:600}#c-msg s{opacity:.7}#c-msg.bad{color:#FFD7CF}
 </style>
 </head>
 <body>
@@ -74,6 +78,12 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
   <div class="price"><b data-offer="price">$1,000</b><span data-offer="terms">One-time · delivered in 5 business days · credited toward ongoing work if you start within 30 days</span></div>
   <div class="ctas"><a class="btn btn-amber" href="/?topic=Comprehensive%20audit#contact" data-offer="button" data-event="begin_checkout">Request your audit · $1,000</a><a class="btn btn-ghost" href="tel:+15184601010" data-event="click_to_call">Questions? Call (518) 460-1010</a></div>
   <p style="font-size:.85rem;opacity:.8" data-offer="paynote">Send a request and Michael will confirm the details and send your invoice.</p>
+  <form class="codebox" id="codebox" novalidate>
+    <label for="c-code">Have a code?</label>
+    <div class="coderow"><input id="c-code" autocomplete="off" autocapitalize="characters" placeholder="Enter code"><button class="btn btn-ghost" type="submit" id="c-go">Apply</button></div>
+    <p id="c-msg" role="status" hidden></p>
+    <a class="btn btn-amber" id="c-next" href="#" hidden>Continue</a>
+  </form>
 </div></section>
 
 <section class="band"><div class="wrap">
@@ -115,5 +125,18 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
   <p style="font-size:.85rem;opacity:.8" data-offer="paynote">Send a request and Michael will confirm the details and send your invoice.</p>
 </div></section>
 <footer><div class="wrap"><span>© 2026 Local Rank Authority · Based in New York's Capital Region · <a href="/local-seo-albany-ny">Local SEO in Albany, NY</a></span><span><a href="tel:+15184601010">(518) 460-1010</a> · <a href="mailto:mike@localrankauthority.com">mike@localrankauthority.com</a></span></div></footer>
+<script>
+(()=>{const $=s=>document.querySelector(s),msg=$("#c-msg"),next=$("#c-next"),go=$("#c-go");
+const fmt=n=>"$"+Number(n).toLocaleString("en-US");
+$("#codebox").addEventListener("submit",async e=>{e.preventDefault();const code=$("#c-code").value.trim();
+msg.className="";next.hidden=true;if(!code){msg.textContent="Enter your code.";msg.className="bad";msg.hidden=false;return;}
+go.disabled=true;go.textContent="Checking…";
+try{const r=await fetch("/api/redeem",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});const d=await r.json();
+if(!r.ok)throw new Error(d.error||"That code isn't valid.");
+msg.innerHTML=d.complimentary?`Code ${d.code} applied. <s>${fmt(d.list_price)}</s> Your audit is complimentary.`:`Code ${d.code} applied. <s>${fmt(d.list_price)}</s> You pay ${fmt(d.you_pay)}.`;
+next.href=d.next;next.textContent=d.complimentary?"Claim your audit":d.invoice?`Request your audit · ${fmt(d.you_pay)}`:`Continue to checkout · ${fmt(d.you_pay)}`;next.hidden=false;}
+catch(x){msg.textContent=x.message;msg.className="bad";}
+finally{msg.hidden=false;go.disabled=false;go.textContent="Apply";}});})();
+</script>
 </body>
 </html>

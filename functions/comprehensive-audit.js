@@ -1,5 +1,5 @@
-// GET /comprehensive-audit: serves the static sales page, then applies the current offer (price, paid/request/free)
-// stored in KV under "offer". The agent changes it through /api/agent { tool: "offer" }, so no redeploy is needed.
+// GET /comprehensive-audit: serves the static sales page, then applies the current offer (list price and whether
+// the button requests an invoice or goes to Stripe) stored in KV under "offer". No redeploy needed to change it.
 import { offerView, readOffer } from "../lib/offer.js";
 
 export async function onRequestGet({ env, next }) {
@@ -9,10 +9,9 @@ export async function onRequestGet({ env, next }) {
   const v = offerView(offer);
   const text = t => ({ element(el) { el.setInnerContent(t); } });
   const rewritten = new HTMLRewriter()
-    .on('[data-offer="price"]', { element(el) { el.setInnerContent(v.priceHtml, { html: true }); } })
-    .on('[data-offer="terms"]', text(v.terms))
+    .on('[data-offer="price"]', text(v.price))
     .on('[data-offer="button"]', { element(el) { el.setAttribute("href", v.href); el.setInnerContent(v.button); } })
-    .on('[data-offer="paynote"]', v.paynote ? text(v.paynote) : { element(el) { el.remove(); } })
+    .on('[data-offer="paynote"]', text(v.paynote))
     .transform(res);
   const h = new Headers(rewritten.headers);
   h.set("cache-control", "no-store");
