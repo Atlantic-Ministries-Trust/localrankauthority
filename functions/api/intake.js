@@ -1,0 +1,44 @@
+// POST /api/intake: the form clients fill in after paying for the Comprehensive Local Visibility Audit.
+// Stores the intake, emails it to the owner, and sends the client a confirmation.
+import { esc, json, sendEmail } from "../../lib/audit.js";
+
+const ACCESS = { gbp: "Google Business Profile", search_console: "Search Console", analytics: "Google Analytics", ads: "Ads accounts" };
+
+export async function onRequestPost({ request, env, waitUntil }) {
+  let b;
+  try { b = await request.json(); } catch { return json({ error: "Something went wrong reading your form. Please try again." }, 400); }
+  const clean = (v, n = 1000) => String(v || "").trim().slice(0, n);
+  if (clean(b._gotcha)) return json({ error: "Your form couldn't be sent." }, 400);
+  const f = {
+    name: clean(b.name, 120), email: clean(b.email, 200).toLowerCase(), phone: clean(b.phone, 40),
+    business: clean(b.business, 160), website: clean(b.website, 300), business_phone: clean(b.business_phone, 40), address: clean(b.address, 300),
+    services: clean(b.services, 500), towns: clean(b.towns, 500), competitors: clean(b.competitors, 500), goal: clean(b.goal, 60),
+    job_value: clean(b.job_value, 60), social: clean(b.social), ads: clean(b.ads), notes: clean(b.notes, 2000), session_id: clean(b.session_id, 200)
+  };
+  if (!f.name || !f.business || !f.website || !f.services || !f.towns || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)) {
+    return json({ error: "Add your name, a valid email, your business name, website, services, and towns." }, 400);
+  }
+  if (!env.REPORTS && !(env.RESEND_KEY && env.OWNER_EMAIL)) return json({ error: "The form isn't connected yet. Please call (518) 460-1010." }, 503);
+  const access = Object.entries(ACCESS).filter(([k]) => b.access?.[k]).map(([, label]) => label);
+  const at = new Date().toISOString();
+  const record = { ...f, access, at };
+  if (env.REPORTS) await env.REPORTS.put(`intake:${at}`, JSON.stringify(record));
+
+  const rows = Object.entries({ ...f, access: access.join(", ") || "None yet" }).filter(([, v]) => v)
+    .map(([k, v]) => `<tr><td style="padding:4px 10px 4px 0;color:#55645C;vertical-align:top"><b>${esc(k.replace(/_/g, " "))}</b></td><td style="padding:4px 0">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");
+  waitUntil(Promise.allSettled([
+    env.OWNER_EMAIL && sendEmail(env, {
+      to: env.OWNER_EMAIL,
+      subject: `New paid audit intake: ${f.business}`,
+      html: `<p>A client submitted the Comprehensive Audit intake form. Confirm the payment in Stripe${f.session_id ? ` (checkout session ${esc(f.session_id)})` : ""}, then start the audit in Claude: "run a comprehensive audit for ${esc(f.business)}".</p><table>${rows}</table>`,
+      replyTo: f.email
+    }),
+    sendEmail(env, {
+      to: f.email,
+      subject: "Your Local Visibility Audit is underway",
+      html: `<p>Hi ${esc(f.name.split(" ")[0])},</p><p>Thanks for choosing Local Rank Authority. We've received your details for <b>${esc(f.business)}</b>, and your Comprehensive Local Visibility Audit is underway. Your report, action plan, and landing page will be ready within 5 business days, and we'll schedule your 45-minute walkthrough.</p>${access.length ? `<p>Access you've granted: ${esc(access.join(", "))}. Thank you, that makes the audit much deeper.</p>` : `<p>If you'd like to add read-only access to your Google Business Profile, Search Console, or Analytics later, just reply to this email and we'll walk you through it.</p>`}<p>Questions anytime: (518) 460-1010 or reply to this email.</p><p>Michael Carlson<br>Local Rank Authority</p>`,
+      replyTo: env.OWNER_EMAIL
+    })
+  ]));
+  return json({ ok: true });
+}
