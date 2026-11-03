@@ -1,6 +1,7 @@
 // /api/admin/*: the owner dashboard. Only the OWNER_EMAIL address can sign in (one-time email link, like the
 // client portal, but with its own cookie and signing key). Writes: the sales pipeline, and "view as client".
 import { json, sendEmail } from "../../../lib/audit.js";
+import { saveCrm } from "../../../lib/crm.js";
 import { clearSessionCookie, getClient, makeSessionCookie, normEmail, randomToken, sessionEmail, validEmail } from "../../../lib/portal.js";
 
 const SITE = "https://localrankauthority.com";
@@ -103,31 +104,11 @@ async function report(url, env) {
   return json({ id: r.id, input: r.input, overall: r.overall, sections: (r.sections || []).map(s => ({ label: s.label, score: s.score, summary: s.summary })) });
 }
 
-// Sales pipeline. One record per company, keyed the same way the dashboard groups companies
-// (website domain, else "name:<business>"), so a manually added prospect joins their later free score or request.
-const STAGES = ["New lead", "Contacted", "Call booked", "Audit sold", "Audit delivered", "Proposal sent", "Won", "Lost"];
-const CRM_FIELDS = { stage: 40, business: 160, website: 300, contact_name: 120, email: 200, phone: 40, source: 120, package: 80, retainer: 80, value: 12, monthly: 12, follow_up: 10, lost_reason: 300 };
-
+// Sales pipeline (lib/crm.js)
 async function crmSave(request, env) {
   const b = await request.json().catch(() => ({}));
-  const key = String(b.key || "").trim().toLowerCase().slice(0, 200);
-  if (!key) return json({ error: "Missing company." }, 400);
-  const rec = (await env.REPORTS.get(`crm:${key}`, "json")) || { key, created: new Date().toISOString(), notes: [], history: [] };
-  if (b.manual && !rec.manual) rec.manual = true;
-  for (const [f, max] of Object.entries(CRM_FIELDS)) {
-    if (!(f in (b.patch || {}))) continue;
-    let v = String(b.patch[f] ?? "").trim().slice(0, max);
-    if (f === "stage" && !STAGES.includes(v)) return json({ error: "Unknown stage." }, 400);
-    if ((f === "value" || f === "monthly") && v) v = String(Math.max(0, Math.round(Number(v.replace(/[$,]/g, ""))) || 0));
-    if (f === "follow_up" && v && !/^\d{4}-\d{2}-\d{2}$/.test(v)) return json({ error: "Follow-up must be a date." }, 400);
-    if (f === "stage" && v !== rec.stage) rec.history = [...(rec.history || []), { at: new Date().toISOString(), from: rec.stage || null, to: v }].slice(-50);
-    rec[f] = v;
-  }
-  const note = String(b.note || "").trim().slice(0, 3000);
-  if (note) rec.notes = [...(rec.notes || []), { at: new Date().toISOString(), text: note }].slice(-200);
-  rec.updated = new Date().toISOString();
-  await env.REPORTS.put(`crm:${key}`, JSON.stringify(rec));
-  return json({ ok: true, record: rec });
+  const r = await saveCrm(env, { key: b.key, patch: b.patch || {}, note: b.note, manual: !!b.manual, by: "you" });
+  return r.error ? json({ error: r.error }, 400) : json({ ok: true, record: r.record });
 }
 
 async function crmDelete(request, env) {

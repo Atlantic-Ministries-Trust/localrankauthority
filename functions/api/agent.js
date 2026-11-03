@@ -1,15 +1,18 @@
 // POST /api/agent: private toolbox for the Local Growth Audit agent. Reuses this site's PageSpeed, SerpApi, and Gemini
 // accounts so in-depth audits don't need their own keys. Requires "Authorization: Bearer <token>"; disabled when AGENT_TOKEN isn't set.
 // AGENT_TOKEN can use every tool. AGENT_TOKEN_RESEARCH (for cloud sessions that read untrusted websites) can only research:
-// it can't publish to portals, send invites, change the offer, or create discount codes.
+// it can't publish to portals, send invites, change the offer, or create discount codes. In the sales pipeline it can
+// only add prospects and notes (never read the pipeline, change stages, or delete).
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, mergeOffer, newCoupon, normCode, offerView, quote, readCoupon, readOffer } from "../../lib/offer.js";
+import { STAGES, crmKey, readCrm, saveCrm } from "../../lib/crm.js";
 import { createSignInLink, emailSignInLink, getClient, normEmail, validEmail } from "../../lib/portal.js";
 
 const clean = (v, n = 200) => String(v || "").trim().slice(0, n);
 const monthKey = () => `serp:${new Date().toISOString().slice(0, 7)}`;
 
-const RESEARCH_TOOLS = new Set(["audit", "search", "pagespeed", "ask", "usage"]);
+const RESEARCH_TOOLS = new Set(["audit", "search", "pagespeed", "ask", "usage", "crm"]);
+const RESEARCH_CRM = new Set(["add", "note"]);
 
 // "full", "research", or null
 async function tokenRole(request, env) {
@@ -147,6 +150,58 @@ async function coupon(b, env) {
   return json({ error: "action must be create, list, or disable." }, 400);
 }
 
+// Sales pipeline (the Pipeline tab at /admin). Companies are identified by website, else business name.
+//   add:    { website?, business, contact_name?, email?, phone?, source?, follow_up?, note? } → creates the prospect or fills
+//           in only empty fields; never changes an existing stage (new prospects start as "New lead" on the board)
+//   note:   { website? | business, note } → adds a dated note
+//   update: { website? | business, stage?, package?, value?, retainer?, monthly?, follow_up?, lost_reason?, note? }   (full token)
+//   get:    { website? | business }   (full token)
+//   list:   { stage? }   (full token)
+//   delete: { website? | business }   (full token)
+async function crm(b, env, role) {
+  if (!env.REPORTS) return json({ error: "Storage (REPORTS) isn't set up." }, 503);
+  if (role === "research" && !RESEARCH_CRM.has(b.action)) {
+    return json({ error: `This is a research-only token: crm "${b.action}" needs the full token on Michael's Mac. It can add prospects and notes.`, research_only: true }, 403);
+  }
+  if (b.action === "list") {
+    const keys = [];
+    let cursor;
+    do { const r = await env.REPORTS.list({ prefix: "crm:", cursor }); keys.push(...r.keys.map(k => k.name)); cursor = r.list_complete ? null : r.cursor; } while (cursor);
+    const all = (await Promise.all(keys.map(k => env.REPORTS.get(k, "json")))).filter(Boolean)
+      .filter(r => !b.stage || r.stage === b.stage)
+      .map(({ notes, history, ...r }) => ({ ...r, last_note: notes?.length ? notes[notes.length - 1] : null }));
+    return json({ stages: STAGES, prospects: all, note: "Companies with no saved stage (free score leads, requests, portals) appear on the dashboard but not here." });
+  }
+  const key = crmKey(b.website, b.business);
+  if (!key) return json({ error: "Send website or business." }, 400);
+  if (b.action === "delete") {
+    await env.REPORTS.delete(`crm:${key}`);
+    return json({ ok: true, deleted: key });
+  }
+  if (b.action === "get") {
+    const r = await readCrm(env, key);
+    return r ? json(r) : json({ error: `${key} isn't in the pipeline yet.` }, 404);
+  }
+  const by = role === "research" ? "agent (cloud)" : "agent";
+  const pick = fields => Object.fromEntries(fields.filter(f => b[f] != null && b[f] !== "").map(f => [f, b[f]]));
+  let r;
+  if (b.action === "add") {
+    r = await saveCrm(env, { key, patch: { ...pick(["business", "website", "contact_name", "email", "phone", "source", "follow_up"]), source: b.source || "Agent" }, note: b.note, manual: true, by, addOnly: true });
+  } else if (b.action === "note") {
+    if (!clean(b.note, 10)) return json({ error: "Send note text." }, 400);
+    if (!(await readCrm(env, key)) && role === "research") return json({ error: `${key} isn't in the pipeline. Use action "add" with the note instead.` }, 404);
+    r = await saveCrm(env, { key, note: b.note, by });
+  } else if (b.action === "update") {
+    r = await saveCrm(env, { key, patch: pick(["business", "contact_name", "email", "phone", "source", "stage", "package", "value", "retainer", "monthly", "follow_up", "lost_reason"]), note: b.note, by });
+  } else {
+    return json({ error: "action must be add, note, update, get, list, or delete." }, 400);
+  }
+  if (r.error) return json({ error: r.error }, 400);
+  // The research token gets back only what it sent, not the rest of the record
+  if (role === "research") return json({ ok: true, key, dashboard: "https://localrankauthority.com/admin/" });
+  return json({ ok: true, record: r.record, dashboard: "https://localrankauthority.com/admin/" });
+}
+
 // Client portal management. Publishing, next steps, and invites happen only when Michael asks.
 //   publish:   { email, name, business, audit_id?, data (portal.json), pdf_base64? } → creates/updates the client and audit
 //   next_step: { audit_id, title, body, cta_label, cta_href, price_label? } or { audit_id, clear: true }
@@ -222,7 +277,7 @@ async function usage(env) {
     tools: { pagespeed: !!env.PSI_KEY, search: !!env.SERPAPI_KEY, gemini: !!env.GEMINI_KEY, workers_ai: !!env.AI } });
 }
 
-const TOOLS = { audit, search, pagespeed, ask, offer, coupon, portal };
+const TOOLS = { audit, search, pagespeed, ask, offer, coupon, portal, crm };
 
 export async function onRequestPost({ request, env }) {
   if (!env.AGENT_TOKEN) return json({ error: "Agent access isn't enabled." }, 503);
@@ -237,7 +292,7 @@ export async function onRequestPost({ request, env }) {
     if (b.tool === "usage") return await usage(env);
     const fn = TOOLS[b.tool];
     if (!fn) return json({ error: `Unknown tool. Use one of: ${[...Object.keys(TOOLS), "usage"].join(", ")}.` }, 400);
-    return await fn(b, env);
+    return await fn(b, env, role);
   } catch (e) {
     return json({ error: e.message || "Tool failed" }, 502);
   }

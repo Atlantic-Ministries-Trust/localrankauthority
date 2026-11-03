@@ -243,7 +243,7 @@ function editor(c){
    <label class="lost" style="grid-column:1/-1">Why lost<input name="lost_reason" value="${esc(r.lost_reason||"")}"></label>
   </div>
   <label>Add a note<textarea name="note" rows="3" placeholder="Call notes, what they said, next step…"></textarea></label>
-  ${(r.notes||[]).length?`<div class="notes">${r.notes.slice().reverse().map(n=>`<div><small>${esc(whenT(n.at))}</small>${esc(n.text)}</div>`).join("")}</div>`:""}
+  ${(r.notes||[]).length?`<div class="notes">${r.notes.slice().reverse().map(n=>`<div><small>${esc(whenT(n.at))}${n.by&&n.by!=="you"?` · ${esc(n.by)}`:""}</small>${esc(n.text)}</div>`).join("")}</div>`:""}
   ${(r.history||[]).length?`<p class="small muted">Stage history: ${r.history.slice(-6).map(h=>`${esc(h.to)} (${esc(when(h.at))})`).join(" → ")}</p>`:""}
   <p class="msg-err small" id="derr" role="alert"></p>
   <div class="row spread"><div class="row">${c&&hasActivity(c)?`<button class="btn btn-ghost btn-sm" type="button" id="dact">See all activity</button>`:""}${c&&c.crm?.manual&&!hasActivity(c)?`<button class="btn btn-ghost btn-sm" type="button" id="ddel">Delete prospect</button>`:""}</div>
