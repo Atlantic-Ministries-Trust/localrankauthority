@@ -29,8 +29,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
   waitUntil(Promise.allSettled([
     env.OWNER_EMAIL && sendEmail(env, {
       to: env.OWNER_EMAIL,
-      subject: `New paid audit intake: ${f.business}`,
-      html: `<p>A client submitted the Comprehensive Audit intake form. Confirm the payment in Stripe${f.session_id ? ` (checkout session ${esc(f.session_id)})` : ""}, then start the audit in Claude: "run a comprehensive audit for ${esc(f.business)}".</p><table>${rows}</table>`,
+      subject: `New audit intake: ${f.business}`,
+      html: `<p>A client submitted the Comprehensive Audit intake form. ${f.session_id ? `Confirm the payment in Stripe (checkout session ${esc(f.session_id)}), then start` : `No Stripe checkout is attached: if this wasn't a free or invoiced audit, check before starting. Then start`} the audit in Claude: "run a comprehensive audit for ${esc(f.business)}".</p><table>${rows}</table>`,
       replyTo: f.email
     }),
     sendEmail(env, {

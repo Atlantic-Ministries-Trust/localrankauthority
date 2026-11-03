@@ -1,6 +1,7 @@
 // POST /api/agent: private toolbox for the Local Growth Audit agent. Reuses this site's PageSpeed, SerpApi, and Gemini
 // accounts so in-depth audits don't need their own keys. Requires "Authorization: Bearer <AGENT_TOKEN>"; disabled when the secret isn't set.
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
+import { DEFAULT_OFFER, mergeOffer, offerView, readOffer } from "../../lib/offer.js";
 
 const clean = (v, n = 200) => String(v || "").trim().slice(0, n);
 const monthKey = () => `serp:${new Date().toISOString().slice(0, 7)}`;
@@ -95,12 +96,24 @@ async function ask(b, env) {
   return json(out);
 }
 
+// Read or change the Comprehensive Audit offer shown on /comprehensive-audit. Send any of mode, price, was, note, stripe_link to change it.
+async function offer(b, env) {
+  if (!env.REPORTS) return json({ error: "Storage (REPORTS) isn't set up." }, 503);
+  const current = (await readOffer(env)) || DEFAULT_OFFER;
+  const changes = ["mode", "price", "was", "note", "stripe_link"].filter(k => b[k] !== undefined);
+  if (!changes.length) return json({ offer: current, shows: offerView(current) });
+  const next = mergeOffer(current, b);
+  if (next.error) return json(next, 400);
+  await env.REPORTS.put("offer", JSON.stringify({ ...next, updatedAt: new Date().toISOString() }));
+  return json({ offer: next, previous: current, shows: offerView(next) });
+}
+
 async function usage(env) {
   return json({ serp_used_this_month: +(await env.REPORTS?.get(monthKey())) || 0, serp_monthly_limit: +env.SERP_MONTHLY_LIMIT || 240,
     tools: { pagespeed: !!env.PSI_KEY, search: !!env.SERPAPI_KEY, gemini: !!env.GEMINI_KEY, workers_ai: !!env.AI } });
 }
 
-const TOOLS = { audit, search, pagespeed, ask };
+const TOOLS = { audit, search, pagespeed, ask, offer };
 
 export async function onRequestPost({ request, env }) {
   if (!env.AGENT_TOKEN) return json({ error: "Agent access isn't enabled." }, 503);

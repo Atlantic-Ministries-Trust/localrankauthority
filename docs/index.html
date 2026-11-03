@@ -470,7 +470,7 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
       <p class="eyebrow">Free · results in about a minute</p>
       <h2>Free Local Visibility Audit</h2>
       <p class="lede">We test your website speed, your SEO, where you rank on Google, Bing, and DuckDuckGo, and whether AI assistants recommend you. You'll see a score for each area right away.</p>
-      <a class="more-cta" href="/comprehensive-audit">Need the full picture? See the $1,000 comprehensive audit →</a>
+      <a class="more-cta" href="/comprehensive-audit">Need the full picture? See the comprehensive audit →</a>
     </div>
     <form class="audit-form" id="audit-form" novalidate>
       <div class="field"><label for="a-url">Website</label><input type="text" inputmode="url" id="a-url" placeholder="yourbusiness.com" autocomplete="url"></div>
@@ -635,7 +635,7 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
       <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" autocomplete="email" required></div>
       <div class="field"><label for="f-phone">Phone</label><input type="tel" id="f-phone" autocomplete="tel"></div>
       <div class="field full"><label for="f-site">Website (if you have one)</label><input type="url" id="f-site" placeholder="https://"></div>
-      <div class="field full"><label for="f-topic">What can we help with?</label><select id="f-topic"><option>Reviewed visibility check</option><option>Help with my audit results</option><option>Website design</option><option>Local SEO &amp; AI search visibility</option><option>Lead capture &amp; follow-up</option><option>Review system</option><option>Ongoing care</option><option>Estimate builder</option><option>AI chat agent</option><option>AI voice agent</option><option>Custom jingle</option><option>Rank and rent leads</option><option>Not sure yet</option></select></div>
+      <div class="field full"><label for="f-topic">What can we help with?</label><select id="f-topic"><option>Reviewed visibility check</option><option>Comprehensive audit</option><option>Help with my audit results</option><option>Website design</option><option>Local SEO &amp; AI search visibility</option><option>Lead capture &amp; follow-up</option><option>Review system</option><option>Ongoing care</option><option>Estimate builder</option><option>AI chat agent</option><option>AI voice agent</option><option>Custom jingle</option><option>Rank and rent leads</option><option>Not sure yet</option></select></div>
       <div class="field full"><label for="f-msg">Anything else?</label><textarea id="f-msg" rows="3"></textarea></div>
       <input type="text" name="_gotcha" id="f-gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
       <p class="err full" id="f-err" role="alert" hidden></p>
@@ -848,6 +848,9 @@ $("#play").addEventListener("click",()=>{
 
 /* ---------- CTA topic prefill + form ---------- */
 const FORM_ENDPOINT="/api/contact";
+/* "Request your audit" links arrive as /?topic=...#contact */
+const qTopic=new URLSearchParams(location.search).get("topic");
+if(qTopic&&[...$("#f-topic").options].some(o=>o.text===qTopic))$("#f-topic").value=qTopic;
 document.querySelectorAll("[data-topic]").forEach(a=>a.addEventListener("click",()=>{$("#f-topic").value=a.dataset.topic;}));
 $("#lead").addEventListener("submit",async e=>{
   e.preventDefault();
