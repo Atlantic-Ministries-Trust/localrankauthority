@@ -167,11 +167,12 @@ details{border-bottom:1px solid var(--line);padding:16px 0}summary{font:800 1.05
 .rel a{text-decoration:none}.rel a:hover h3{text-decoration:underline}
 .cta{background:var(--sign-deep);color:var(--sign-ink)}.cta .wrap{display:flex;flex-direction:column;gap:16px;align-items:flex-start}.cta p{color:rgba(255,255,255,.85);max-width:60ch}
 footer{padding-block:28px;font-size:.88rem;color:var(--muted)}footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.brand-logo{display:block;height:64px;width:auto;margin-block:-8px}@media (max-width:560px){.brand-logo{height:48px;margin-block:0}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
-  <a class="logo" href="/"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="134" height="48" style="display:block;height:48px;width:auto"></a>
+  <a class="logo" href="/"><img class="brand-logo" src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="179" height="64"></a>
   <a class="top-call" href="tel:+15184601010" data-event="click_to_call" aria-label="Call (518) 460-1010"><span class="tc-full">(518) 460-1010</span><span class="tc-short">Call</span></a>
   <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free score</a>
 </div></header>
