@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Owner Dashboard | Local Rank Authority</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/assets/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="apple-touch-icon" href="/assets/icon-180.png"><meta name="theme-color" content="#075139">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@700;800;900&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#F5F7F4;--surface:#FFFFFF;--ink:#11201A;--muted:#55645C;--line:#D8DFDA;--sign:#0B5D3F;--sign-ink:#FFFFFF;--sign-deep:#075139;--amber:#FFBE00;--amber-ink:#2A1E00;--pin:#C8432B;--warn:#B87400;--good:#1B7F4C;
+  --display:"Overpass","Arial Narrow",Arial,sans-serif;--body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--r:6px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1512;--surface:#15201B;--ink:#E8EEEA;--muted:#9AAAA1;--line:#2A3832;--sign:#0E6B49;--sign-deep:#08442F;--pin:#E66A52;--warn:#E5A53A;--good:#4CC489;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0D1512;--surface:#15201B;--ink:#E8EEEA;--muted:#9AAAA1;--line:#2A3832;--sign:#0E6B49;--sign-deep:#08442F;--pin:#E66A52;--warn:#E5A53A;--good:#4CC489;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}h1{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:900}h2{font-size:1.35rem;font-weight:900}h3{font-size:1.02rem;font-weight:800}p{margin:0}a{color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+header{background:var(--sign-deep);color:var(--sign-ink)}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:12px}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.brand-logo{display:block;height:64px;width:auto;margin-block:-8px}@media (max-width:560px){.brand-logo{height:48px;margin-block:0}}
+.hdr-tag{font:500 .75rem var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+main{padding-block:24px 64px}.stack{display:flex;flex-direction:column;gap:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;font:700 .95rem var(--display);padding:10px 16px;border-radius:var(--r);text-decoration:none;border:2px solid transparent;cursor:pointer;background:none;color:inherit}
+.btn-amber{background:var(--amber);color:var(--amber-ink)}.btn-ghost{border-color:var(--line)}.btn-sm{padding:6px 11px;font-size:.85rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}.small{font-size:.88rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.spread{justify-content:space-between}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}.tile b{display:block;font:900 1.9rem var(--display)}.tile span{color:var(--muted);font-size:.88rem}
+@media(max-width:560px){.tiles{grid-template-columns:repeat(3,1fr);gap:8px}.tile{padding:10px}.tile b{font-size:1.4rem}.tile span{font-size:.75rem;line-height:1.3;display:block}}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs button{font:800 .95rem var(--display);padding:10px 14px;border:0;background:none;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--amber)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tools input[type=search]{flex:1 1 240px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)}
+.chip{font:600 .85rem var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--sign);border-color:var(--sign);color:#fff}
+.pill{display:inline-block;font:700 .72rem var(--body);padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap;vertical-align:middle}
+.pill.good{background:var(--good)}.pill.ok{background:var(--warn)}.pill.bad{background:var(--pin)}.pill.na{background:var(--muted)}.pill.new{background:var(--amber);color:var(--amber-ink)}.pill.sign{background:var(--sign)}
+details.co{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.co>summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center}
+details.co>summary::-webkit-details-marker{display:none}
+details.co[open]>summary{border-bottom:1px solid var(--line)}
+.co-name{font:900 1.1rem var(--display)}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.co-body{padding:6px 16px 16px;display:flex;flex-direction:column;gap:6px}
+.item{border-top:1px solid var(--line);padding-top:12px;margin-top:8px}
+.item:first-child{border-top:0}
+dl.kv{display:grid;grid-template-columns:140px 1fr;gap:3px 12px;margin:8px 0 0;font-size:.92rem}dl.kv dt{color:var(--muted);font-weight:600}dl.kv dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:560px){dl.kv{grid-template-columns:1fr}dl.kv dd{margin-bottom:6px}details.co>summary{grid-template-columns:1fr}}
+.progress{height:10px;background:var(--line);border-radius:5px;overflow:hidden;max-width:260px}.progress i{display:block;height:100%;background:var(--good)}
+.secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:8px}.secs div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.88rem}
+table.t{width:100%;border-collapse:collapse;font-size:.9rem}table.t th{text-align:left;font:800 .8rem var(--display);color:var(--muted);padding:8px;border-bottom:2px solid var(--line)}table.t td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+.scroll{overflow-x:auto}
+.inbox li{list-style:none;display:grid;grid-template-columns:110px 1fr auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.inbox{padding:0;margin:0}@media(max-width:560px){.inbox li{grid-template-columns:1fr}}
+.linkish{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer;text-align:left}
+.field{display:flex;flex-direction:column;gap:6px}.field input{font:inherit;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)}
+.login{max-width:440px;margin:40px auto}
+.msg-ok{color:var(--good);font-weight:600}.msg-err{color:var(--pin);font-weight:600}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+blockquote{margin:6px 0 0;padding:8px 12px;border-left:3px solid var(--amber);background:var(--bg);border-radius:0 6px 6px 0;white-space:pre-wrap}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a href="/"><img class="brand-logo" src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="179" height="64"></a>
+  <span class="hdr-tag">Owner dashboard</span>
+</div></header>
+<main><div class="wrap stack" id="app" aria-live="polite"><p class="muted">Loading…</p></div></main>
+<script>
+(()=>{
+const $=s=>document.querySelector(s), app=$("#app");
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const tone=n=>n==null?"na":n>=80?"good":n>=50?"ok":"bad";
+const when=d=>d?new Date(d).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"–";
+const whenT=d=>d?new Date(d).toLocaleString(undefined,{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"–";
+const host=w=>{if(!w)return"";try{return new URL(/^https?:\/\//i.test(w)?w:"https://"+w).hostname.toLowerCase().replace(/^www\./,"")}catch{return""}};
+const mail=e=>String(e||"").trim().toLowerCase();
+async function api(path,opts={}){const r=await fetch("/api/admin/"+path,{credentials:"same-origin",headers:{"Content-Type":"application/json"},...opts});const d=await r.json().catch(()=>({}));if(r.status===401)throw Object.assign(new Error("signin"),{signin:true});if(!r.ok)throw new Error(d.error||"Something went wrong.");return d;}
+
+function loginView(note){app.innerHTML=`<div class="login panel"><p class="eyebrow">Owner dashboard</p><h2 style="margin-top:4px">Sign in</h2>
+${note?`<p class="msg-err" style="margin-top:8px">${esc(note)}</p>`:""}<p class="muted" style="margin:6px 0 16px">Enter the owner email. We'll send a one-time sign-in link.</p>
+<form id="lf" class="field"><label for="le">Email</label><input id="le" type="email" autocomplete="email" required><button class="btn btn-amber" type="submit" id="lb" style="margin-top:8px">Email me a sign-in link</button><p id="lm" role="status"></p></form></div>`;
+$("#lf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#lb"),m=$("#lm");b.disabled=true;
+try{const d=await api("login",{method:"POST",body:JSON.stringify({email:$("#le").value})});m.className="msg-ok";m.textContent=d.message;}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;}});}
+
+// Group every record by company: website domain first, then business name, then email
+function group(D){
+  const byEmail={},cos={};
+  const link=(e,k)=>{e=mail(e);if(e&&k&&!byEmail[e])byEmail[e]=k;};
+  D.leads.forEach(l=>link(l.email,l.site&&host(l.site)));
+  D.intakes.forEach(i=>link(i.email,host(i.website)));
+  D.contacts.forEach(c=>link(c.email,host(c.website)));
+  D.clients.forEach(c=>link(c.email,host(c.audits[0]?.website)));
+  const keyFor=(site,business,email)=>host(site)||byEmail[mail(email)]||(business?"name:"+business.trim().toLowerCase():"")||"email:"+mail(email);
+  const co=(k,name,site)=>{const c=cos[k]||(cos[k]={key:k,names:[],site:"",leads:[],intakes:[],contacts:[],clients:[],messages:[],codes:[],emails:new Set(),latest:""});
+    if(name&&!c.names.includes(name))c.names.push(name);if(site&&!c.site)c.site=host(site);return c;};
+  const touch=(c,at,email)=>{if(at>c.latest)c.latest=at;if(email)c.emails.add(mail(email));};
+  D.leads.forEach(l=>{const c=co(keyFor(l.site,l.business,l.email),l.business,l.site);c.leads.push(l);touch(c,l.at,l.email);});
+  D.intakes.forEach(i=>{const c=co(keyFor(i.website,i.business,i.email),i.business,i.website);c.intakes.push(i);touch(c,i.at,i.email);});
+  D.contacts.forEach(m=>{const c=co(keyFor(m.website,m.business,m.email),m.business,m.website);c.contacts.push(m);touch(c,m.at,m.email);});
+  D.clients.forEach(p=>{const a=p.audits[p.audits.length-1]||{};const c=co(keyFor(a.website,p.business,p.email),p.business,a.website);c.clients.push(p);
+    touch(c,[p.last_seen,a.updated,a.published].filter(Boolean).sort().pop()||"",p.email);});
+  D.messages.forEach(m=>{const k=byEmail[mail(m.email)]||keyFor("",m.business,m.email);const c=co(k,m.business);c.messages.push(m);touch(c,m.at,m.email);});
+  D.uses.forEach(u=>{const k=u.kind==="site"?u.value:(byEmail[mail(u.value)]||"");if(cos[k]&&!cos[k].codes.includes(u.code))cos[k].codes.push(u.code);});
+  return Object.values(cos).sort((a,b)=>b.latest.localeCompare(a.latest));
+}
+
+let D,COS,tab="companies",filter="all",query="";
+const isNew=at=>D.seen_before&&at&&at>D.seen_before;
+
+function badges(c){const b=[];
+  if(c.clients.length){const a=c.clients[0].audits.slice(-1)[0];b.push(`<span class="pill sign">Portal${a?` · ${a.overall??"–"}/100`:""}</span>`);}
+  if(c.intakes.length)b.push(`<span class="pill ok">Audit request${c.intakes.length>1?" ×"+c.intakes.length:""}</span>`);
+  if(c.leads.length){const l=c.leads[c.leads.length-1];b.push(`<span class="pill ${tone(l.overall)}">Free score ${l.overall??"–"}</span>`);}
+  if(c.contacts.length)b.push(`<span class="pill na">Contact form${c.contacts.length>1?" ×"+c.contacts.length:""}</span>`);
+  if(c.messages.length)b.push(`<span class="pill na">${c.messages.length} portal message${c.messages.length>1?"s":""}</span>`);
+  if(c.codes.length)b.push(`<span class="pill na">Code ${esc(c.codes.join(", "))}</span>`);
+  if(isNew(c.latest))b.push(`<span class="pill new">New</span>`);
+  return b.join("");}
+
+const contactLine=x=>[x.name,x.email&&`<a href="mailto:${esc(x.email)}">${esc(x.email)}</a>`,x.phone&&`<a href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`].filter(Boolean).map((v,i)=>i?v:esc(v)).join(" · ");
+
+function companyBody(c){let h="";
+  c.clients.forEach(p=>p.audits.slice().reverse().forEach(a=>{const pct=a.plan_total?Math.round(a.plan_done/a.plan_total*100):0;
+    h+=`<div class="item"><div class="row spread"><h3>Client portal · Comprehensive Growth Audit</h3><button class="btn btn-ghost btn-sm" data-viewas="${esc(p.email)}">Open their portal</button></div>
+    <dl class="kv"><dt>Client</dt><dd>${contactLine(p)}</dd><dt>Audit</dt><dd>${esc(a.date||"")} · <b>${a.overall??"–"}/100</b>${a.grade?` (${esc(a.grade)})`:""}${a.has_pdf?" · PDF attached":""}</dd>
+    <dt>Action plan</dt><dd>${a.plan_done} of ${a.plan_total} done<div class="progress"><i style="width:${pct}%"></i></div></dd>
+    <dt>Last visit</dt><dd>${p.last_seen?whenT(p.last_seen):"Hasn't signed in yet"}</dd>
+    <dt>Next step card</dt><dd>${a.next_step?esc(a.next_step):'<span class="muted">Not set (you approve this)</span>'}</dd>
+    <dt>Monthly re-scan</dt><dd>${a.last_scan?`${a.last_scan.overall??"–"}/100 on ${when(a.last_scan.date)}`:'<span class="muted">None yet</span>'}</dd>
+    <dt>Published</dt><dd>${when(a.published)}${a.updated&&a.updated!==a.published?` · updated ${when(a.updated)}`:""}</dd></dl></div>`;}));
+  c.messages.slice().reverse().forEach(m=>{h+=`<div class="item"><h3>Portal message ${isNew(m.at)?'<span class="pill new">New</span>':""}</h3><p class="small muted">${whenT(m.at)} · <a href="mailto:${esc(m.email)}">${esc(m.email)}</a></p><blockquote>${esc(m.text)}</blockquote></div>`;});
+  c.intakes.slice().reverse().forEach(i=>{h+=`<div class="item"><h3>Comprehensive Growth Audit request ${isNew(i.at)?'<span class="pill new">New</span>':""}</h3><p class="small muted">${whenT(i.at)}</p>
+    <dl class="kv"><dt>Pricing</dt><dd><b>${esc(i.pricing)}</b></dd><dt>Contact</dt><dd>${contactLine(i)}</dd><dt>Website</dt><dd>${esc(i.website)}</dd>
+    ${[["Business phone",i.business_phone],["Address",i.address],["Services",i.services],["Towns",i.towns],["Competitors",i.competitors],["Goal",i.goal],["Job value",i.job_value],["Social",i.social],["Ads",i.ads],["Access granted",(i.access||[]).join(", ")],["Notes",i.notes],["Stripe session",i.session_id]].filter(x=>x[1]).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>`;});
+  c.leads.slice().reverse().forEach((l,n)=>{h+=`<div class="item"><div class="row spread"><h3>Free Local Visibility Score: <span class="pill ${tone(l.overall)}">${l.overall??"–"}/100</span> ${isNew(l.at)?'<span class="pill new">New</span>':""}</h3>${l.reportId?`<button class="btn btn-ghost btn-sm" data-report="${esc(l.reportId)}">Show scores</button>`:""}</div>
+    <p class="small muted">${whenT(l.at)} · ${esc(l.site||"")}</p><dl class="kv"><dt>Contact</dt><dd>${contactLine(l)}</dd></dl><div data-report-out="${esc(l.reportId||"")}"></div></div>`;});
+  c.contacts.slice().reverse().forEach(m=>{h+=`<div class="item"><h3>Contact form${m.topic?`: ${esc(m.topic)}`:""} ${isNew(m.at)?'<span class="pill new">New</span>':""}</h3><p class="small muted">${whenT(m.at)}</p>
+    <dl class="kv"><dt>Contact</dt><dd>${contactLine(m)}</dd>${m.website?`<dt>Website</dt><dd>${esc(m.website)}</dd>`:""}</dl>${m.message?`<blockquote>${esc(m.message)}</blockquote>`:""}</div>`;});
+  return h;}
+
+function companyCard(c){const name=c.names[c.names.length-1]||c.site||[...c.emails][0]||"Unknown";
+  return `<details class="co" data-key="${esc(c.key)}"><summary><div><div class="co-name">${esc(name)}</div><div class="small muted">${esc([c.site,c.names.length>1?"also: "+c.names.slice(0,-1).join(", "):""].filter(Boolean).join(" · "))}</div><div class="badges">${badges(c)}</div></div>
+  <div class="small muted">${when(c.latest)}</div></summary><div class="co-body"></div></details>`;}
+
+const FILTERS={all:"All",portal:"Portal clients",intake:"Audit requests",lead:"Free score leads",contact:"Contact forms",new:"New"};
+function matches(c){
+  if(filter==="portal"&&!c.clients.length)return false;if(filter==="intake"&&!c.intakes.length)return false;
+  if(filter==="lead"&&!c.leads.length)return false;if(filter==="contact"&&!c.contacts.length)return false;if(filter==="new"&&!isNew(c.latest))return false;
+  if(!query)return true;const q=query.toLowerCase();
+  return [c.site,...c.names,...c.emails].some(v=>String(v||"").toLowerCase().includes(q));}
+
+function companiesView(){const list=COS.filter(matches);
+  return `<div class="tools"><input type="search" id="q" placeholder="Search by business, website, or email" value="${esc(query)}" aria-label="Search companies">
+  <div class="row">${Object.entries(FILTERS).map(([k,v])=>`<button class="chip" data-filter="${k}" aria-pressed="${filter===k}">${v}</button>`).join("")}</div></div>
+  <p class="small muted">${list.length} compan${list.length===1?"y":"ies"}, most recent activity first. Comprehensive audit files and advisor briefs stay in the lra-agent repository, not on the website.</p>
+  <div class="stack" style="gap:10px">${list.map(companyCard).join("")||'<div class="panel empty">Nothing here yet.</div>'}</div>`;}
+
+function inboxView(){const items=[
+  ...D.leads.map(x=>({at:x.at,type:"Free score",tone:tone(x.overall),who:x.business||x.site,email:x.email,text:`${x.overall??"–"}/100 · ${x.site||""}`})),
+  ...D.intakes.map(x=>({at:x.at,type:"Audit request",tone:"ok",who:x.business,email:x.email,text:x.pricing})),
+  ...D.contacts.map(x=>({at:x.at,type:"Contact form",tone:"na",who:x.business,email:x.email,text:x.message||x.topic})),
+  ...D.messages.map(x=>({at:x.at,type:"Portal message",tone:"sign",who:x.business,email:x.email,text:x.text}))
+].sort((a,b)=>b.at.localeCompare(a.at)).slice(0,300);
+  return items.length?`<ul class="inbox panel">${items.map(i=>`<li><span class="small muted">${whenT(i.at)}</span><div><span class="pill ${i.tone}">${esc(i.type)}</span> <b>${esc(i.who||i.email)}</b> ${isNew(i.at)?'<span class="pill new">New</span>':""}<p class="small muted" style="margin-top:4px">${esc(String(i.text||"").slice(0,220))}</p></div><button class="btn btn-ghost btn-sm" data-open="${esc(i.email)}">Open</button></li>`).join("")}</ul>`:'<div class="panel empty">No leads or messages yet.</div>';}
+
+function couponsView(){if(!D.coupons.length)return '<div class="panel empty">No discount codes yet. Create them with the agent: "make a free audit code for Joe\'s Plumbing."</div>';
+  const used=code=>D.uses.filter(u=>u.code===code).map(u=>u.value);
+  return `<div class="panel scroll"><table class="t"><tr><th>Code</th><th>Discount</th><th>Uses</th><th>Status</th><th>For</th><th>Used by</th></tr>${D.coupons.sort((a,b)=>String(b.created).localeCompare(String(a.created))).map(c=>{
+    const exp=c.expires&&Date.parse(c.expires)<Date.now(),full=c.max_uses!=null&&(c.used||0)>=c.max_uses;
+    const st=!c.active?["na","Off"]:exp?["na","Expired"]:full?["na","Used up"]:["good","Active"];
+    return `<tr><td><b style="font-family:var(--mono)">${esc(c.code)}</b><br><span class="small muted">${when(c.created)}</span></td><td>${c.percent_off?esc(c.percent_off)+"% off":c.amount_off?"$"+esc(c.amount_off)+" off":"–"}</td><td>${c.used||0} / ${c.max_uses??"∞"}</td><td><span class="pill ${st[0]}">${st[1]}</span>${c.expires?`<br><span class="small muted">ends ${when(c.expires)}</span>`:""}</td><td>${esc(c.note||"")}</td><td class="small">${esc(used(c.code).join(", "))||'<span class="muted">–</span>'}</td></tr>`;}).join("")}</table></div>`;}
+
+function render(){
+  const newCount=COS.filter(c=>isNew(c.latest)).length;
+  app.innerHTML=`<div class="row spread"><div><p class="eyebrow">Local Rank Authority</p><h1>Owner dashboard</h1><p class="small muted">${D.seen_before?`Your last visit: ${whenT(D.seen_before)}`:"First visit"}</p></div>
+  <div class="row"><button class="btn btn-ghost btn-sm" id="rf">Refresh</button><button class="btn btn-ghost btn-sm" id="so">Sign out</button></div></div>
+  <div class="tiles">
+   <div class="tile"><b>${COS.length}</b><span>Companies</span></div>
+   <div class="tile"><b>${newCount}</b><span>With new activity</span></div>
+   <div class="tile"><b>${D.free_scores_30d}</b><span>Free scores (30 days)</span></div>
+   <div class="tile"><b>${D.leads.length}</b><span>Free score leads</span></div>
+   <div class="tile"><b>${D.intakes.length}</b><span>Audit requests</span></div>
+   <div class="tile"><b>${D.clients.length}</b><span>Portal clients</span></div>
+  </div>
+  <div class="tabs" role="tablist">${[["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
+  <div id="view"></div>`;
+  $("#rf").onclick=load;
+  $("#so").onclick=async()=>{await fetch("/api/admin/logout",{method:"POST"});location.href="/admin/";};
+  app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
+  draw();}
+
+function draw(){const v=$("#view");v.innerHTML=tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
+  const q=$("#q");if(q){q.oninput=()=>{query=q.value;const pos=q.selectionStart;draw();const n=$("#q");n.focus();n.setSelectionRange(pos,pos);};}
+  v.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{filter=b.dataset.filter;draw();});
+  v.querySelectorAll("details.co").forEach(d=>d.addEventListener("toggle",()=>{if(d.open&&!d.dataset.filled){d.dataset.filled=1;d.querySelector(".co-body").innerHTML=companyBody(COS.find(c=>c.key===d.dataset.key));wire(d);}}));
+  v.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const c=COS.find(c=>c.emails.has(mail(b.dataset.open)));if(!c)return;tab="companies";filter="all";query="";render();
+    const d=[...document.querySelectorAll("details.co")].find(d=>d.dataset.key===c.key);if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"start"});}});}
+
+function wire(root){
+  root.querySelectorAll("[data-report]").forEach(b=>b.onclick=async()=>{const out=root.querySelector(`[data-report-out="${CSS.escape(b.dataset.report)}"]`);b.disabled=true;
+    try{const r=await api("report?id="+encodeURIComponent(b.dataset.report));out.innerHTML=`<p class="small muted" style="margin-top:8px">Searched: ${esc([r.input?.service,r.input?.city].filter(Boolean).join(" in "))}</p><div class="secs">${r.sections.map(s=>`<div><b>${esc(s.label)}</b> <span class="pill ${tone(s.score)}">${s.score??"–"}</span><br><span class="muted">${esc(s.summary||"")}</span></div>`).join("")}</div>`;b.hidden=true;}
+    catch(x){out.innerHTML=`<p class="msg-err small">${esc(x.message)}</p>`;b.disabled=false;}});
+  root.querySelectorAll("[data-viewas]").forEach(b=>b.onclick=async()=>{b.disabled=true;const w=window.open("about:blank","_blank");
+    try{await api("view-as",{method:"POST",body:JSON.stringify({email:b.dataset.viewas})});if(w)w.location="/portal/";else location.href="/portal/";}catch(x){if(w)w.close();alert(x.message);}finally{b.disabled=false;}});}
+
+async function load(){app.innerHTML='<p class="muted">Loading…</p>';
+  try{D=await api("data");COS=group(D);render();}
+  catch(x){if(x.signin)loginView(new URLSearchParams(location.search).get("e")==="expired"?"That sign-in link has expired or was already used. Request a new one.":"");else app.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p></div>`;}}
+load();
+})();
+</script>
+</body>
+</html>
