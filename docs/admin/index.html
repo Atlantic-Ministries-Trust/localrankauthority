@@ -139,6 +139,10 @@ const coName=c=>c.crm?.business||c.names[c.names.length-1]||c.site||[...c.emails
 const stageOf=c=>c.crm?.stage||(c.clients.length?"Audit delivered":c.intakes.length?"Audit sold":"New lead");
 const sourceOf=c=>c.crm?.source||(c.leads.length?"Free score":c.intakes.length?"Audit request":c.contacts.length?"Contact form":c.clients.length?"Portal client":"Added by you");
 const isOpen=c=>!["Won","Lost"].includes(stageOf(c));
+const PROFILE={years:"Years in business",team:"Team size",revenue:"Annual revenue",new_customers:"New customers a month",capacity:"Could handle more",close_rate:"Quotes that become jobs",marketing_spend:"Marketing spend a month",marketing_by:"Marketing handled by",sources:"Customers come from",seasons:"Seasons",start:"Wants to start",win:"A win in 12 months"};
+const profileOf=c=>{const i=c.intakes.slice().reverse().find(i=>i.profile&&Object.keys(i.profile).length);return i?i.profile:null;};
+const profileKv=p=>Object.keys(PROFILE).filter(k=>p[k]&&p[k].length).map(k=>`<dt>${PROFILE[k]}</dt><dd>${esc(Array.isArray(p[k])?p[k].join(", "):p[k])}</dd>`).join("");
+const profileLine=p=>p?[p.revenue&&p.revenue!=="Prefer not to say"&&p.revenue,p.team&&(p.team==="Just me"?"solo":p.team+" people"),p.start&&"start: "+p.start.toLowerCase()].filter(Boolean).join(" · "):"";
 const keyFrom=(website,business)=>host(website)||(business?"name:"+business.trim().toLowerCase():"");
 const isNew=at=>D.seen_before&&at&&at>D.seen_before;
 const hasActivity=c=>!!(c.leads.length||c.intakes.length||c.contacts.length||c.clients.length||c.messages.length);
@@ -168,7 +172,8 @@ function companyBody(c){let h=`<div class="item row spread"><p><b>Pipeline:</b> 
   c.messages.slice().reverse().forEach(m=>{h+=`<div class="item"><h3>Portal message ${isNew(m.at)?'<span class="pill new">New</span>':""}</h3><p class="small muted">${whenT(m.at)} · <a href="mailto:${esc(m.email)}">${esc(m.email)}</a></p><blockquote>${esc(m.text)}</blockquote></div>`;});
   c.intakes.slice().reverse().forEach(i=>{h+=`<div class="item"><h3>Comprehensive Growth Audit request ${isNew(i.at)?'<span class="pill new">New</span>':""}</h3><p class="small muted">${whenT(i.at)}</p>
     <dl class="kv"><dt>Pricing</dt><dd><b>${esc(i.pricing)}</b></dd><dt>Contact</dt><dd>${contactLine(i)}</dd><dt>Website</dt><dd>${esc(i.website)}</dd>
-    ${[["Business phone",i.business_phone],["Address",i.address],["Services",i.services],["Towns",i.towns],["Competitors",i.competitors],["Goal",i.goal],["Job value",i.job_value],["Social",i.social],["Ads",i.ads],["Access granted",(i.access||[]).join(", ")],["Notes",i.notes],["Stripe session",i.session_id]].filter(x=>x[1]).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>`;});
+    ${[["Business phone",i.business_phone],["Address",i.address],["Services",i.services],["Towns",i.towns],["Competitors",i.competitors],["Goal",i.goal],["Job value",i.job_value],["Social",i.social],["Ads",i.ads],["Access granted",(i.access||[]).join(", ")],["Notes",i.notes],["Stripe session",i.session_id]].filter(x=>x[1]).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+    ${i.profile&&Object.keys(i.profile).length?`<p class="eyebrow" style="margin-top:12px">About their business (private)</p><dl class="kv">${profileKv(i.profile)}</dl>`:'<p class="small muted" style="margin-top:8px">Skipped the optional business questions. Ask on the call.</p>'}</div>`;});
   c.leads.slice().reverse().forEach((l,n)=>{h+=`<div class="item"><div class="row spread"><h3>Free Local Visibility Score: <span class="pill ${tone(l.overall)}">${l.overall??"–"}/100</span> ${isNew(l.at)?'<span class="pill new">New</span>':""}</h3>${l.reportId?`<button class="btn btn-ghost btn-sm" data-report="${esc(l.reportId)}">Show scores</button>`:""}</div>
     <p class="small muted">${whenT(l.at)} · ${esc(l.site||"")}</p><dl class="kv"><dt>Contact</dt><dd>${contactLine(l)}</dd></dl><div data-report-out="${esc(l.reportId||"")}"></div></div>`;});
   c.contacts.slice().reverse().forEach(m=>{h+=`<div class="item"><h3>Contact form${m.topic?`: ${esc(m.topic)}`:""} ${isNew(m.at)?'<span class="pill new">New</span>':""}</h3><p class="small muted">${whenT(m.at)}</p>
@@ -211,6 +216,7 @@ function pcard(c){const r=c.crm||{},due=r.follow_up&&r.follow_up<=today()&&isOpe
   return `<button class="pcard" draggable="true" data-edit="${esc(c.key)}" data-key="${esc(c.key)}"><span class="nm">${esc(coName(c))}</span>
   ${c.site||r.contact_name?`<span class="meta">${esc([c.site,r.contact_name].filter(Boolean).join(" · "))}</span>`:""}
   ${r.package||r.retainer?`<span class="money">${[r.package&&`${esc(r.package)} ${money(r.value)}`,r.retainer&&`${esc(r.retainer)} ${money(r.monthly)}/mo`].filter(Boolean).join(" + ")}</span>`:""}
+  ${profileLine(profileOf(c))?`<span class="meta">${esc(profileLine(profileOf(c)))}</span>`:""}
   <span class="meta">${esc(sourceOf(c))}${r.follow_up?` · <span class="${due?"due":""}">follow up ${esc(when(r.follow_up+"T12:00:00"))}</span>`:""}</span></button>`;}
 
 function pipelineView(){
@@ -228,6 +234,7 @@ function editor(c){
   const first=c&&(c.leads[0]||c.intakes[0]||c.contacts[0]||c.clients[0])||{};
   dlg.innerHTML=`<form class="dlg" method="dialog"><div class="row spread"><h2>${isNewP?"Add a prospect":esc(coName(c))}</h2><button class="btn btn-ghost btn-sm" type="button" id="dclose">Close</button></div>
   ${c?`<p class="small muted">${esc([c.site,sourceOf(c)].filter(Boolean).join(" · "))}</p>`:""}
+  ${c&&profileOf(c)?`<details><summary class="small" style="cursor:pointer;font-weight:700">About their business (from their intake form)</summary><dl class="kv">${profileKv(profileOf(c))}</dl></details>`:""}
   <div class="fgrid">
    ${isNewP?`<label>Business name<input name="business" required></label><label>Website<input name="website" placeholder="example.com"></label>`:`<label>Business name<input name="business" value="${esc(r.business||coName(c))}"></label><label>Website<input value="${esc(c.site)}" disabled></label>`}
    <label>Contact name<input name="contact_name" value="${esc(r.contact_name||first.name||"")}"></label>

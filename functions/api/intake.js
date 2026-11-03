@@ -3,6 +3,8 @@
 import { esc, json, sendEmail } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, money, normCode, quote, readCoupon, readOffer, useKeys } from "../../lib/offer.js";
 
+// Optional "About your business" answers: private, for sizing recommendations (advisor brief, dashboard). Never shown to the client.
+const PROFILE = { years: "Years in business", team: "Team size", revenue: "Annual revenue", new_customers: "New customers a month", capacity: "Could handle more", close_rate: "Quotes that become jobs", marketing_spend: "Marketing spend a month", marketing_by: "Marketing handled by", sources: "Customers come from", seasons: "Seasons", start: "Wants to start", win: "A win in 12 months" };
 const ACCESS = { gbp: "Google Business Profile", search_console: "Search Console", analytics: "Google Analytics", ads: "Ads accounts" };
 
 export async function onRequestPost({ request, env, waitUntil }) {
@@ -20,6 +22,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
     return json({ error: "Add your name, a valid email, your business name, website, services, and towns." }, 400);
   }
   if (!env.REPORTS && !(env.RESEND_KEY && env.OWNER_EMAIL)) return json({ error: "The form isn't connected yet. Please call (518) 460-1010." }, 503);
+  const p = b.profile && typeof b.profile === "object" ? b.profile : {};
+  const profile = Object.fromEntries(Object.keys(PROFILE).map(k => [k, k === "sources"
+    ? (Array.isArray(p.sources) ? p.sources.slice(0, 10).map(x => clean(x, 60)).filter(Boolean) : [])
+    : clean(p[k], k === "win" || k === "seasons" ? 600 : 80)]).filter(([, v]) => v.length));
   const access = Object.entries(ACCESS).filter(([k]) => b.access?.[k]).map(([, label]) => label);
   const at = new Date().toISOString();
   const offer = (await readOffer(env)) || DEFAULT_OFFER;
@@ -44,16 +50,17 @@ export async function onRequestPost({ request, env, waitUntil }) {
       ]);
     }
   }
-  const record = { ...f, access, code, pricing, at };
+  const record = { ...f, access, profile, code, pricing, at };
   if (env.REPORTS) await env.REPORTS.put(`intake:${at}`, JSON.stringify(record));
 
   const rows = Object.entries({ pricing, ...f, access: access.join(", ") || "None yet" }).filter(([, v]) => v)
     .map(([k, v]) => `<tr><td style="padding:4px 10px 4px 0;color:#55645C;vertical-align:top"><b>${esc(k.replace(/_/g, " "))}</b></td><td style="padding:4px 0">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");
+  const profileRows = Object.entries(profile).map(([k, v]) => `<tr><td style="padding:4px 10px 4px 0;color:#55645C;vertical-align:top"><b>${esc(PROFILE[k])}</b></td><td style="padding:4px 0">${esc(Array.isArray(v) ? v.join(", ") : v)}</td></tr>`).join("");
   waitUntil(Promise.allSettled([
     env.OWNER_EMAIL && sendEmail(env, {
       to: env.OWNER_EMAIL,
       subject: `New audit intake: ${f.business}`,
-      html: `<p>A client submitted the Comprehensive Growth Audit intake form. <b>${esc(pricing)}</b>.${f.session_id ? ` Confirm the payment in Stripe (checkout session ${esc(f.session_id)}).` : ""} Then start the audit in Claude: "run a comprehensive audit for ${esc(f.business)}".</p><table>${rows}</table>`,
+      html: `<p>A client submitted the Comprehensive Growth Audit intake form. <b>${esc(pricing)}</b>.${f.session_id ? ` Confirm the payment in Stripe (checkout session ${esc(f.session_id)}).` : ""} Then start the audit in Claude: "run a comprehensive audit for ${esc(f.business)}".</p><table>${rows}</table>${profileRows ? `<h3 style="margin:18px 0 6px">About their business (private)</h3><table>${profileRows}</table>` : "<p><i>They skipped the optional business questions. Ask on the call.</i></p>"}`,
       replyTo: f.email
     }),
     sendEmail(env, {

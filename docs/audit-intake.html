@@ -72,7 +72,7 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 <section class="hero"><div class="wrap">
   <span class="lane">Comprehensive Growth Audit · thank you</span>
   <h1>Let's get your audit started</h1>
-  <p>This takes about 5 minutes. The more you tell us, the more useful your audit will be. Your 5 business days start when we receive this form.</p>
+  <p>This takes about 5–8 minutes. The more you tell us, the more useful your audit will be. Your 5 business days start when we receive this form.</p>
 </div></section>
 
 <section class="band"><div class="wrap">
@@ -90,6 +90,20 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
     <div class="field full"><label for="i-comp">2–3 competitors you lose jobs to</label><input id="i-comp" placeholder="Names or websites"></div>
     <div class="field"><label for="i-goal">Main goal</label><select id="i-goal"><option>More phone calls</option><option>More form leads</option><option>More bookings</option><option>More walk-ins</option><option>More online sales</option></select></div>
     <div class="field"><label for="i-value">Average job or sale value</label><input id="i-value" placeholder="$450"></div>
+
+    <div class="field full prof-head"><h2 style="font:900 1.35rem var(--display);margin:14px 0 0">About your business</h2><small>Optional, and kept private: these help us size our recommendations to your business and budget. They never appear in your report.</small></div>
+    <div class="field"><label for="p-years">How long you've been in business</label><select id="p-years"><option value="">Choose…</option><option>Less than 1 year</option><option>1–3 years</option><option>3–10 years</option><option>10+ years</option></select></div>
+    <div class="field"><label for="p-team">Team size, including you</label><select id="p-team"><option value="">Choose…</option><option>Just me</option><option>2–5</option><option>6–15</option><option>16–50</option><option>50+</option></select></div>
+    <div class="field"><label for="p-revenue">Annual revenue</label><select id="p-revenue"><option value="">Choose…</option><option>Under $250K</option><option>$250K–$500K</option><option>$500K–$1M</option><option>$1M–$3M</option><option>$3M+</option><option>Prefer not to say</option></select></div>
+    <div class="field"><label for="p-new">New customers in a typical month</label><select id="p-new"><option value="">Choose…</option><option>0–5</option><option>6–15</option><option>16–40</option><option>41–100</option><option>100+</option><option>Not sure</option></select></div>
+    <div class="field"><label for="p-capacity">How many more could you handle each month?</label><select id="p-capacity"><option value="">Choose…</option><option>We're booked out</option><option>A few more</option><option>10–25 more</option><option>25+ more</option><option>Not sure</option></select></div>
+    <div class="field"><label for="p-close">Share of quotes or calls that become jobs</label><select id="p-close"><option value="">Choose…</option><option>Under 25%</option><option>25–50%</option><option>50–75%</option><option>Over 75%</option><option>Not sure</option></select></div>
+    <div class="field"><label for="p-spend">Monthly marketing spend, including ads</label><select id="p-spend"><option value="">Choose…</option><option>$0</option><option>Under $500</option><option>$500–$1,500</option><option>$1,500–$5,000</option><option>$5,000+</option><option>Prefer not to say</option></select></div>
+    <div class="field"><label for="p-who">Who handles your marketing now?</label><select id="p-who"><option value="">Choose…</option><option>I do</option><option>An employee</option><option>An agency or freelancer</option><option>Nobody right now</option></select></div>
+    <div class="field full"><span style="font-weight:600">Where new customers come from now</span><div class="checks prof-src" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px"><label><input type="checkbox" value="Referrals and word of mouth"> <span>Referrals and word of mouth</span></label><label><input type="checkbox" value="Google search"> <span>Google search</span></label><label><input type="checkbox" value="Google Maps"> <span>Google Maps</span></label><label><input type="checkbox" value="Paid ads"> <span>Paid ads</span></label><label><input type="checkbox" value="Social media"> <span>Social media</span></label><label><input type="checkbox" value="Repeat customers"> <span>Repeat customers</span></label><label><input type="checkbox" value="Directories (Yelp, Angi, etc.)"> <span>Directories (Yelp, Angi, etc.)</span></label><label><input type="checkbox" value="Other"> <span>Other</span></label></div></div>
+    <div class="field"><label for="p-season">Busy and slow seasons</label><input id="p-season" placeholder="Busy April–September, slow in winter"></div>
+    <div class="field"><label for="p-start">If the audit shows clear fixes, when would you want to start?</label><select id="p-start"><option value="">Choose…</option><option>This month</option><option>In 1–3 months</option><option>Later this year</option><option>Just exploring</option></select></div>
+    <div class="field full"><label for="p-win">What would make the next 12 months a win?</label><textarea id="p-win" rows="2" placeholder="Two more crews booked year-round, or 30 new patients a month"></textarea></div>
     <div class="field full"><label for="i-social">Social profile links</label><textarea id="i-social" rows="2" placeholder="Facebook, Instagram, Nextdoor, Yelp…"></textarea></div>
     <div class="field full"><label for="i-ads">Are you running ads? Where do they point?</label><textarea id="i-ads" rows="2" placeholder="Google Ads to our homepage, about $800/month"></textarea></div>
     <div class="field full"><span style="font-weight:600">Read-only access (optional, but it makes your audit much deeper)</span>
@@ -119,6 +133,7 @@ if(need.length){err.textContent="Add "+need.map(n=>n[1]).join(", ")+".";err.hidd
 if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("i-email"))){err.textContent="That email address looks incomplete.";err.hidden=false;return;}
 err.hidden=true;btn.disabled=true;btn.textContent="Sending…";
 const data={name:v("i-name"),email:v("i-email"),phone:v("i-phone"),business:v("i-biz"),website:v("i-site"),business_phone:v("i-bizphone"),address:v("i-addr"),services:v("i-svc"),towns:v("i-towns"),competitors:v("i-comp"),goal:v("i-goal"),job_value:v("i-value"),social:v("i-social"),ads:v("i-ads"),notes:v("i-notes"),
+profile:{years:v("p-years"),team:v("p-team"),revenue:v("p-revenue"),new_customers:v("p-new"),capacity:v("p-capacity"),close_rate:v("p-close"),marketing_spend:v("p-spend"),marketing_by:v("p-who"),sources:[...document.querySelectorAll(".prof-src input:checked")].map(x=>x.value),seasons:v("p-season"),start:v("p-start"),win:v("p-win")},
 access:{gbp:c("a-gbp"),search_console:c("a-gsc"),analytics:c("a-ga4"),ads:c("a-ads")},session_id:new URLSearchParams(location.search).get("session_id")||"",code:new URLSearchParams(location.search).get("code")||"",_gotcha:v("i-gotcha")};
 try{const r=await fetch("/api/intake",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"We couldn't send your form. Try again, or call (518) 460-1010.");
 $("#intake").hidden=true;$("#i-ok").hidden=false;$("#i-ok").scrollIntoView({behavior:"smooth"});}
