@@ -406,9 +406,18 @@ details p{padding:0 0 22px;color:var(--muted);max-width:62ch}
 .reach{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:22px;font:600 16px/1.3 var(--body)}
 .reach span{user-select:all}
 
-footer{background:var(--ink);color:#AFC0B7;font-size:14px}
-footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;padding-block:32px}
+footer{background:var(--ink);color:#AFC0B7;font-size:14.5px}
 footer a{color:#E3ECE7;text-decoration:none}
+footer a:hover{text-decoration:underline;text-underline-offset:3px}
+.fgrid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:36px 28px;padding-block:64px 40px}
+.fbrand{display:grid;gap:14px;align-content:start;max-width:300px}
+.flogo{width:170px;height:auto}
+.freach{display:grid;gap:6px;font-weight:600;color:#E3ECE7}
+.fcol{display:grid;gap:10px;align-content:start}
+.fcol b{font:700 13px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:#7F9489;margin-bottom:4px}
+footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px}
+.flegal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;padding-block:22px 28px;border-top:1px solid #24352D;font-size:13.5px}
+.flegal nav{display:flex;flex-wrap:wrap;gap:8px 22px}
 
 /* mobile action bar */
 .mbar{display:none}
@@ -426,6 +435,8 @@ footer a{color:#E3ECE7;text-decoration:none}
   .strip div.i:nth-child(-n+2){border-top:0}
   .pages{height:400px;max-width:520px}
   .faqside{position:static}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .fbrand{grid-column:1/-1;max-width:none}
   .portrait{max-width:420px;aspect-ratio:1/1}
 }
 @media (max-width:640px){
@@ -447,7 +458,7 @@ footer a{color:#E3ECE7;text-decoration:none}
 }
 </style>
 
-<div class="mocknote"><b>Design mockup</b> · not the live site · yellow tags mark spots that need your real photo, numbers, or quotes</div>
+<div class="mocknote"><b>Design mockup</b> · not the live site · yellow tags need your real photo, numbers, or quotes · dotted footer links are pages still to create</div>
 
 <header class="top" id="top">
   <div class="wrap nav">
@@ -745,7 +756,7 @@ footer a{color:#E3ECE7;text-decoration:none}
         <div class="row"><input id="site" name="site" placeholder="yourbusiness.com" autocomplete="url"><button class="btn btn-primary" type="submit">Check it</button></div>
         <p class="msg" id="scoremsg" aria-live="polite"></p>
       </form>
-      <div class="reach"><span>(518) 460-1010</span><span>mike@localrankauthority.com</span></div>
+      <div class="reach"><span>(518) 460-1010</span><a class="textlink" href="#book" data-page="/contact">Send Michael a message →</a></div>
     </div>
     <div class="cal" aria-label="Booking calendar (mockup)">
       <div class="ch">20-minute intro call <span>Eastern time</span></div>
@@ -759,9 +770,21 @@ footer a{color:#E3ECE7;text-decoration:none}
 </main>
 
 <footer>
-  <div class="wrap">
-    <span>© 2026 Local Rank Authority · New York's Capital Region</span>
-    <span><a href="#services">Services</a> · <a href="#audit">Audits</a> · <a href="#packages">Packages</a> · <a href="#top">Local SEO in Albany</a> · <a href="#top">Client login</a></span>
+  <div class="wrap fgrid">
+    <div class="fbrand">
+      <img src="../docs/assets/lra-primary-white.svg" alt="Local Rank Authority" class="flogo">
+      <p>Get found. Win the conversation. Stay remembered.</p>
+      <p>Based in New York's Capital Region.<br>Working with local businesses anywhere.</p>
+      <p class="freach"><span>(518) 460-1010</span><a href="#book" data-page="/contact">Send a message →</a></p>
+    </div>
+    <nav class="fcol" aria-label="Services"><b>Services</b><a href="https://localrankauthority.com/services/local-seo-ai-search">Local SEO &amp; AI search</a><a href="https://localrankauthority.com/services/website-design">Website design</a><a href="https://localrankauthority.com/services/lead-capture-follow-up">Lead capture &amp; follow-up</a><a href="https://localrankauthority.com/services/ai-chat-agents">AI chat agents</a><a href="https://localrankauthority.com/services/ai-receptionist">AI receptionist</a><a href="https://localrankauthority.com/services/review-systems">Review systems</a><a href="https://localrankauthority.com/services/rank-and-rent">Rank and rent leads</a><a href="https://localrankauthority.com/services/custom-jingles">Custom jingles</a><a href="https://localrankauthority.com/services/ongoing-care">Ongoing care</a></nav>
+    <nav class="fcol" aria-label="Audits &amp; pricing"><b>Audits &amp; pricing</b><a href="#book">Free Visibility Score</a><a href="https://localrankauthority.com/comprehensive-audit">Comprehensive Growth Audit</a><a href="#audit" class="todo" title="Page to be created">Sample report</a><a href="#packages" class="todo" title="Page to be created">Packages and pricing</a><a href="#demos">Live demos</a></nav>
+    <nav class="fcol" aria-label="Company"><b>Company</b><a href="#about">About Michael</a><a href="#results" class="todo" title="Page to be created">Results</a><a href="#faq">Questions</a><a href="#book">Book a call</a><a href="#book" class="todo" title="Page to be created">Contact</a><a href="https://localrankauthority.com/portal/">Client login</a></nav>
+    <nav class="fcol" aria-label="Areas we serve"><b>Areas we serve</b><a href="https://localrankauthority.com/local-seo-albany-ny">Local SEO in Albany, NY</a><a href="#top" class="todo" title="Page to be created">Troy, NY</a><a href="#top" class="todo" title="Page to be created">Schenectady, NY</a><a href="#top" class="todo" title="Page to be created">Saratoga Springs, NY</a></nav>
+  </div>
+  <div class="wrap flegal">
+    <span>© 2026 Local Rank Authority. All rights reserved.</span>
+    <nav aria-label="Policies"><a href="#top" class="todo" title="Page to be created">Privacy Policy</a><a href="#top" class="todo" title="Page to be created">Terms of Service</a><a href="#top" class="todo" title="Page to be created">SMS Terms</a><a href="#top" class="todo" title="Page to be created">Accessibility</a><a href="https://localrankauthority.com/sitemap.xml">Sitemap</a></nav>
   </div>
 </footer>
 
