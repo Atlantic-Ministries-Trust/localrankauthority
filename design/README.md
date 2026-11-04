@@ -12,6 +12,7 @@ This folder is outside `docs/`, so nothing here is on the live site. Open the fi
 - [ ] **Working demos:** replace the static phone mockup with the real demos from the live homepage (chat agent, AI receptionist, estimate builder, jingle).
 - [ ] **AI voice agent:** set up the xAI voice agent plus a Google Voice number, the same way as AtlanticFlagpole.com, and connect it to the site.
 - [ ] **Chat agent:** set up the site chat agent and add it to the site.
+- [x] **FAQs:** all 13 live questions are back, plus 6 new ones written the way people ask AI assistants, in 4 groups, with matching FAQPage structured data (19 questions). Re-check the pricing answer ("How much does local SEO cost?") once prices are final.
 - [ ] **Real proof:** Michael's photo, Atlantic Flagpole numbers, one real client quote (yellow tags in the mockup).
 - [ ] **Booking:** Cal.com or Calendly account for the booking box.
 - [ ] Then rebuild the live `docs/index.html` in this design, keeping the free score form, unlock flow, schema and SEO tags.
