@@ -101,11 +101,13 @@ SCRIPT = """<script>
 document.querySelectorAll('form[data-mock]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();var m=f.querySelector('.msg');if(m)m.textContent=f.dataset.mock})});})();
 </script>"""
 
+DOC_HEAD = '<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+
 def build(src):
     raw = src.read_text()
     meta = dict(re.findall(r"^(\w+):\s*(.+)$", re.search(r"<!--(.*?)-->", raw, re.S).group(1), re.M))
     body = raw.split("-->", 1)[1].strip()
-    head = f"""<title>{meta['title']}</title>
+    head = DOC_HEAD + f"""<title>{meta['title']}</title>
 <meta name="description" content="{meta.get('description','')}">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -427,8 +427,10 @@ def index():
 <p style="margin-top:18px;color:var(--muted)">Ad copy for each page is in <code>design/lp/ads.md</code>.</p></div></section></main>
 """
 
+DOC_HEAD = '<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+
 if __name__ == "__main__":
     for p in PAGES:
-        (D / f"{p['slug']}.html").write_text(page(p))
+        (D / f"{p['slug']}.html").write_text(DOC_HEAD + page(p))
         print("built", p["slug"])
-    (D / "index.html").write_text(index())
+    (D / "index.html").write_text(DOC_HEAD + index())
