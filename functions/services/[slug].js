@@ -206,7 +206,7 @@ footer{padding-block:28px;font-size:.88rem;color:var(--muted)}footer .wrap{displ
   <div class="ctas"><a class="btn btn-amber" href="/#check">Get your free score</a><a class="btn btn-ghost" href="/#contact">Tell Michael about your project</a></div>
 </div></section>
 
-<footer><div class="wrap"><span>© 2026 Local Rank Authority · Based in New York's Capital Region · <a href="/local-seo-albany-ny">Local SEO in Albany, NY</a></span><span><a href="tel:+15184601010">(518) 460-1010</a> · <a href="mailto:mike@localrankauthority.com">mike@localrankauthority.com</a></span></div></footer>
+<footer><div class="wrap"><span>© 2026 Local Rank Authority · Based in New York's Capital Region · <a href="/local-seo-albany-ny">Local SEO in Albany, NY</a></span><span><a href="tel:+15184601010">(518) 460-1010</a> · <a href="/#contact">Send a message</a></span></div></footer>
 </body>
 </html>`;
 }
