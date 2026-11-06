@@ -30,6 +30,7 @@ const LINKS = {
   ai_chat_agents: ["AI Chat Agents", `${SITE}/services/ai-chat-agents`],
   ai_receptionist: ["AI Receptionist", `${SITE}/services/ai-receptionist`],
   review_systems: ["Review Systems", `${SITE}/services/review-systems`],
+  branding: ["Branding & Brand Identity", `${SITE}/services/branding-brand-identity`],
   custom_jingles: ["Custom Jingles", `${SITE}/services/custom-jingles`],
   ongoing_care: ["Ongoing Care & Reporting", `${SITE}/services/ongoing-care`],
   rank_and_rent: ["Rank & Rent Lead Sites", `${SITE}/services/rank-and-rent`]

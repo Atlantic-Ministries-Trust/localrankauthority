@@ -352,7 +352,7 @@ def page(p):
 
 <section class="sec-tight">
   <div class="wrap about">
-    <div class="portrait"><span class="ph">[Michael's photo]</span></div>
+    <div class="portrait has-photo"><img src="../../docs/assets/michael-carlson-cooperstown.jpg" alt="Michael Carlson and Laiala in Cooperstown, New York" width="825" height="1100" loading="lazy" decoding="async"></div>
     <div class="stack">
       <p class="eyebrow">Who you'll work with</p>
       <blockquote>"Every marketing dollar I've spent has had to produce sales. That's the standard I hold your marketing to."</blockquote>

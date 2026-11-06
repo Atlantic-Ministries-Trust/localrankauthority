@@ -268,6 +268,37 @@ Questions:
 - Q: Do reviews help with AI search too?
   A: Yes. AI assistants often draw on reviews when they recommend businesses, so a steady flow of genuine reviews helps both Google rankings and AI answers.
 
+### Branding & Brand Identity
+Page: https://localrankauthority.com/services/branding-brand-identity
+
+A cohesive, professional brand: logo, colors, type, voice, and guidelines used the same way everywhere, so customers trust you before they call and choose you when they compare.
+
+What's included:
+- Brand discovery: A working session on your customers, competitors, strengths, and the reputation you want, so the brand is built on what makes you different.
+- Logo and visual identity: A primary logo plus versions for small spaces, vehicles, and dark backgrounds, with a color palette and typefaces that work together.
+- Brand voice and messaging: Your one-line description, tagline options, the key points that set you apart, and the words to use and avoid.
+- Brand guidelines: A short, practical guide that shows anyone, from a sign shop to a new hire, how to use your logo, colors, fonts, and voice correctly.
+- Everywhere customers see you: Your website, Google Business Profile, social profiles, email signature, estimates, and invoices brought in line with the new brand.
+- Print and vehicle files: Ready-to-print files for business cards, yard signs, shirts, and vehicle graphics, in the formats printers ask for.
+
+Good fit for: New businesses that need a professional start; Established businesses with a dated or homemade look; Companies adding services, locations, or partners; Businesses rebranding after a name change or buyout; Owners who want to charge what their work is worth.
+
+Timing: Most brand identity projects take four to eight weeks, depending on how many pieces need updating.
+
+Questions:
+- Q: Why does branding matter for a local service business?
+  A: Customers can't see your work before they hire you, so they judge what they can see: your profile, website, truck, and paperwork. A consistent, professional brand makes you look established and trustworthy, which helps more people call and makes it easier to win the job without competing on price alone.
+- Q: Is branding just a logo?
+  A: No. The logo is one piece. A brand is the whole impression: your look, your colors, how you describe yourself, and how consistently it all shows up wherever customers find you.
+- Q: Do I have to change my business name?
+  A: No. Most projects keep the name and improve how it's presented. If a name is causing real confusion, we'll talk it through honestly, but it's your call.
+- Q: Can you refresh my current logo instead of starting over?
+  A: Yes. If your logo has recognition worth keeping, a refresh can modernize it while keeping what customers already know.
+- Q: Who owns the logo and files?
+  A: You do. All final files and the rights to use them are yours, set out in writing.
+- Q: How does branding help with Google and AI search?
+  A: Search engines and AI assistants trust businesses whose name, details, and description match everywhere. A clear, consistent brand makes your listings, website, and profiles agree, which supports the rest of your local SEO.
+
 ### Custom Jingles
 Page: https://localrankauthority.com/services/custom-jingles
 
