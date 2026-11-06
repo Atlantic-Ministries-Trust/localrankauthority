@@ -42,6 +42,8 @@ def fix_links(html):
                 u = "/" + frag
             elif name.startswith("svc-"):
                 u = f"/services/{name[4:]}{frag}"
+            elif name.startswith("case-"):
+                u = f"/results/{name[5:]}{frag}"
             else:
                 u = f"/{name}{frag}"
         return f'href="{u}"'
@@ -207,8 +209,12 @@ def main():
     for f in sorted(D.glob("svc-*.html")):
         (OUT / "services" / (f.name[4:])).write_text(add_widget(set_note(add_canonical(fix_links(f.read_text()), f"/services/{f.stem[4:]}"))))
         written.append("services/" + f.name[4:])
+    (OUT / "results").mkdir(exist_ok=True)
+    for f in sorted(D.glob("case-*.html")):
+        (OUT / "results" / (f.name[5:])).write_text(add_widget(set_note(add_canonical(fix_links(f.read_text()), f"/results/{f.stem[5:]}"))))
+        written.append("results/" + f.name[5:])
     for f in sorted(D.glob("*.html")):
-        if f.name == "homepage-redesign.html" or f.name.startswith("svc-"):
+        if f.name == "homepage-redesign.html" or f.name.startswith(("svc-", "case-")):
             continue
         (OUT / f.name).write_text(add_widget(set_note(add_canonical(fix_links(f.read_text()), f"/{f.stem}"))))
         written.append(f.name)

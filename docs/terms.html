@@ -413,9 +413,24 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 .mapbox{border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#E4EBE6;aspect-ratio:4/3;max-width:100%}
 .mapframe{display:block;width:100%;height:100%;border:0}
 .compare td:nth-child(3){background:#EEF5F0}
+.shot{margin:0;display:grid;gap:12px}
+.shot img{width:100%;height:auto;border-radius:16px;border:1px solid var(--line);box-shadow:0 24px 48px -28px rgba(0,0,0,.45)}
+.shot figcaption{font-size:14.5px;color:var(--muted)}
+.case-meta{margin-top:18px;max-width:72ch;color:var(--muted)}
+.case-wide{grid-column:1/-1}
+.phero .eyebrow{margin-bottom:12px}
+.tbl.compact table{min-width:0}
+.metrics-4{grid-template-columns:repeat(4,1fr)}
+.case .more{color:var(--amber);font-weight:700;text-decoration:none}
+.case .more:hover{text-decoration:underline}
+.jingle-box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:grid;gap:10px;margin-top:8px}
+.jingle-box audio{width:100%}
+@media (max-width:980px){.metrics-4{grid-template-columns:1fr 1fr}}
 @media (max-width:980px){.two,.cards{grid-template-columns:1fr}.toc ol{columns:1}}
 @media (max-width:640px){.form .grid2{grid-template-columns:1fr}}
 </style>
+
+<div class="mocknote"><b>Staging preview</b> · not the live site yet · yellow tags still need real content</div>
 
 <header class="top" id="top">
   <div class="wrap nav">
@@ -461,7 +476,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
           <a href="/local-seo-albany-ny">Albany</a><a href="/local-seo-troy-ny">Troy</a><a href="/local-seo-schenectady-ny">Schenectady</a><a href="/local-seo-saratoga-springs-ny">Saratoga Springs</a><a href="/local-seo-clifton-park-ny">Clifton Park</a><a href="/local-seo-colonie-latham-ny">Colonie &amp; Latham</a><a href="/local-seo-bethlehem-delmar-ny">Bethlehem &amp; Delmar</a><a href="/local-seo-glens-falls-lake-george-ny">Glens Falls &amp; Lake George</a><a href="/local-seo-amsterdam-ny">Amsterdam</a><a href="/areas">All areas we serve →</a>
         </details>
         <details><summary>Company</summary>
-          <a href="/why-us">Why work with us</a><a href="/#about">About Michael</a><a href="/results">Results</a><a href="/#demos">Live demos</a><a href="/#faq">Questions &amp; answers</a><a href="/contact">Contact</a><a href="/portal/">Client login</a>
+          <a href="/why-us">Why work with us</a><a href="/#about">About Michael</a><a href="/results">Results</a><a href="/results/marquee-moments">Case study: Marquee Moments</a><a href="/#demos">Live demos</a><a href="/#faq">Questions &amp; answers</a><a href="/contact">Contact</a><a href="/portal/">Client login</a>
         </details>
         <div class="drawer-cta"><a class="btn btn-primary" href="/#book">Get your free score</a><a class="dphone" href="tel:+15184601010">(518) 460-1010</a></div>
         <p class="drawer-legal"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/sms-terms">SMS terms</a> · <a href="/accessibility">Accessibility</a></p>
@@ -477,6 +492,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
     <p class="crumbs"><a href="/">Home</a> / Terms of Service</p>
     <h1>Terms of Service</h1>
     <p class="lede">The ground rules for using this website, the free score, and the client portal, and how paid work is agreed.</p>
+    <p class="draft"><b>Draft for review.</b> This isn't legal advice. Michael, or a lawyer, should approve it before it goes on the live site.</p>
   </div>
 </section>
 <section class="sec-tight">

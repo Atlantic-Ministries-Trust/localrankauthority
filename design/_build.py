@@ -96,6 +96,19 @@ PAGE_CSS = """
 .mapbox{border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#E4EBE6;aspect-ratio:4/3;max-width:100%}
 .mapframe{display:block;width:100%;height:100%;border:0}
 .compare td:nth-child(3){background:#EEF5F0}
+.shot{margin:0;display:grid;gap:12px}
+.shot img{width:100%;height:auto;border-radius:16px;border:1px solid var(--line);box-shadow:0 24px 48px -28px rgba(0,0,0,.45)}
+.shot figcaption{font-size:14.5px;color:var(--muted)}
+.case-meta{margin-top:18px;max-width:72ch;color:var(--muted)}
+.case-wide{grid-column:1/-1}
+.phero .eyebrow{margin-bottom:12px}
+.tbl.compact table{min-width:0}
+.metrics-4{grid-template-columns:repeat(4,1fr)}
+.case .more{color:var(--amber);font-weight:700;text-decoration:none}
+.case .more:hover{text-decoration:underline}
+.jingle-box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:grid;gap:10px;margin-top:8px}
+.jingle-box audio{width:100%}
+@media (max-width:980px){.metrics-4{grid-template-columns:1fr 1fr}}
 @media (max-width:980px){.two,.cards{grid-template-columns:1fr}.toc ol{columns:1}}
 @media (max-width:640px){.form .grid2{grid-template-columns:1fr}}
 """
