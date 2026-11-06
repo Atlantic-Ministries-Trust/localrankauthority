@@ -571,3 +571,18 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 })();
 </script>
 <script src="https://api.dmchamp.com/v1/chat-widget/pyZvHlqZ4JzGZoU7cvlf?agent=JFz5XsehDM9jTN7C5mfG" defer></script>
+<script>
+/* Keep the chat bubble above the phone "Call / Free score" bar (.mbar on site pages, .lpbar on ad landing pages). */
+(function(){
+  function fix(){
+    var host=document.querySelector('.wai-shadow-host'), bar=document.querySelector('.mbar, .lpbar');
+    if(!host||!host.shadowRoot)return false;
+    var off=(bar&&getComputedStyle(bar).display!=='none')?Math.round(bar.getBoundingClientRect().height+12)+'px':'20px';
+    host.shadowRoot.querySelectorAll('.wai-chat-bubble').forEach(function(b){if(b.style.bottom!==off)b.style.bottom=off;});
+    if(!host._lraWatch){host._lraWatch=1;new MutationObserver(fix).observe(host.shadowRoot,{subtree:true,childList:true,attributes:true,attributeFilter:['style']});}
+    return true;
+  }
+  var tries=0, t=setInterval(function(){if(fix()||++tries>60)clearInterval(t);},250);
+  addEventListener('resize',fix);
+})();
+</script>
