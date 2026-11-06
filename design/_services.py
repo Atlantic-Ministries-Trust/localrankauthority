@@ -406,7 +406,7 @@ SERVICES = [
     text="Marquee Moments, owned by Laiala Margonar, rents 4-foot light-up marquee letters for weddings, birthdays, and events across Albany and the Capital Region. We created this jingle around the name and the promise behind it.",
     audio="../docs/assets/audio/marquee-moments-make-your-moment-shine.mp3", length="14 seconds", link=("marqueemoments.net", "https://marqueemoments.net"),
     quote="One of my favorite parts was the custom jingle they created for us! “MarqueeMoments.net — make your moment shine” captures our business perfectly. It’s catchy, memorable, and gives our marketing so much personality. I still catch myself singing it!",
-    quote_by="Laiala Margonar, Marquee Moments", quote_note="Marquee Moments is our family business.", case="case-marquee-moments.html"),
+    quote_by="Laiala Margonar, Marquee Moments", quote_note="Marquee Moments is my wife Laiala’s business.", case="case-marquee-moments.html"),
   related=["review-systems", "ongoing-care", "website-design"],
   demo=("jingle sketch", "Play a melody sketch for a fictional plumbing company, made in your browser. Finished jingles add professional vocals and production.")),
 
