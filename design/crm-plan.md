@@ -25,6 +25,12 @@ Goal: one CRM in the website's owner dashboard (`/admin`) that holds every lead 
 - Cloudflare D1, Workers and Durable Objects: free tiers cover this volume
 - DM Champ: chat on Max, from the 3,000 credits
 
+## Status
+- **Phase 1 is live (2026-11-06)** on localrankauthority.com/admin: Contacts, Calls & activity, and Tasks tabs. D1 database `lra-crm` is bound as `CRM` (Production only). Existing records were imported: 2 contacts.
+- Preview (staging) has no bindings or secrets at all, so the staging dashboard can't sign in. That's fine until launch.
+- For phase 2, set the `CRM_INGEST_TOKEN` secret in Cloudflare (Production), then give the xAI agent a tool that posts to `/api/crm/ingest`.
+- Michael's Cloudflare account also has `afp_command_center` (Atlantic Flagpole). Check whether his xAI agent already logs calls there; that would show the pattern to reuse.
+
 ## Build phases
 1. **CRM foundation**: D1 schema, move the pipeline over, contacts, timeline and pipeline screens in `/admin`, website forms flowing in.
 2. **xAI calls**: a save-the-call tool for the xAI agent, the call log in the CRM, email alerts, and links to xAI recordings. The privacy policy mentions call recording if xAI records calls.
