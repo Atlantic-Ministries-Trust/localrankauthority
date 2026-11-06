@@ -33,6 +33,10 @@ footer = relink(footer).replace('href="#top"', f'href="{HOME}"')
 mbar = relink(mbar)
 
 PAGE_CSS = """
+.faq>.stack{align-self:start}
+.svc-rel{text-decoration:none;color:inherit;transition:border-color .15s}.svc-rel:hover{border-color:var(--sign)}.svc-rel .textlink{margin-top:4px}
+.ctaband .btn-ghost{color:var(--on-sign);border-color:rgba(255,255,255,.4)}
+
 /* inner pages */
 .phero{padding-block:clamp(48px,7vw,88px) clamp(36px,5vw,56px);border-bottom:1px solid var(--line)}
 .crumbs{font:500 14px/1.4 var(--body);color:var(--muted);margin-bottom:18px}

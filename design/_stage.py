@@ -37,11 +37,23 @@ def fix_links(html):
         page = re.match(r"^(?:\.\./)*([\w-]+)\.html(#[\w-]*)?$", u)
         if page:
             name, frag = page.group(1), page.group(2) or ""
-            u = "/" + frag if name == "homepage-redesign" else f"/{name}{frag}"
+            if name == "homepage-redesign":
+                u = "/" + frag
+            elif name.startswith("svc-"):
+                u = f"/services/{name[4:]}{frag}"
+            else:
+                u = f"/{name}{frag}"
         return f'href="{u}"'
 
     # only <a> links: canonical and og:url tags keep the absolute live address
     return re.sub(r"<a\b[^>]*>", lambda a: re.sub(r'href="([^"]*)"', fix_href, a.group(0)), html)
+
+
+def add_canonical(html, path):
+    """Every page names its one true address, so the staging copy and old addresses never compete in search."""
+    if 'rel="canonical"' in html:
+        return html
+    return html.replace("</title>", f'</title>\n<link rel="canonical" href="https://localrankauthority.com{path}">', 1)
 
 
 def set_note(html):
@@ -167,10 +179,14 @@ def build_home():
 def main():
     (OUT / "index.html").write_text(build_home())
     written = ["index.html"]
+    (OUT / "services").mkdir(exist_ok=True)
+    for f in sorted(D.glob("svc-*.html")):
+        (OUT / "services" / (f.name[4:])).write_text(set_note(add_canonical(fix_links(f.read_text()), f"/services/{f.stem[4:]}")))
+        written.append("services/" + f.name[4:])
     for f in sorted(D.glob("*.html")):
-        if f.name == "homepage-redesign.html":
+        if f.name == "homepage-redesign.html" or f.name.startswith("svc-"):
             continue
-        (OUT / f.name).write_text(set_note(fix_links(f.read_text())))
+        (OUT / f.name).write_text(set_note(add_canonical(fix_links(f.read_text()), f"/{f.stem}")))
         written.append(f.name)
     for f in sorted((D / "lp").glob("*.html")):
         if f.name == "index.html":
@@ -181,14 +197,12 @@ def main():
     print(f"staged {len(written)} pages into docs/")
 
 
-SERVICE_SLUGS = ["local-seo-ai-search", "website-design", "lead-capture-follow-up", "ai-chat-agents",
-                 "ai-receptionist", "rank-and-rent", "custom-jingles", "review-systems", "ongoing-care"]
 
 
 def write_sitemap(pages):
     import datetime
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{p[:-5]}" for p in pages if p != "index.html"] + ["/comprehensive-audit"] + [f"/services/{s}" for s in SERVICE_SLUGS]
+    urls = ["/"] + [f"/{p[:-5]}" for p in pages if p != "index.html"] + ["/comprehensive-audit"]
     seen, rows = set(), []
     for u in urls:
         if u not in seen:
