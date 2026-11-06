@@ -7,7 +7,15 @@ The chat bubble on localrankauthority.com is a DM Champ AI agent trained on the 
 - `knowledge-base.md`: facts about the business, every service, and 71 questions and answers, built from the new site by `python3 design/_chat_kb.py`. Rerun that script after any change to services, FAQs, or prices, then re-upload the file.
 - `widget.html`: paste the DM Champ embed snippet here. The staging build (`design/_stage.py`) adds it to every new page.
 
-## Setup in DM Champ (Michael does these, signed in to his own account)
+## Status (set up 2026-11-06)
+- Agent: **Local Rank Authority Assistant** (id `JFz5XsehDM9jTN7C5mfG`), published. AI quality Max, "Human Like" speed, replies after 3 to 8 seconds, at most 2 message bubbles per reply and 30 AI messages per chat, AI disclosure on.
+- Instructions: `dmchamp-instructions.txt` (DM Champ's text format). Knowledge: the knowledge base pasted into **FAQs & Knowledge → Legacy text**.
+- Widget: brand green `#0B5D3F`, our greeting, 4 starter questions, a "Call (518) 460-1010" button, attachments off, pop-up after 20 seconds, no pre-chat form, allowed on localrankauthority.com, www.localrankauthority.com and redesign.localrankauthority.pages.dev (so it won't show on localhost).
+- Lead alerts: email for new contacts, human alerts, chat summaries and low credits (already on by default).
+- On staging: all 37 new pages. `widget.html` also keeps the chat bubble above the phone Call / Free score bar.
+- Tested 2026-11-06: it disclosed it's an AI, gave no package prices, and refused to guarantee rankings.
+
+## Setup in DM Champ (for reference, or to rebuild)
 1. **Create the agent.** Name it something like "Local Rank Authority Assistant".
 2. **AI Instructions tab:** paste all of `instructions.md`. Set **AI Quality** to **Max** (0.25 credits per reply).
 3. **Knowledge base:** upload or paste `knowledge-base.md`. Don't import the website itself: the live site still has the old content, and a website import charges credits for every chunk it reads.
