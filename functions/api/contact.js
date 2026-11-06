@@ -1,7 +1,8 @@
 // POST /api/contact: the "Tell us about your business" form. Stores the inquiry and emails it to the owner.
+import { recordInteraction } from "../../lib/crmdb.js";
 import { esc, json, sendEmail } from "../../lib/audit.js";
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   let b;
   try { b = await request.json(); } catch { return json({ error: "Something went wrong reading your request. Please try again." }, 400); }
   const clean = v => String(v || "").trim().slice(0, 2000);
@@ -13,6 +14,9 @@ export async function onRequestPost({ request, env }) {
 
   const at = new Date().toISOString();
   if (env.REPORTS) await env.REPORTS.put(`contact:${at}`, JSON.stringify({ ...f, at }));
+  waitUntil(recordInteraction(env, { type: "form", at, external_id: `contact:${at}`, source: "contact form",
+    contact: { name: f.name, email: f.email, phone: f.phone, business: f.business, website: f.website, tags: f.smsOk ? ["sms ok"] : [] },
+    title: f.topic ? `Contact form: ${f.topic}` : "Contact form", body: f.message || null }).catch(e => console.log("crm", e && e.message)));
   if (env.OWNER_EMAIL) {
     await sendEmail(env, {
       to: env.OWNER_EMAIL,

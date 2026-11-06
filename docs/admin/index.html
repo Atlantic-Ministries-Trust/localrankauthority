@@ -79,6 +79,21 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .notes{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto}
 .notes div{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:.92rem;white-space:pre-wrap}.notes small{display:block;color:var(--muted);font-size:.75rem}
 .dueList li{list-style:none;display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);align-items:center}.dueList{margin:0;padding:0}
+/* CRM */
+.crm-tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.crm-tl li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.crm-tl .hd{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.crm-tl .hd b{font:800 .98rem var(--display)}
+.crm-tl pre{white-space:pre-wrap;font:inherit;font-size:.9rem;margin:8px 0 0;background:var(--bg);padding:10px;border-radius:8px;max-height:360px;overflow:auto}
+.tp{display:inline-block;font:700 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--bg);border:1px solid var(--line)}
+.tp.call{background:var(--sign);border-color:var(--sign);color:#fff}.tp.chat{background:#2d5a8c;border-color:#2d5a8c;color:#fff}
+.crm-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}@media(max-width:860px){.crm-grid{grid-template-columns:1fr}}
+.crm-form{display:grid;gap:8px}.crm-form label{display:flex;flex-direction:column;gap:3px;font-size:.82rem;font-weight:600;color:var(--muted)}
+.crm-form input,.crm-form select,.crm-form textarea{font:inherit;font-weight:400;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);color:var(--ink)}
+.task{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}.task:last-child{border-bottom:0}.task.done span{text-decoration:line-through;color:var(--muted)}
+.clist{display:flex;flex-direction:column;gap:8px}
+.crow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:4px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%}
+.crow:hover{border-color:var(--sign)}.crow .nm{font:800 1rem var(--display)}@media(max-width:560px){.crow{grid-template-columns:1fr}}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -292,14 +307,14 @@ function render(){
    <div class="tile"><b>${D.intakes.length}</b><span>Audit requests</span></div>
    <div class="tile"><b>${D.clients.length}</b><span>Portal clients</span></div>
   </div>
-  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
+  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["contacts","Contacts"],["activity","Calls & activity"],["tasks","Tasks"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
   <div id="view"></div>`;
   $("#rf").onclick=load;
   $("#so").onclick=async()=>{await fetch("/api/admin/logout",{method:"POST"});location.href="/admin/";};
   app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
   draw();}
 
-function draw(){const v=$("#view");v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
+function draw(){const v=$("#view");if(["contacts","activity","tasks"].includes(tab))return crmView(v);v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
   v.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.preventDefault();editor(COS.find(c=>c.key===b.dataset.edit));});
   $("#addp")?.addEventListener("click",()=>editor(null));
   v.querySelectorAll(".pcard").forEach(p=>p.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",p.dataset.key);e.dataTransfer.effectAllowed="move";}));
@@ -321,6 +336,108 @@ function wire(root){
 async function load(){app.innerHTML='<p class="muted">Loading…</p>';
   try{D=await api("data");COS=group(D);render();}
   catch(x){if(x.signin)loginView(new URLSearchParams(location.search).get("e")==="expired"?"That sign-in link has expired or was already used. Request a new one.":"");else app.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p></div>`;}}
+/* ---------- CRM (Cloudflare D1): contacts, calls & activity, tasks ---------- */
+const CRM={q:"",filter:"all",id:null,type:""};
+const TL={call:"Call",chat:"Chat",form:"Form",score:"Free score",intake:"Audit intake",message:"Portal message",email:"Email",note:"Note",stage:"Stage",other:"Other"};
+const dur=s=>s?`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`:"";
+const ph=p=>{const m=/^\+1(\d{3})(\d{3})(\d{4})$/.exec(p||"");return m?`(${m[1]}) ${m[2]}-${m[3]}`:(p||"")};
+const urg=u=>u==="urgent"?'<span class="pill bad">Urgent</span>':u==="high"?'<span class="pill ok">High priority</span>':"";
+const tp=x=>`<span class="tp ${esc(x)}">${esc(TL[x]||x)}</span>`;
+const link=u=>/^https?:\/\//i.test(u||"")?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${/call|record|voice|x\.ai/i.test(u)?"Open recording":"Open link"} ↗</a>`:"";
+const who=r=>esc(r.name||r.company||ph(r.phone)||r.email||"Unknown");
+const go=id=>{CRM.id=id;tab="contacts";history.replaceState(null,"",id?"#contact-"+id:"#");render();scrollTo({top:0});};
+function crmErr(v,x){if(x.signin)return load();v.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p>${/connected/.test(x.message)?'<p class="muted small" style="margin-top:6px">Connect the D1 database in Cloudflare (Pages project → Settings → Bindings → D1, variable name CRM), then redeploy.</p>':""}</div>`;}
+async function crmView(v){v.innerHTML='<p class="muted">Loading…</p>';try{if(tab==="contacts")await(CRM.id?contactView(v):contactsView(v));else if(tab==="activity")await activityView(v);else await tasksView(v);}catch(x){crmErr(v,x);}}
+
+async function contactsView(v){
+  const [s,l]=await Promise.all([api("crm/stats"),api(`crm/contacts?filter=${CRM.filter}&q=${encodeURIComponent(CRM.q)}`)]);
+  const f=[["all","All"],["calls","Called"],["urgent","Urgent (14 days)"],["tasks","Open tasks"],["clients","Clients"]];
+  v.innerHTML=`<div class="stack" style="margin-top:16px">
+   <div class="tiles"><div class="tile"><b>${s.contacts}</b><span>Contacts</span></div><div class="tile"><b>${s.calls7}</b><span>Calls (7 days)</span></div><div class="tile"><b>${s.urgent14}</b><span>Urgent or high (14 days)</span></div><div class="tile"><b>${s.openTasks}</b><span>Open tasks${s.overdue?` · <span class="due">${s.overdue} overdue</span>`:""}</span></div></div>
+   <div class="tools"><input type="search" id="cq" placeholder="Search name, email, phone, company" value="${esc(CRM.q)}" aria-label="Search contacts"><button class="btn btn-amber btn-sm" id="cadd">Add contact</button><button class="btn btn-ghost btn-sm" id="cimp" title="Copy free-score leads, forms, intakes, portal clients and the pipeline into the CRM. Safe to run more than once.">Import existing records</button></div>
+   <div class="row">${f.map(([k,x])=>`<button class="chip" data-cf="${k}" aria-pressed="${CRM.filter===k}">${x}</button>`).join("")}</div>
+   <p id="cmsg" role="status" class="small"></p>
+   <div class="clist">${l.contacts.length?l.contacts.map(c=>`<button class="crow" data-cid="${c.id}"><div><span class="nm">${who(c)}</span>${c.company&&c.name?`<span class="muted small"> · ${esc(c.company)}</span>`:""}<div class="small muted">${esc([ph(c.phone),c.email].filter(Boolean).join(" · "))}</div></div>
+     <div class="small">${c.last_type?tp(c.last_type):""} <span class="muted">${whenT(c.last_activity||c.created)}</span>${c.stage?`<div class="muted">Pipeline: ${esc(c.stage)}</div>`:""}</div>
+     <div class="row">${c.open_tasks?`<span class="pill new">${c.open_tasks} task${c.open_tasks>1?"s":""}</span>`:""}${c.status==="customer"?'<span class="pill good">Customer</span>':""}${(c.tags||[]).slice(0,3).map(x=>`<span class="pill na">${esc(x)}</span>`).join("")}</div></button>`).join(""):'<div class="panel empty">No contacts here yet. New calls, chats, and form messages appear automatically.</div>'}</div></div>`;
+  let tmr;const q=$("#cq");q.oninput=()=>{clearTimeout(tmr);tmr=setTimeout(async()=>{CRM.q=q.value;const pos=q.selectionStart;await crmView($("#view"));const n=$("#cq");n.focus();n.setSelectionRange(pos,pos);},250);};
+  v.querySelectorAll("[data-cf]").forEach(b=>b.onclick=()=>{CRM.filter=b.dataset.cf;crmView(v);});
+  v.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>go(+b.dataset.cid));
+  $("#cadd").onclick=()=>addContact();
+  $("#cimp").onclick=async e=>{const b=e.currentTarget,m=$("#cmsg");b.disabled=true;m.className="small muted";m.textContent="Importing…";
+    try{const r=await api("crm/import",{method:"POST",body:"{}"});const n=r.imported;m.className="msg-ok small";m.textContent=`Done: ${n.scores} free scores, ${n.forms} forms, ${n.intakes} intakes, ${n.clients} portal clients, ${n.messages} messages, ${n.pipeline} pipeline companies.`;setTimeout(()=>crmView(v),1200);}
+    catch(x){m.className="msg-err small";m.textContent=x.message;b.disabled=false;}};
+}
+
+function addContact(){
+  const dlg=document.createElement("dialog");
+  dlg.innerHTML=`<form method="dialog" class="dlg"><h2>Add a contact</h2><div class="fgrid">
+   <label>Name<input name="name" autocomplete="off"></label><label>Business<input name="business" autocomplete="off"></label>
+   <label>Phone<input name="phone" type="tel" autocomplete="off"></label><label>Email<input name="email" type="email" autocomplete="off"></label>
+   <label style="grid-column:1/-1">Website<input name="website" autocomplete="off"></label><label style="grid-column:1/-1">Note<textarea name="note" rows="3"></textarea></label></div>
+   <p class="msg-err small" id="aerr" role="alert"></p><div class="row" style="justify-content:flex-end"><button class="btn btn-ghost btn-sm" value="cancel">Cancel</button><button class="btn btn-amber btn-sm" id="asave" value="save">Add</button></div></form>`;
+  document.body.append(dlg);dlg.showModal();dlg.addEventListener("close",()=>dlg.remove());
+  dlg.querySelector("#asave").onclick=async e=>{e.preventDefault();const f=new FormData(dlg.querySelector("form"));const patch=Object.fromEntries(["name","business","phone","email","website"].map(k=>[k,f.get(k)]));
+    try{const r=await api("crm/contact",{method:"POST",body:JSON.stringify({create:true,patch,note:f.get("note")})});dlg.close();go(r.contact.id);}catch(x){dlg.querySelector("#aerr").textContent=x.message;}};
+}
+
+async function contactView(v){
+  const d=await api("crm/contact?id="+CRM.id);const c=d.contact,co=d.company;
+  v.innerHTML=`<div class="stack" style="margin-top:16px">
+   <div class="row spread"><button class="btn btn-ghost btn-sm" id="cback">← All contacts</button><span class="small muted">Added ${when(c.created)}${c.source?` · from ${esc(c.source)}`:""}</span></div>
+   <div><h2>${who(c)}</h2><p class="muted">${esc([co?.name&&co.name!==c.name?co.name:"",co?.website,co?.stage?`Pipeline: ${co.stage}`:"",co?.value?money(co.value):""].filter(Boolean).join(" · "))}</p>
+    <p class="row" style="margin-top:6px">${c.phone?`<a class="btn btn-amber btn-sm" href="tel:${esc(c.phone)}">Call ${esc(ph(c.phone))}</a>`:""}${c.email?`<a class="btn btn-ghost btn-sm" href="mailto:${esc(c.email)}">Email</a>`:""}</p></div>
+   <div class="crm-grid"><div class="stack">
+     <form class="panel crm-form" id="logf"><h3>Log a note or call</h3><div class="fgrid"><label>Type<select name="type"><option value="note">Note</option><option value="call">Call</option><option value="email">Email</option></select></label><label>Priority<select name="urgency"><option value="">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select></label></div>
+      <label>What happened<textarea name="body" rows="3" required></textarea></label><label>Recording or link (optional)<input name="url" type="url" placeholder="https://"></label><div class="row"><button class="btn btn-amber btn-sm">Add to timeline</button><span id="lmsg" class="small" role="status"></span></div></form>
+     <h3>Timeline</h3>
+     <ul class="crm-tl">${d.timeline.length?d.timeline.map(i=>`<li><div class="hd">${tp(i.type)}<b>${esc(i.title||TL[i.type]||"")}</b>${urg(i.urgency)}<span class="muted small">${whenT(i.at)}${i.duration?` · ${dur(i.duration)}`:""}${i.direction==="out"?" · outgoing":""}</span></div>
+       ${i.outcome?`<p class="small" style="margin-top:4px"><b>Outcome:</b> ${esc(i.outcome)}</p>`:""}${i.summary?`<p style="margin-top:6px;white-space:pre-wrap">${esc(i.summary)}</p>`:""}
+       ${i.body?(i.type==="call"||i.type==="chat"||i.body.length>400?`<details style="margin-top:6px"><summary class="small">${i.type==="call"||i.type==="chat"?"Transcript":"Full text"}</summary><pre>${esc(i.body)}</pre></details>`:`<pre>${esc(i.body)}</pre>`):""}
+       ${i.url?`<p class="small" style="margin-top:6px">${link(i.url)}</p>`:""}</li>`).join(""):'<li class="muted">Nothing yet.</li>'}</ul>
+   </div><div class="stack">
+     <form class="panel crm-form" id="cf"><h3>Details</h3>
+      <label>Name<input name="name" value="${esc(c.name||"")}"></label><label>Phone<input name="phone" type="tel" value="${esc(c.phone||"")}"></label><label>Email<input name="email" type="email" value="${esc(c.email||"")}"></label>
+      <label>Title or role<input name="title" value="${esc(c.title||"")}"></label><label>Business<input name="business" value="${esc(co?.name||"")}"></label><label>Website<input name="website" value="${esc(co?.website||"")}"></label>
+      <label>Status<select name="status">${[["open","Open"],["customer","Customer"],["closed","Closed"],["do_not_contact","Do not contact"]].map(([k,x])=>`<option value="${k}"${c.status===k?" selected":""}>${x}</option>`).join("")}</select></label>
+      <label>Tags (comma separated)<input name="tags" value="${esc((c.tags||[]).join(", "))}"></label>
+      <div class="row"><button class="btn btn-amber btn-sm">Save</button><span id="cmsg2" class="small" role="status"></span></div>
+      ${co?.key?`<p class="small muted">Stage, value, and follow-up date are set on the Pipeline tab.</p>`:""}</form>
+     <div class="panel"><h3>Tasks</h3><div id="tl">${d.tasks.map(k=>`<label class="task${k.done_at?" done":""}"><input type="checkbox" data-tk="${k.id}"${k.done_at?" checked":""}><span>${esc(k.title)}${k.due?` <span class="${!k.done_at&&k.due<today()?"due":"muted"} small">· ${esc(when(k.due+"T12:00:00"))}</span>`:""}</span></label>`).join("")||'<p class="muted small">No tasks.</p>'}</div>
+      <form class="crm-form" id="tf" style="margin-top:10px"><input name="title" placeholder="Follow-up task" required><input name="due" type="date"><button class="btn btn-ghost btn-sm">Add task</button></form></div>
+     ${d.coworkers.length?`<div class="panel"><h3>Same company</h3>${d.coworkers.map(x=>`<p><button class="linkish" data-cid="${x.id}">${who(x)}</button></p>`).join("")}</div>`:""}
+     <button class="btn btn-ghost btn-sm" id="cdel" style="color:var(--pin)">Delete contact</button>
+   </div></div></div>`;
+  $("#cback").onclick=()=>go(null);
+  v.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>go(+b.dataset.cid));
+  $("#logf").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{await api("crm/log",{method:"POST",body:JSON.stringify({contact_id:c.id,type:f.get("type"),urgency:f.get("urgency")||null,body:f.get("body"),url:f.get("url")||null,title:f.get("type")==="call"?"Call (logged by hand)":f.get("type")==="email"?"Email":"Note"})});crmView(v);}catch(x){$("#lmsg").className="msg-err small";$("#lmsg").textContent=x.message;}};
+  $("#cf").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),m=$("#cmsg2");const patch=Object.fromEntries(["name","phone","email","title","business","website","status"].map(k=>[k,f.get(k)]));patch.tags=String(f.get("tags")||"").split(",").map(x=>x.trim()).filter(Boolean);
+    try{await api("crm/contact",{method:"POST",body:JSON.stringify({id:c.id,patch})});m.className="msg-ok small";m.textContent="Saved";setTimeout(()=>crmView(v),600);}catch(x){m.className="msg-err small";m.textContent=x.message;}};
+  v.querySelectorAll("[data-tk]").forEach(b=>b.onchange=async()=>{try{await api("crm/task",{method:"POST",body:JSON.stringify({id:+b.dataset.tk,done:b.checked})});crmView(v);}catch(x){alert(x.message);}});
+  $("#tf").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{await api("crm/task",{method:"POST",body:JSON.stringify({contact_id:c.id,title:f.get("title"),due:f.get("due")||null})});crmView(v);}catch(x){alert(x.message);}};
+  $("#cdel").onclick=async()=>{if(!confirm(`Delete ${c.name||"this contact"} and their whole timeline? This can't be undone.`))return;try{await api("crm/contact-delete",{method:"POST",body:JSON.stringify({id:c.id})});go(null);}catch(x){alert(x.message);}};
+}
+
+async function activityView(v){
+  const r=await api("crm/activity?limit=150"+(CRM.type?"&type="+CRM.type:""));
+  const f=[["","Everything"],["call","Calls"],["chat","Chats"],["form","Forms"],["score","Free scores"],["intake","Audit intakes"],["note","Notes"]];
+  v.innerHTML=`<div class="stack" style="margin-top:16px"><div class="row">${f.map(([k,x])=>`<button class="chip" data-at="${k}" aria-pressed="${CRM.type===k}">${x}</button>`).join("")}</div>
+   <ul class="crm-tl">${r.items.length?r.items.map(i=>`<li><div class="hd">${tp(i.type)}${i.contact_id?`<button class="linkish" data-cid="${i.contact_id}"><b>${who(i)}</b></button>`:`<b>${who(i)}</b>`}${urg(i.urgency)}<span class="muted small">${whenT(i.at)}${i.duration?` · ${dur(i.duration)}`:""}</span></div>
+     <p class="small" style="margin-top:4px">${esc(i.title||"")}${i.outcome?` · <b>${esc(i.outcome)}</b>`:""}</p>${i.summary||i.snippet?`<p class="muted" style="margin-top:4px;white-space:pre-wrap">${esc(i.summary||i.snippet)}</p>`:""}${i.url?`<p class="small" style="margin-top:4px">${link(i.url)}</p>`:""}</li>`).join(""):`<li class="muted">${CRM.type==="call"?"No calls yet. Once the xAI voice agent is connected, every call lands here.":"Nothing yet."}</li>`}</ul></div>`;
+  v.querySelectorAll("[data-at]").forEach(b=>b.onclick=()=>{CRM.type=b.dataset.at;crmView(v);});
+  v.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>go(+b.dataset.cid));
+}
+
+async function tasksView(v){
+  const r=await api("crm/tasks");const t0=today();
+  v.innerHTML=`<div class="stack" style="margin-top:16px"><form class="row" id="gtf"><input name="title" placeholder="New task (not tied to a contact)" required style="flex:1 1 260px;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)"><input name="due" type="date" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)"><button class="btn btn-amber btn-sm">Add</button></form>
+   <div class="panel">${r.tasks.length?r.tasks.map(k=>`<div class="task"><input type="checkbox" data-tk="${k.id}" aria-label="Done"><span style="flex:1">${esc(k.title)}${k.contact_id?` · <button class="linkish" data-cid="${k.contact_id}">${who(k)}</button>`:""}</span><span class="small ${k.due&&k.due<t0?"due":k.due===t0?"":"muted"}">${k.due?(k.due<t0?"Overdue · ":k.due===t0?"Today · ":"")+esc(when(k.due+"T12:00:00")):"No date"}</span><button class="linkish small muted" data-tdel="${k.id}" aria-label="Delete task">✕</button></div>`).join(""):'<p class="empty">No open tasks.</p>'}</div></div>`;
+  v.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>go(+b.dataset.cid));
+  v.querySelectorAll("[data-tk]").forEach(b=>b.onchange=async()=>{try{await api("crm/task",{method:"POST",body:JSON.stringify({id:+b.dataset.tk,done:true})});crmView(v);}catch(x){alert(x.message);}});
+  v.querySelectorAll("[data-tdel]").forEach(b=>b.onclick=async()=>{try{await api("crm/task-delete",{method:"POST",body:JSON.stringify({id:+b.dataset.tdel})});crmView(v);}catch(x){alert(x.message);}});
+  $("#gtf").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{await api("crm/task",{method:"POST",body:JSON.stringify({title:f.get("title"),due:f.get("due")||null})});crmView(v);}catch(x){alert(x.message);}};
+}
+{const m=/^#contact-(\d+)$/.exec(location.hash);if(m){tab="contacts";CRM.id=+m[1];}}
 load();
 })();
 </script>
