@@ -69,7 +69,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(246,247,243,.88);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
 header.top.scrolled{border-bottom-color:var(--line)}
 .nav{display:flex;align-items:center;gap:28px;height:76px}
-.nav .logo img{height:42px;width:auto;display:block}
+.nav .logo img{height:60px;width:auto;display:block}
 .nav ul{display:flex;gap:26px;list-style:none;margin:0 auto 0 12px;padding:0}
 .nav ul a{text-decoration:none;font:600 15px/1 var(--body);color:var(--ink);opacity:.82}
 .nav ul a:hover{opacity:1}
@@ -214,6 +214,7 @@ header.top.scrolled{border-bottom-color:var(--line)}
 /* about */
 .about{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,5vw,72px);align-items:center}
 .portrait{aspect-ratio:4/5;max-width:100%;border-radius:20px;background:linear-gradient(160deg,#E4EBE6,#CBD8CF);display:grid;place-items:center;text-align:center;padding:24px;position:relative;overflow:hidden}
+.portrait.has-photo{padding:0}.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
 .portrait::after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;background:repeating-linear-gradient(-45deg,var(--amber) 0 12px,var(--sign) 12px 24px)}
 .about blockquote{margin:0;font:700 clamp(24px,2.6vw,32px)/1.25 var(--display)}
 .facts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
@@ -280,6 +281,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 
 @media (max-width:980px){
   .nav ul,.nav .signin{display:none}
+  .nav .phone{margin-left:auto}
   .hero-grid,.audit-grid,.demo,.about,.faq,.book-grid,.results{grid-template-columns:1fr}
   .serp{transform:none}
   .pillars,.pkgs{grid-template-columns:1fr}
@@ -298,7 +300,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 @media (max-width:640px){
   body{font-size:16px}
   .nav{height:64px;gap:12px}
-  .nav .logo img{height:34px}
+  .nav .logo img{height:46px}
   .nav .phone{display:none}
   .nav .btn{margin-left:auto;padding:11px 16px;font-size:14px}
   .exits{grid-template-columns:1fr}
@@ -312,6 +314,10 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
   .mbar a{justify-content:center;padding:15px 12px}
   footer{padding-bottom:84px}
 }
+
+.faq>.stack{align-self:start}
+.svc-rel{text-decoration:none;color:inherit;transition:border-color .15s}.svc-rel:hover{border-color:var(--sign)}.svc-rel .textlink{margin-top:4px}
+.ctaband .btn-ghost{color:var(--on-sign);border-color:rgba(255,255,255,.4)}
 
 /* inner pages */
 .phero{padding-block:clamp(48px,7vw,88px) clamp(36px,5vw,56px);border-bottom:1px solid var(--line)}
@@ -378,7 +384,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 /* landing pages */
 .lp-top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(246,247,243,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .lp-top .wrap{display:flex;align-items:center;gap:16px;height:68px}
-.lp-top img{height:36px;width:auto;display:block}
+.lp-top img{height:52px;width:auto;display:block}
 .lp-top .area{font-size:13.5px;color:var(--muted);margin-right:auto}
 .lp-top .tel{font:700 16px/1 var(--display);text-decoration:none;white-space:nowrap}
 .lp-top .btn{padding:12px 18px;font-size:15px}
@@ -461,7 +467,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       <p style="margin-top:16px"><a class="textlink" href="tel:+15184601010" data-event="lp_call_click">or call Michael: (518) 460-1010</a></p>
       <div class="trust"><span>Run by a local business owner</span><span>You work with Michael directly</span><span>No long contracts</span><span>Plain-English reports</span></div>
     </div>
-    <div><div><div class="wave" aria-hidden="true"><i style="animation-delay:0.00s;height:30%"></i><i style="animation-delay:0.09s;height:67%"></i><i style="animation-delay:0.18s;height:34%"></i><i style="animation-delay:0.27s;height:71%"></i><i style="animation-delay:0.36s;height:38%"></i><i style="animation-delay:0.45s;height:75%"></i><i style="animation-delay:0.54s;height:42%"></i><i style="animation-delay:0.63s;height:79%"></i><i style="animation-delay:0.72s;height:46%"></i><i style="animation-delay:0.81s;height:83%"></i><i style="animation-delay:0.90s;height:50%"></i><i style="animation-delay:0.99s;height:87%"></i><i style="animation-delay:1.08s;height:54%"></i><i style="animation-delay:1.17s;height:91%"></i><i style="animation-delay:0.06s;height:58%"></i><i style="animation-delay:0.15s;height:95%"></i><i style="animation-delay:0.24s;height:62%"></i><i style="animation-delay:0.33s;height:99%"></i><i style="animation-delay:0.42s;height:66%"></i><i style="animation-delay:0.51s;height:33%"></i><i style="animation-delay:0.60s;height:70%"></i><i style="animation-delay:0.69s;height:37%"></i><i style="animation-delay:0.78s;height:74%"></i><i style="animation-delay:0.87s;height:41%"></i><i style="animation-delay:0.96s;height:78%"></i><i style="animation-delay:1.05s;height:45%"></i><i style="animation-delay:1.14s;height:82%"></i><i style="animation-delay:0.03s;height:49%"></i></div><p style="margin-top:14px;color:var(--muted);font-size:14px">Sample jingle player <span class="ph">[add a real sample clip]</span></p></div></div>
+    <div><div><div class="wave" aria-hidden="true"><i style="animation-delay:0.00s;height:30%"></i><i style="animation-delay:0.09s;height:67%"></i><i style="animation-delay:0.18s;height:34%"></i><i style="animation-delay:0.27s;height:71%"></i><i style="animation-delay:0.36s;height:38%"></i><i style="animation-delay:0.45s;height:75%"></i><i style="animation-delay:0.54s;height:42%"></i><i style="animation-delay:0.63s;height:79%"></i><i style="animation-delay:0.72s;height:46%"></i><i style="animation-delay:0.81s;height:83%"></i><i style="animation-delay:0.90s;height:50%"></i><i style="animation-delay:0.99s;height:87%"></i><i style="animation-delay:1.08s;height:54%"></i><i style="animation-delay:1.17s;height:91%"></i><i style="animation-delay:0.06s;height:58%"></i><i style="animation-delay:0.15s;height:95%"></i><i style="animation-delay:0.24s;height:62%"></i><i style="animation-delay:0.33s;height:99%"></i><i style="animation-delay:0.42s;height:66%"></i><i style="animation-delay:0.51s;height:33%"></i><i style="animation-delay:0.60s;height:70%"></i><i style="animation-delay:0.69s;height:37%"></i><i style="animation-delay:0.78s;height:74%"></i><i style="animation-delay:0.87s;height:41%"></i><i style="animation-delay:0.96s;height:78%"></i><i style="animation-delay:1.05s;height:45%"></i><i style="animation-delay:1.14s;height:82%"></i><i style="animation-delay:0.03s;height:49%"></i></div><p style="margin-top:14px;color:var(--muted);font-size:14px">Your jingle comes in 5, 15, and 30-second cuts</p></div></div>
   </div>
 </section>
 
@@ -495,12 +501,11 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 
 <section class="sec-tight">
   <div class="wrap about">
-    <div class="portrait"><span class="ph">[Michael's photo]</span></div>
+    <div class="portrait has-photo"><img src="../../docs/assets/michael-carlson-cooperstown.jpg" alt="Michael Carlson and Laiala in Cooperstown, New York" width="825" height="1100" loading="lazy" decoding="async"></div>
     <div class="stack">
       <p class="eyebrow">Who you'll work with</p>
       <blockquote>"Every marketing dollar I've spent has had to produce sales. That's the standard I hold your marketing to."</blockquote>
       <p class="lede">I'm Michael Carlson. I've owned Atlantic Flagpole since 2008 and co-founded The Christmas Guys, so I know what it's like when the phone doesn't ring. You'll work with me directly, not an account manager.</p>
-      <div class="quote" style="border-left-color:var(--sign)"><blockquote style="font:700 20px/1.35 var(--display)"><span class="ph">[A real client review about Custom Ad Jingles, with name and town]</span></blockquote></div>
     </div>
   </div>
 </section>
@@ -559,7 +564,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       ['url','biz','svc','city'].forEach(function(k){q.set(k,f.elements[k].value.trim())});
       q.set('src','lp-'+f.dataset.lp);
       var dest='/?'+q.toString()+'#check';
-      if(location.hostname!=='localrankauthority.com'){f.querySelector('.msg').textContent='Draft: on the live site this opens your free score, already filled in.';return}
+      if(!/(^|\.)localrankauthority\.com$|\.pages\.dev$/.test(location.hostname)){f.querySelector('.msg').textContent='Draft: on the live site this opens your free score, already filled in.';return}
       location.href=dest;
     });
   });

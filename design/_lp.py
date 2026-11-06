@@ -180,7 +180,7 @@ LP_CSS = """
 /* landing pages */
 .lp-top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(246,247,243,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .lp-top .wrap{display:flex;align-items:center;gap:16px;height:68px}
-.lp-top img{height:36px;width:auto;display:block}
+.lp-top img{height:52px;width:auto;display:block}
 .lp-top .area{font-size:13.5px;color:var(--muted);margin-right:auto}
 .lp-top .tel{font:700 16px/1 var(--display);text-decoration:none;white-space:nowrap}
 .lp-top .btn{padding:12px 18px;font-size:15px}
@@ -241,7 +241,7 @@ def visual(p):
         return """<div class="pages" aria-label="Sample report pages"><div class="pg p1"><div class="t">Comprehensive<br>Growth Audit</div><div class="s">Harbor Point Plumbing · sample</div><div class="bar"></div></div><div class="pg p2"><div class="mini-h">Where you stand</div><svg class="gauge" viewBox="0 0 120 70" aria-hidden="true"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" stroke="#DCE2DD" stroke-width="12" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 86 22" fill="none" stroke="#0B5D3F" stroke-width="12" stroke-linecap="round"/><text x="60" y="60" text-anchor="middle" font-family="Overpass,Arial" font-weight="900" font-size="24" fill="#10201A">61</text></svg><div class="rows"><div class="rowbar">Google profile<i style="--w:42%;--c:#C8432B"></i></div><div class="rowbar">AI visibility<i style="--w:30%;--c:#C8432B"></i></div><div class="rowbar">Website speed<i style="--w:78%"></i></div></div></div><div class="pg p3"><div class="mini-h">Top problems, ranked</div><div class="find"><b>No phone on the first screen</b><span class="blur">Mobile visitors see a headline first.</span></div><div class="find"><b>Missing from 3 "best of" lists</b><span class="blur">Competitors appear on every list.</span></div></div></div>"""
     if v == "jingle":
         bars = "".join(f'<i style="animation-delay:{(i*0.09)%1.2:.2f}s;height:{30+((i*37)%70)}%"></i>' for i in range(28))
-        return f'<div><div class="wave" aria-hidden="true">{bars}</div><p style="margin-top:14px;color:var(--muted);font-size:14px">Sample jingle player <span class="ph">[add a real sample clip]</span></p></div>'
+        return f'<div><div class="wave" aria-hidden="true">{bars}</div><p style="margin-top:14px;color:var(--muted);font-size:14px">Your jingle comes in 5, 15, and 30-second cuts</p></div>'
     chats = {
      "voice": ("AI receptionist", "Answering a call at 8:47 pm", [("them","Thanks for calling Harbor Point Plumbing. How can I help tonight?"),("me","My water heater is leaking."),("them","I'm sorry to hear that. I can book a technician for 8 am tomorrow. Is the leak near the top or the bottom?"),("sum","Booked 8 am. Summary texted to the owner at 8:49 pm.")]),
      "chat": ("Website assistant", "Usually replies instantly", [("them","Hi! I can help with pricing, scheduling, or questions."),("me","Do you do drain cleaning in Troy?"),("them","Yes, we serve Troy. Most drains are $149–$229. Want the first opening tomorrow?"),("sum","Lead sent to the owner: drain cleaning, Troy, phone collected.")]),
@@ -352,12 +352,11 @@ def page(p):
 
 <section class="sec-tight">
   <div class="wrap about">
-    <div class="portrait"><span class="ph">[Michael's photo]</span></div>
+    <div class="portrait has-photo"><img src="../../docs/assets/michael-carlson-cooperstown.jpg" alt="Michael Carlson and Laiala in Cooperstown, New York" width="825" height="1100" loading="lazy" decoding="async"></div>
     <div class="stack">
       <p class="eyebrow">Who you'll work with</p>
       <blockquote>"Every marketing dollar I've spent has had to produce sales. That's the standard I hold your marketing to."</blockquote>
       <p class="lede">I'm Michael Carlson. I've owned Atlantic Flagpole since 2008 and co-founded The Christmas Guys, so I know what it's like when the phone doesn't ring. You'll work with me directly, not an account manager.</p>
-      <div class="quote" style="border-left-color:var(--sign)"><blockquote style="font:700 20px/1.35 var(--display)"><span class="ph">[A real client review about {e(p['service'])}, with name and town]</span></blockquote></div>
     </div>
   </div>
 </section>
@@ -404,7 +403,7 @@ def page(p):
       ['url','biz','svc','city'].forEach(function(k){{q.set(k,f.elements[k].value.trim())}});
       q.set('src','lp-'+f.dataset.lp);
       var dest='/?'+q.toString()+'#check';
-      if(location.hostname!=='localrankauthority.com'){{f.querySelector('.msg').textContent='Draft: on the live site this opens your free score, already filled in.';return}}
+      if(!/(^|\\.)localrankauthority\\.com$|\\.pages\\.dev$/.test(location.hostname)){{f.querySelector('.msg').textContent='Draft: on the live site this opens your free score, already filled in.';return}}
       location.href=dest;
     }});
   }});

@@ -33,6 +33,10 @@ footer = relink(footer).replace('href="#top"', f'href="{HOME}"')
 mbar = relink(mbar)
 
 PAGE_CSS = """
+.faq>.stack{align-self:start}
+.svc-rel{text-decoration:none;color:inherit;transition:border-color .15s}.svc-rel:hover{border-color:var(--sign)}.svc-rel .textlink{margin-top:4px}
+.ctaband .btn-ghost{color:var(--on-sign);border-color:rgba(255,255,255,.4)}
+
 /* inner pages */
 .phero{padding-block:clamp(48px,7vw,88px) clamp(36px,5vw,56px);border-bottom:1px solid var(--line)}
 .crumbs{font:500 14px/1.4 var(--body);color:var(--muted);margin-bottom:18px}
@@ -98,6 +102,14 @@ PAGE_CSS = """
 
 SCRIPT = """<script>
 (function(){var h=document.querySelector('header.top');addEventListener('scroll',function(){h.classList.toggle('scrolled',scrollY>8)},{passive:true});
+document.querySelectorAll('form[data-api]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();
+  var m=f.querySelector('.msg'),btn=f.querySelector('button[type=submit]'),v=function(id){var el=f.querySelector('#'+id);return el?el.value.trim():''};
+  var data={name:v('c-name'),email:v('c-email'),phone:v('c-phone'),message:v('c-msg'),topic:'General message',sms_ok:!!(f.querySelector('#c-sms')||{}).checked,_gotcha:(f.querySelector('[name=_gotcha]')||{}).value||''};
+  if(!data.name||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)||!data.message){m.textContent='Add your name, a valid email, and a message.';return}
+  btn.disabled=true;m.textContent='Sending…';
+  fetch(f.dataset.api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json().then(function(j){return [r.ok,j]})})
+  .then(function(x){if(x[0]&&x[1].ok){f.reset();m.textContent='Thanks, your message is in. Michael will reply within one business day.'}else{m.textContent=(x[1]&&x[1].error)||'Something went wrong. Please call (518) 460-1010.'}})
+  .catch(function(){m.textContent='Something went wrong. Please call (518) 460-1010.'}).finally(function(){btn.disabled=false})})});
 document.querySelectorAll('form[data-mock]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();var m=f.querySelector('.msg');if(m)m.textContent=f.dataset.mock})});})();
 </script>"""
 

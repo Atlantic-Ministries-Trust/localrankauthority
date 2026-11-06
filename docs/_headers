@@ -1,0 +1,7 @@
+# Keep Cloudflare preview and staging addresses (*.pages.dev) out of search results.
+# The real domain, localrankauthority.com, is not affected.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
