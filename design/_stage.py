@@ -70,7 +70,14 @@ def add_widget(html):
     return html.rstrip() + "\n" + snippet + "\n"
 
 
+import os
+LIVE = os.environ.get("LRA_LIVE") == "1"   # LRA_LIVE=1 python3 design/_stage.py builds the production site
+
+
 def set_note(html):
+    if LIVE:
+        html = re.sub(r'<div class="mocknote">.*?</div>\s*', "", html, count=1, flags=re.S)
+        return re.sub(r'\s*<p class="draft">.*?</p>', "", html, flags=re.S)
     return re.sub(r'<div class="mocknote">.*?</div>', STAGING_NOTE, html, count=1, flags=re.S)
 
 
