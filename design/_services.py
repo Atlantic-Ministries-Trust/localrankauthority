@@ -404,7 +404,9 @@ SERVICES = [
   ],
   example=dict(title="“Make Your Moment Shine” for Marquee Moments",
     text="Marquee Moments, owned by Laiala Margonar, rents 4-foot light-up marquee letters for weddings, birthdays, and events across Albany and the Capital Region. We created this jingle around the name and the promise behind it.",
-    audio="../docs/assets/audio/marquee-moments-make-your-moment-shine.mp3", length="14 seconds", link=("marqueemoments.net", "https://marqueemoments.net")),
+    audio="../docs/assets/audio/marquee-moments-make-your-moment-shine.mp3", length="14 seconds", link=("marqueemoments.net", "https://marqueemoments.net"),
+    quote="One of my favorite parts was the custom jingle they created for us! “MarqueeMoments.net — make your moment shine” captures our business perfectly. It’s catchy, memorable, and gives our marketing so much personality. I still catch myself singing it!",
+    quote_by="Laiala Margonar, Marquee Moments", quote_note="Laiala is Michael’s family.", case="case-marquee-moments.html"),
   related=["review-systems", "ongoing-care", "website-design"],
   demo=("jingle sketch", "Play a melody sketch for a fictional plumbing company, made in your browser. Finished jingles add professional vocals and production.")),
 
@@ -474,6 +476,11 @@ def page(s):
     example = ""
     if s.get("example"):
         x = s["example"]
+        quote_html = ""
+        if x.get("quote"):
+            quote_html = (f'<figure class="testimonial"><blockquote>{e(x["quote"])}</blockquote>'
+                          f'<figcaption><b>{e(x["quote_by"])}</b><span>{e(x["quote_note"])}</span></figcaption></figure>'
+                          f'<a class="textlink" href="{x["case"]}">Read the Marquee Moments case study →</a>')
         example = f"""
 <section class="sec-tight">
   <div class="wrap two">
@@ -481,6 +488,7 @@ def page(s):
       <p class="eyebrow">Real client work</p>
       <h2 class="h2" style="font-size:clamp(28px,3.4vw,40px)">{e(x['title'])}</h2>
       <p class="lede">{e(x['text'])}</p>
+      {quote_html}
     </div>
     <div class="panel">
       <h3>Listen</h3>
