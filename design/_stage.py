@@ -218,6 +218,7 @@ def main():
         (OUT / f.name).write_text(add_widget(set_note(fix_links(f.read_text()))))
         written.append(f.name)
     write_sitemap(written)
+    write_search_index(written)
     print(f"staged {len(written)} pages into docs/")
 
 
@@ -234,6 +235,41 @@ def write_sitemap(pages):
             rows.append(f"  <url><loc>https://localrankauthority.com{u}</loc><lastmod>{today}</lastmod></url>")
     (OUT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                                      + "\n".join(rows) + "\n</urlset>\n")
+
+
+
+# Ad landing pages stay out of site search (they're for ad traffic), except the Albany page the menu links to
+LP_SLUGS = {f.stem for f in (D / "lp").glob("*.html")} - {"index", "local-seo-albany-ny"}
+
+
+def write_search_index(pages):
+    """docs/search-index.json for the header search: one entry per page, plus each homepage FAQ."""
+    import html as H
+    import json
+    clean = lambda s: re.sub(r"\s+", " ", H.unescape(re.sub(r"<[^>]+>", " ", s or ""))).strip()
+    out = []
+    for name in pages:
+        stem = name[:-5]
+        if stem in LP_SLUGS:
+            continue
+        src = (OUT / name).read_text()
+        title = clean((re.search(r"<title>(.*?)</title>", src, re.S) or [None, ""])[1])
+        title = re.sub(r"\s*\|\s*Local Rank Authority$", "", title)
+        desc = clean((re.search(r'<meta name="description" content="([^"]*)"', src) or [None, ""])[1])
+        main = re.search(r"<main[^>]*>(.*?)</main>", src, re.S)
+        body = re.sub(r"<script.*?</script>|<style.*?</style>", " ", main.group(1) if main else src, flags=re.S)
+        heads = " · ".join(clean(h) for h in re.findall(r"<h[12][^>]*>(.*?)</h[12]>", body, re.S))[:600]
+        url = "/" if stem == "index" else f"/{stem}"
+        if stem == "index":
+            title = "Home: Local SEO & AI search for service businesses"
+            faq = re.search(r'<section[^>]*id="faq".*?</section>', src, re.S)
+            for q, a in re.findall(r"<summary>([^<]{3,300})</summary>\s*<p>(.*?)</p>", faq.group(0) if faq else "", re.S):
+                out.append({"u": "/#faq", "t": clean(q), "d": clean(a)[:180], "h": "Questions", "x": clean(a)[:600]})
+        out.append({"u": url, "t": title, "d": desc[:200], "h": heads, "x": clean(body)[:1500]})
+    out.append({"u": "/comprehensive-audit", "t": "Comprehensive Growth Audit ($2,000)", "d": "The full diagnosis of your website, Google profile, listings, competitors, and AI answers, with a 30/60/90-day plan and a walkthrough with Michael.",
+                "h": "Growth Audit · audit · report · $2,000", "x": "Comprehensive Growth Audit 20 to 25 page report client portal landing page 30/60/90-day plan walkthrough credited toward a package"})
+    out.append({"u": "/portal/", "t": "Client login", "d": "Sign in to your client portal to see your audit, action plan, and messages.", "h": "portal login sign in", "x": ""})
+    (OUT / "search-index.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
 
 
 if __name__ == "__main__":

@@ -66,8 +66,47 @@ header.top.scrolled{border-bottom-color:var(--line)}
 .nav ul a{text-decoration:none;font:600 15px/1 var(--body);color:var(--ink);opacity:.82}
 .nav ul a:hover{opacity:1}
 .nav .phone{font:600 15px/1 var(--body);text-decoration:none;white-space:nowrap}
-.nav .btn{padding:13px 20px;font-size:15px}
+.nav .btn{padding:13px 20px;font-size:15px;white-space:nowrap}
 .nav .signin{white-space:nowrap;font:500 14px/1 var(--body);color:var(--muted);text-decoration:none}
+/* hamburger menu + search */
+@media (max-width:1240px){.nav{gap:18px}.nav ul{gap:18px;margin-left:4px}}
+@media (max-width:1100px){.nav ul,.nav .signin{display:none}.nav .search-btn{margin-left:auto}}
+.icon-btn{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--ink);cursor:pointer;flex:0 0 auto}
+.icon-btn:hover{background:rgba(11,93,63,.08)}.icon-btn:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.nav .menu-btn{margin-right:-14px}
+.nav{position:relative}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.site-search{position:absolute;inset:10px 0;display:flex;align-items:center;gap:8px;background:var(--card,#fff);border:1px solid var(--line);border-radius:16px;padding:0 6px 0 14px;box-shadow:0 18px 40px -20px rgba(0,0,0,.35);z-index:12}
+.site-search[hidden]{display:none}
+.site-search .ss-icon{color:var(--muted);display:grid}
+.site-search input{flex:1;min-width:0;border:0;background:transparent;font:500 17px/1.2 var(--body);color:var(--ink);padding:10px 4px;outline:none}
+.site-search input::-webkit-search-cancel-button{display:none}
+.ss-results{position:absolute;left:0;right:0;top:calc(100% + 8px);background:var(--card,#fff);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 48px -24px rgba(0,0,0,.4);max-height:min(70vh,520px);overflow:auto;padding:6px}
+.ss-results a{display:block;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--ink)}
+.ss-results a:hover,.ss-results a[aria-selected="true"]{background:rgba(11,93,63,.08)}
+.ss-results b{display:block;font:700 15.5px/1.3 var(--display)}.ss-results span{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+.ss-results .ss-none{padding:14px 12px;color:var(--muted);font-size:14.5px}
+.drawer{position:fixed;inset:0;z-index:50}.drawer[hidden]{display:none}
+.drawer-bg{position:absolute;inset:0;background:rgba(10,20,15,.45);animation:fadeIn .18s ease}
+.drawer-panel{position:absolute;left:0;top:0;bottom:0;width:min(360px,88vw);background:var(--paper);box-shadow:20px 0 50px -20px rgba(0,0,0,.4);display:flex;flex-direction:column;animation:slideIn .22s ease}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 12px 20px;border-bottom:1px solid var(--line)}
+.drawer-head img{height:48px;width:auto;display:block}
+.drawer-body{overflow:auto;padding:8px 20px 28px}
+.drawer details{border-bottom:1px solid var(--line);padding:4px 0}
+.drawer summary{list-style:none;cursor:pointer;font:800 17px/1.2 var(--display);padding:14px 0;display:flex;justify-content:space-between;align-items:center}
+.drawer summary::-webkit-details-marker{display:none}
+.drawer summary::after{content:"+";font:600 20px/1 var(--body);color:var(--sign)}.drawer details[open] summary::after{content:"–"}
+.drawer details a{display:block;padding:8px 0 8px 2px;text-decoration:none;color:var(--ink);font-size:15.5px}
+.drawer details a:hover{color:var(--sign);text-decoration:underline}
+.drawer .dgroup{font:600 11.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 4px}
+.drawer-cta{display:grid;gap:10px;margin-top:20px}.drawer-cta .btn{justify-content:center}
+.drawer-cta .dphone{text-align:center;font:700 16px/1 var(--body);color:var(--ink);text-decoration:none;padding:8px}
+.drawer-legal{margin-top:18px;font-size:13px;color:var(--muted)}.drawer-legal a{color:var(--muted)}
+body.menu-open{overflow:hidden}
+@keyframes slideIn{from{transform:translateX(-100%)}to{transform:none}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.drawer-panel,.drawer-bg{animation:none}}
+@media (max-width:640px){.nav .menu-btn{margin-right:-6px}.site-search{inset:8px 0}}
+
 
 /* hero */
 .hero{padding-block:clamp(48px,7vw,96px) clamp(64px,8vw,104px)}
@@ -307,6 +346,10 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
   footer{padding-bottom:84px}
 }
 
+/* header: the search icon is the one thing pushed right */
+@media (max-width:1100px){.nav .phone{margin-left:0}}
+@media (max-width:640px){.nav .btn{margin-left:0}}
+
 .faq>.stack{align-self:start}
 .svc-rel{text-decoration:none;color:inherit;transition:border-color .15s}.svc-rel:hover{border-color:var(--sign)}.svc-rel .textlink{margin-top:4px}
 .ctaband .btn-ghost{color:var(--on-sign);border-color:rgba(255,255,255,.4)}
@@ -374,8 +417,11 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 @media (max-width:640px){.form .grid2{grid-template-columns:1fr}}
 </style>
 
+<div class="mocknote"><b>Staging preview</b> · not the live site yet · yellow tags still need real content</div>
+
 <header class="top" id="top">
   <div class="wrap nav">
+    <button class="icon-btn menu-btn" type="button" aria-label="Open menu" aria-controls="site-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     <a class="logo" href="/" aria-label="Local Rank Authority home"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority"></a>
     <ul>
       <li><a href="/#services">Services</a></li>
@@ -385,10 +431,46 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       <li><a href="/#about">About</a></li>
       <li><a href="/#faq">FAQ</a></li>
     </ul>
-    <a class="signin" href="/">Client login</a>
+    <button class="icon-btn search-btn" type="button" aria-label="Search the site" aria-expanded="false"><svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    <a class="signin" href="/portal/">Client login</a>
     <a class="phone" href="tel:+15184601010">(518) 460-1010</a>
     <a class="btn btn-primary" href="/#book">Book a call</a>
+    <form class="site-search" role="search" action="#" hidden>
+      <label class="visually-hidden" for="site-q">Search the site</label>
+      <span class="ss-icon"><svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+      <input id="site-q" type="search" placeholder="Search services, towns, questions…" autocomplete="off" aria-controls="site-results" aria-expanded="false">
+      <button class="icon-btn" type="button" data-close-search aria-label="Close search"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+      <div class="ss-results" id="site-results" role="listbox" hidden></div>
+    </form>
   </div>
+  <div class="drawer" id="site-menu" hidden>
+    <div class="drawer-bg" data-close-menu></div>
+    <nav class="drawer-panel" aria-label="All pages">
+      <div class="drawer-head"><a class="logo" href="/"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="134" height="48"></a><button class="icon-btn" type="button" data-close-menu aria-label="Close menu"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
+      <div class="drawer-body">
+        <details open><summary>Services</summary>
+          <p class="dgroup">Get found</p>
+          <a href="/services/local-seo-ai-search">Local SEO &amp; AI search</a><a href="/services/google-business-profile-listings">Google profile &amp; listings</a><a href="/services/rank-and-rent">Rank &amp; rent lead sites</a>
+          <p class="dgroup">Win the conversation</p>
+          <a href="/services/website-design">Website design</a><a href="/services/lead-capture-follow-up">Lead capture &amp; follow-up</a><a href="/services/ai-chat-agents">AI chat agents</a><a href="/services/ai-receptionist">AI receptionist</a>
+          <p class="dgroup">Stay remembered</p>
+          <a href="/services/review-systems">Review systems</a><a href="/services/branding-brand-identity">Branding &amp; brand identity</a><a href="/services/custom-jingles">Custom jingles</a><a href="/services/ongoing-care">Ongoing care &amp; reporting</a>
+        </details>
+        <details><summary>Audits &amp; pricing</summary>
+          <a href="/#book">Free Local Visibility Score</a><a href="/comprehensive-audit">Comprehensive Growth Audit</a><a href="/sample-report">Sample audit report</a><a href="/packages">Packages &amp; pricing</a>
+        </details>
+        <details><summary>Areas we serve</summary>
+          <a href="/local-seo-albany-ny">Albany</a><a href="/local-seo-troy-ny">Troy</a><a href="/local-seo-schenectady-ny">Schenectady</a><a href="/local-seo-saratoga-springs-ny">Saratoga Springs</a><a href="/local-seo-clifton-park-ny">Clifton Park</a><a href="/local-seo-colonie-latham-ny">Colonie &amp; Latham</a><a href="/local-seo-bethlehem-delmar-ny">Bethlehem &amp; Delmar</a><a href="/local-seo-glens-falls-lake-george-ny">Glens Falls &amp; Lake George</a><a href="/local-seo-amsterdam-ny">Amsterdam</a><a href="/areas">All areas we serve →</a>
+        </details>
+        <details><summary>Company</summary>
+          <a href="/why-us">Why work with us</a><a href="/#about">About Michael</a><a href="/results">Results</a><a href="/#demos">Live demos</a><a href="/#faq">Questions &amp; answers</a><a href="/contact">Contact</a><a href="/portal/">Client login</a>
+        </details>
+        <div class="drawer-cta"><a class="btn btn-primary" href="/#book">Get your free score</a><a class="dphone" href="tel:+15184601010">(518) 460-1010</a></div>
+        <p class="drawer-legal"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/sms-terms">SMS terms</a> · <a href="/accessibility">Accessibility</a></p>
+      </div>
+    </nav>
+  </div>
+  <script src="/assets/site-nav.js" defer></script>
 </header>
 
 <main>
@@ -397,6 +479,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
     <p class="crumbs"><a href="/">Home</a> / SMS Terms</p>
     <h1>SMS Terms</h1>
     <p class="lede">How we text the people who contact us, and how to stop at any time.</p>
+    <p class="draft"><b>Draft for review.</b> Your texting provider will review this page when it registers your number. Confirm the details match your setup before it goes live.</p>
   </div>
 </section>
 <section class="sec-tight">
