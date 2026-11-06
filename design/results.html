@@ -114,7 +114,7 @@ header.top.scrolled{border-bottom-color:var(--line)}
 .band{background:var(--sign-deep);color:var(--on-sign)}
 .band .eyebrow{color:var(--amber)}
 .band .lede{color:var(--on-sign-muted)}
-.results{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,4vw,56px);margin-top:52px;align-items:stretch}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);margin-top:52px;align-items:stretch}
 .case{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:clamp(24px,3vw,40px);display:grid;gap:22px;align-content:start}
 .case .who{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .case .who b{font:800 22px/1.1 var(--display)}
@@ -124,6 +124,7 @@ header.top.scrolled{border-bottom-color:var(--line)}
 .metric .v{font:800 clamp(30px,3.6vw,44px)/1 var(--display);color:var(--amber)}
 .metric .k{margin-top:8px;font-size:14px;color:var(--on-sign-muted);line-height:1.4}
 .case p{color:#DDEAE3}
+.case .src{font-size:13px;color:var(--on-sign-muted);margin-top:-12px}
 .quote{display:grid;gap:22px;align-content:space-between;border-left:3px solid var(--amber);padding:6px 0 6px clamp(20px,3vw,36px)}
 .quote blockquote{margin:0;font:700 clamp(22px,2.3vw,28px)/1.3 var(--display);letter-spacing:-.005em}
 .quote .by{display:flex;align-items:center;gap:14px;font-size:15px}
@@ -390,8 +391,8 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
   <div class="wrap">
     <p class="crumbs"><a href="homepage-redesign.html">Home</a> / Results</p>
     <h1>Results</h1>
-    <p class="lede">I tested everything here on my own businesses first. These are real numbers, and client results get added as projects finish.</p>
-    <p class="draft"><b>Draft.</b> Yellow tags need your real numbers, screenshots, and permission-approved quotes. Nothing here should be estimated.</p>
+    <p class="lede">I tested everything here on my own businesses first. These are their real, public numbers, and client results get added as projects finish.</p>
+    <p class="draft"><b>Draft.</b> Every number below is public and dated so a visitor can check it. Client quotes still need permission.</p>
   </div>
 </section>
 
@@ -399,24 +400,27 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
   <div class="wrap">
     <div class="results" style="margin-top:0">
       <article class="case">
-        <div class="who"><b>Atlantic Flagpole</b><span>Flagpole sales and installation · owner since 2008</span></div>
+        <div class="who"><b>Atlantic Flagpole</b><span>American-made telescoping flagpoles · owner since 2008</span></div>
         <div class="metrics">
-          <div class="metric"><div class="v"><span class="ph">[+X%]</span></div><div class="k">calls from Google, year over year</div></div>
-          <div class="metric"><div class="v"><span class="ph">[#]</span></div><div class="k">map-pack spots in its main towns</div></div>
-          <div class="metric"><div class="v"><span class="ph">[#]</span></div><div class="k">Google reviews</div></div>
+          <div class="metric"><div class="v">36,783</div><div class="k">customers flying a Phoenix flagpole</div></div>
+          <div class="metric"><div class="v">4.91 ★</div><div class="k">average from 3,022 reviews</div></div>
+          <div class="metric"><div class="v">Top 1%</div><div class="k">of Judge.me shops for verified reviews</div></div>
         </div>
-        <p><b>The problem:</b> <span class="ph">[What wasn't working]</span></p>
-        <p><b>What we changed:</b> <span class="ph">[Profile, pages, reviews, voice agent, etc.]</span></p>
-        <p><b>What happened:</b> <span class="ph">[Calls, sales, or rankings, with dates]</span></p>
+        <p><b>The business:</b> A flagpole sales and installation company grown into a national online store. Orders ship to homeowners across the country, from Maine to Arizona.</p>
+        <p><b>What it shows:</b> Reviews do the selling. The best-selling Premier Kit alone carries a 4.95 rating from 804 verified reviews, shown right beside the buy button.</p>
+        <p><b>What I&rsquo;m working on now:</b> After a 2026 site relaunch, some Google rankings dipped. I&rsquo;m fixing it with the same audit and checklist clients get, and I&rsquo;ll post the before-and-after here.</p>
+        <p class="src">Figures shown on atlanticflagpole.com, November 2026.</p>
       </article>
       <article class="case">
-        <div class="who"><b>The Christmas Guys</b><span>Holiday lighting installation · co-founder, sold my share in 2023</span></div>
+        <div class="who"><b>The Christmas Guys</b><span>Holiday lighting installation · co-founded 2009, sold my share in 2023</span></div>
         <div class="metrics">
-          <div class="metric"><div class="v"><span class="ph">[#]</span></div><div class="k"><span class="ph">[metric]</span></div></div>
-          <div class="metric"><div class="v"><span class="ph">[#]</span></div><div class="k"><span class="ph">[metric]</span></div></div>
-          <div class="metric"><div class="v"><span class="ph">[#]</span></div><div class="k"><span class="ph">[metric]</span></div></div>
+          <div class="metric"><div class="v">#1</div><div class="k">on Google Maps for &ldquo;christmas light installation clifton park ny&rdquo;</div></div>
+          <div class="metric"><div class="v">5.0 ★</div><div class="k">from 26 Google reviews</div></div>
+          <div class="metric"><div class="v">3,700+</div><div class="k">Facebook and Instagram followers</div></div>
         </div>
-        <p><span class="ph">[How you built a seasonal business that had to book a whole season in a few weeks.]</span></p>
+        <p><b>The business:</b> Christmas light installation for homes and businesses across the Capital Region, co-founded with Matthew Martoccio in 2009.</p>
+        <p><b>What it shows:</b> A seasonal business has to book a whole year&rsquo;s work in a few weeks, so it has to be the first name people find. Three years after I sold my share, it still holds the top spot in Google&rsquo;s map results ahead of established competitors.</p>
+        <p class="src">Google search and Google profile checked November 5, 2026. Map results vary by searcher location.</p>
       </article>
     </div>
   </div>
