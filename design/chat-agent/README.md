@@ -34,3 +34,17 @@ Tier 6 came with 3,000 one-time credits that don't refill. At 0.25 credits per r
 ## Before it goes on the live site
 - Confirm in the privacy policy what the widget stores in the browser (marked with a yellow tag).
 - When package prices are confirmed, set `PRICES_CONFIRMED = True` in `design/_chat_kb.py`, rebuild, and re-upload the knowledge base.
+
+## Keeping credit use low (Michael's goal, 2026-11-06)
+Every "AI action" (a reply, a tool use such as booking or alerting, a tag, a summary, a follow-up, or picking a name or email out of a message) costs the agent's tier rate: Pro 1, Max 0.25, Mini 0.10 credits. A credit is $0.10.
+
+Done:
+- Website chat only, so there are no monthly channel fees. Telegram, WhatsApp Web and rented numbers each cost 50+ credits a month.
+- Follow-ups off, auto-research of new contacts off, "create tasks" off, no automations, and the knowledge base pasted in rather than imported, since imports charge per chunk.
+- At most 30 AI messages per chat.
+
+Still to do:
+- **AI web search**: switch it off (Agent → AI Abilities). It kept turning itself back on when saved from the browser pane. The knowledge base covers our answers, and each search is a charged tool call.
+- **Human check (Cloudflare Turnstile)** on the widget, so bots can't spend credits. Needs free Turnstile keys from Michael's Cloudflare account.
+- **Phone calls**: use Michael's own Twilio number, not a DM Champ rented one (50+ credits a month), forwarded from Google Voice. For the voice, either an ElevenLabs key (0 credits a minute; ElevenLabs bills directly) or xAI instead.
+- **Option for 0-credit chat**: switch the agent to **Pro** and add an Anthropic key (Settings → Advanced → BYOK). Every AI action then costs 0 credits and Anthropic bills directly. The trade-off: DM Champ rates Max as more accurate, and each reply sends about 10k tokens of instructions and knowledge to Anthropic. Compare a week of Anthropic usage against Max's roughly $0.025 per reply before committing.
