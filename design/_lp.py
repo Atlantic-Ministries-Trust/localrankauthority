@@ -404,7 +404,7 @@ def page(p):
       ['url','biz','svc','city'].forEach(function(k){{q.set(k,f.elements[k].value.trim())}});
       q.set('src','lp-'+f.dataset.lp);
       var dest='/?'+q.toString()+'#check';
-      if(location.hostname!=='localrankauthority.com'){{f.querySelector('.msg').textContent='Draft: on the live site this opens your free score, already filled in.';return}}
+      if(!/(^|\\.)localrankauthority\\.com$|\\.pages\\.dev$/.test(location.hostname)){{f.querySelector('.msg').textContent='Draft: on the live site this opens your free score, already filled in.';return}}
       location.href=dest;
     }});
   }});

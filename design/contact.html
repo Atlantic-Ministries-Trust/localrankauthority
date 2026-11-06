@@ -396,7 +396,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 </section>
 <section class="sec-tight">
   <div class="wrap two">
-    <form class="panel form" data-mock="Mockup: on the live site this sends your message to Michael." aria-label="Contact form">
+    <form class="panel form" data-api="/api/contact" aria-label="Contact form" novalidate>
       <h2>Send a message</h2>
       <div class="grid2">
         <label for="c-name">Name<input id="c-name" autocomplete="name" required></label>
@@ -405,6 +405,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       <label for="c-phone">Phone <span>(optional)</span><input id="c-phone" type="tel" autocomplete="tel"></label>
       <label for="c-msg">How can we help?<textarea id="c-msg" required placeholder="A question, your goals, or what's not working"></textarea></label>
       <label for="c-sms" style="grid-template-columns:auto 1fr;align-items:start;font-weight:400"><input id="c-sms" type="checkbox" style="width:auto;margin-top:3px"><span style="color:var(--ink)">Text me about my request. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to stop. See <a href="sms-terms.html">SMS Terms</a>.</span></label>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
       <button class="btn btn-primary" type="submit" style="justify-self:start">Send message</button>
       <p class="msg" aria-live="polite"></p>
       <p class="fine">We'll only use this to reply to you. <a href="privacy.html">Privacy Policy</a>.</p>
@@ -413,7 +414,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       <div class="panel">
         <h3>Call</h3>
         <p style="font:800 26px/1 var(--display)">(518) 460-1010</p>
-        <p style="color:var(--muted)">Weekdays <span class="ph">[hours]</span>. After hours, our AI receptionist takes the details and texts Michael.</p>
+        <p style="color:var(--muted)">Monday to Friday, 9 AM to 5 PM Eastern. After hours, leave a voicemail or send a message and Michael will reply the next business day.</p>
       </div>
       <div class="panel">
         <h3>Prefer to talk it through?</h3>
@@ -464,5 +465,13 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 
 <script>
 (function(){var h=document.querySelector('header.top');addEventListener('scroll',function(){h.classList.toggle('scrolled',scrollY>8)},{passive:true});
+document.querySelectorAll('form[data-api]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();
+  var m=f.querySelector('.msg'),btn=f.querySelector('button[type=submit]'),v=function(id){var el=f.querySelector('#'+id);return el?el.value.trim():''};
+  var data={name:v('c-name'),email:v('c-email'),phone:v('c-phone'),message:v('c-msg'),topic:'General message',sms_ok:!!(f.querySelector('#c-sms')||{}).checked,_gotcha:(f.querySelector('[name=_gotcha]')||{}).value||''};
+  if(!data.name||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)||!data.message){m.textContent='Add your name, a valid email, and a message.';return}
+  btn.disabled=true;m.textContent='Sending…';
+  fetch(f.dataset.api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json().then(function(j){return [r.ok,j]})})
+  .then(function(x){if(x[0]&&x[1].ok){f.reset();m.textContent='Thanks, your message is in. Michael will reply within one business day.'}else{m.textContent=(x[1]&&x[1].error)||'Something went wrong. Please call (518) 460-1010.'}})
+  .catch(function(){m.textContent='Something went wrong. Please call (518) 460-1010.'}).finally(function(){btn.disabled=false})})});
 document.querySelectorAll('form[data-mock]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();var m=f.querySelector('.msg');if(m)m.textContent=f.dataset.mock})});})();
 </script>
