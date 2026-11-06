@@ -156,6 +156,8 @@ BRIDGE_CSS = """
 .lv .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
 .lv .tabs button{border-radius:999px}
 #book.lv{scroll-margin-top:80px}
+.lv .real-jingle{grid-column:1/-1;border-top:1px solid var(--line);margin-top:6px;padding-top:18px;display:grid;gap:8px;justify-items:start}
+.lv .real-jingle audio{width:100%;max-width:560px}
 """
 
 

@@ -876,6 +876,8 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 .lv .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
 .lv .tabs button{border-radius:999px}
 #book.lv{scroll-margin-top:80px}
+.lv .real-jingle{grid-column:1/-1;border-top:1px solid var(--line);margin-top:6px;padding-top:18px;display:grid;gap:8px;justify-items:start}
+.lv .real-jingle audio{width:100%;max-width:560px}
 
 </style>
 
@@ -1163,6 +1165,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
     <div class="panel" role="tabpanel" id="p-jingle" aria-labelledby="t-jingle" hidden>
       <div class="side"><span class="sample-tag">Melody sketch</span><h3>A tune built around your name</h3><p>Press play to hear a melody sketch for our sample business. Finished jingles include professional vocals and production, in 5, 15, and 30-second cuts.</p><button class="btn btn-sign" id="play" type="button" style="align-self:flex-start">▶ Play melody</button></div>
       <div class="jingle"><div class="staff" id="staff" aria-hidden="true"></div><p class="lyric" id="lyric">Har-bor Point, we're on the way…</p><p style="color:var(--muted);font-size:.9rem">Synthesized in your browser. Turn your sound on.</p></div>
+      <div class="real-jingle"><span class="sample-tag">Real client jingle</span><h3>&ldquo;Make Your Moment Shine&rdquo; for Marquee Moments</h3><p>Marquee Moments, owned by Laiala Margonar, rents 4-foot light-up marquee letters for weddings, birthdays, and events across Albany and the Capital Region. We created this jingle around the name and the promise behind it. Press play to hear the finished version.</p><audio controls preload="none" src="/assets/audio/marquee-moments-make-your-moment-shine.mp3">Your browser can't play this audio.</audio><p style="font-size:.9rem;color:var(--muted)">14 seconds · <a href="https://marqueemoments.net" target="_blank" rel="noopener">marqueemoments.net</a></p></div>
     </div>
   </div>
 </section>

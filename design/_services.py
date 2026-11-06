@@ -402,6 +402,9 @@ SERVICES = [
    ("Where can I use it?", "Radio, TV and streaming ads, social video, your website, trade shows, and your phone's on-hold message."),
    ("Can it include my phone number?", "Yes. Building the number into the melody is one of the most effective ways to make it stick."),
   ],
+  example=dict(title="“Make Your Moment Shine” for Marquee Moments",
+    text="Marquee Moments, owned by Laiala Margonar, rents 4-foot light-up marquee letters for weddings, birthdays, and events across Albany and the Capital Region. We created this jingle around the name and the promise behind it.",
+    audio="../docs/assets/audio/marquee-moments-make-your-moment-shine.mp3", length="14 seconds", link=("marqueemoments.net", "https://marqueemoments.net")),
   related=["review-systems", "ongoing-care", "website-design"],
   demo=("jingle sketch", "Play a melody sketch for a fictional plumbing company, made in your browser. Finished jingles add professional vocals and production.")),
 
@@ -468,6 +471,24 @@ def page(s):
     dels = "".join(f"<li>{e(x)}</li>" for x in s["deliverables"])
     faqs = "".join(f"<details{' open' if i == 0 else ''}><summary>{e(q)}</summary><p>{e(a)}</p></details>" for i, (q, a) in enumerate(s["faqs"]))
     rel = "".join(f'<a class="card svc-rel" href="svc-{r}.html"><span class="eyebrow">{e(LANES[BY_SLUG[r]["lane"]])}</span><h3>{e(BY_SLUG[r]["name"])}</h3><p>{e(BY_SLUG[r]["desc"])}</p><span class="textlink">Learn more →</span></a>' for r in s["related"])
+    example = ""
+    if s.get("example"):
+        x = s["example"]
+        example = f"""
+<section class="sec-tight">
+  <div class="wrap two">
+    <div class="stack">
+      <p class="eyebrow">Real client work</p>
+      <h2 class="h2" style="font-size:clamp(28px,3.4vw,40px)">{e(x['title'])}</h2>
+      <p class="lede">{e(x['text'])}</p>
+    </div>
+    <div class="panel">
+      <h3>Listen</h3>
+      <audio controls preload="none" src="{x['audio']}" style="width:100%">Your browser can't play this audio.</audio>
+      <p style="color:var(--muted)">{e(x['length'])} · <a href="{x['link'][1]}" target="_blank" rel="noopener">{e(x['link'][0])}</a></p>
+    </div>
+  </div>
+</section>"""
     demo = ""
     if s["demo"]:
         label, text = s["demo"]
@@ -526,7 +547,7 @@ description: {s['desc']}
       <a class="textlink" href="packages.html">See packages and pricing →</a>
     </div>
   </div>
-</section>{demo}
+</section>{example}{demo}
 <section class="sec-tight">
   <div class="wrap faq">
     <div class="stack"><p class="eyebrow">Questions</p><h2 class="h2" style="font-size:clamp(28px,3.4vw,40px)">{e(s['name'])}: common questions</h2></div>
