@@ -4,6 +4,15 @@
 
 This folder is outside `docs/`, so nothing here is on the live site. Open any page in a browser from this folder; logos load from `../docs/assets/`. To edit an inner page, change `content/<page>.html` (or `_towns.py` for town pages), then run `python3 design/_towns.py && python3 design/_build.py`. The homepage wording now says "working with local businesses across the US"; the live SEO title will be "Local SEO & AI Search for Service Businesses | Albany, NY".
 
+## Staging site (branch `redesign`)
+
+Working copy of the full new site: https://redesign.localrankauthority.pages.dev (hidden from search engines; the live site is untouched).
+
+- Edit drafts here in `design/`, then run `python3 design/_towns.py && python3 design/_build.py && python3 design/_lp.py && python3 design/_stage.py`, commit, and push the `redesign` branch. Cloudflare redeploys staging in about a minute.
+- `_stage.py` copies everything into `docs/` with real links and carries over the live homepage's free score, unlock flow, AI search section, demos and contact form.
+- **Free score and forms on staging** need Cloudflare's *Preview* settings to match Production: Workers & Pages → localrankauthority → Settings → Bindings (KV `REPORTS` → `lra-reports`, Workers AI `AI`) and Variables and Secrets (`PSI_KEY`, `SERPAPI_KEY`, `GEMINI_KEY`, `RESEND_KEY`, `OWNER_EMAIL`, `FROM_EMAIL`, `AGENT_TOKEN`), each set for the Preview environment. Michael pastes the keys himself.
+- **Going live** = merge `redesign` into `main` (with Michael's OK), after removing the staging banner.
+
 ## To do before it replaces the live homepage
 
 - [ ] **Offers and pricing:** check every package, retainer and audit price against real delivery costs (Michael). Then update `packages.md` in the agent repo to match.
