@@ -1,5 +1,6 @@
 // POST /api/intake: the form clients fill in to start the Comprehensive Growth Audit (after checkout, an
 // invoice request, or with a discount code). Stores the intake, counts a code use, emails the owner and the client.
+import { recordInteraction } from "../../lib/crmdb.js";
 import { esc, json, sendEmail } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, money, normCode, quote, readCoupon, readOffer, useKeys } from "../../lib/offer.js";
 
@@ -52,6 +53,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
   }
   const record = { ...f, access, profile, code, pricing, at };
   if (env.REPORTS) await env.REPORTS.put(`intake:${at}`, JSON.stringify(record));
+  waitUntil(recordInteraction(env, { type: "intake", at, external_id: `intake:${at}`, source: "audit intake",
+    contact: { name: f.name, email: f.email, phone: f.phone, business: f.business, website: f.website },
+    title: "Growth Audit intake", summary: [f.goal && `Goal: ${f.goal}`, f.services && `Services: ${f.services}`, f.towns && `Towns: ${f.towns}`].filter(Boolean).join("\n") || null,
+    body: f.notes || null }).catch(e => console.log("crm", e && e.message)));
 
   const rows = Object.entries({ pricing, ...f, access: access.join(", ") || "None yet" }).filter(([, v]) => v)
     .map(([k, v]) => `<tr><td style="padding:4px 10px 4px 0;color:#55645C;vertical-align:top"><b>${esc(k.replace(/_/g, " "))}</b></td><td style="padding:4px 0">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");

@@ -1,4 +1,5 @@
 // POST /api/unlock: saves the lead, emails the full report to the visitor and the lead to the owner, and returns the full report.
+import { recordInteraction } from "../../lib/crmdb.js";
 import { completeRankings, esc, json, reportEmailHtml, sendEmail } from "../../lib/audit.js";
 
 export async function onRequestPost({ request, env, waitUntil }) {
@@ -24,6 +25,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   const record = { ...lead, reportId: report.id, site: report.input.host, overall: report.overall, at: new Date().toISOString(), ip: request.headers.get("cf-connecting-ip") || "" };
   await env.REPORTS.put(`lead:${record.at}:${report.id}`, JSON.stringify(record));
+  waitUntil(recordInteraction(env, { type: "score", at: record.at, external_id: `lead:${record.at}:${report.id}`, source: "free score",
+    contact: { name: lead.name, email: lead.email, phone: lead.phone, business: lead.business, website: record.site },
+    title: `Unlocked free score${report.overall?.score != null ? `: ${report.overall.score}/100` : ""}`, summary: `Website: ${record.site}`,
+    meta: { reportId: report.id, grade: report.overall?.grade || null } }).catch(e => console.log("crm", e && e.message)));
 
   const summary = report.sections.map(s => `<li>${esc(s.label)}: ${s.score ?? "–"}/100 · ${esc(s.summary || "")}</li>`).join("");
   waitUntil(Promise.allSettled([

@@ -2,6 +2,7 @@
 // client portal, but with its own cookie and signing key). Writes: the sales pipeline, and "view as client".
 import { json, sendEmail } from "../../../lib/audit.js";
 import { saveCrm } from "../../../lib/crm.js";
+import { activity, deleteContact, deleteTask, getContact, importFromKV, listContacts, listTasks, recordInteraction, saveTask, stats, updateContact } from "../../../lib/crmdb.js";
 import { clearSessionCookie, getClient, makeSessionCookie, normEmail, randomToken, sessionEmail, validEmail } from "../../../lib/portal.js";
 
 const SITE = "https://localrankauthority.com";
@@ -118,6 +119,49 @@ async function crmDelete(request, env) {
   return json({ ok: true });
 }
 
+// ---------- CRM database (lib/crmdb.js). Each returns 503 until the D1 database is bound as CRM. ----------
+const noCrm = () => json({ error: "The CRM database isn't connected yet." }, 503);
+const body = request => request.json().catch(() => ({}));
+
+async function crmRoute(route, method, url, request, env) {
+  if (!env.CRM) return noCrm();
+  const q = k => url.searchParams.get(k) || "";
+  if (route === "crm/stats" && method === "GET") return json(await stats(env));
+  if (route === "crm/contacts" && method === "GET") return json({ contacts: await listContacts(env, { q: q("q"), filter: q("filter") || "all", limit: q("limit"), offset: q("offset") }) });
+  if (route === "crm/contact" && method === "GET") {
+    const r = await getContact(env, q("id"));
+    return r.contact ? json(r) : json({ error: "Contact not found." }, 404);
+  }
+  if (route === "crm/contact" && method === "POST") {
+    const b = await body(request);
+    if (b.create) {
+      const r = await recordInteraction(env, { type: "note", contact: b.patch || {}, title: "Added by hand", body: b.note || null });
+      if (!r || !r.contact_id) return json({ error: "Add at least a name, email, phone, or business." }, 400);
+      return json(await getContact(env, r.contact_id));
+    }
+    const r = await updateContact(env, b.id, b.patch || {});
+    return r.error ? json(r, 400) : json(r);
+  }
+  if (route === "crm/contact-delete" && method === "POST") return json(await deleteContact(env, (await body(request)).id));
+  if (route === "crm/log" && method === "POST") {
+    // A note, or a call or email logged by hand, on a contact's timeline
+    const b = await body(request);
+    const type = ["note", "call", "email", "other"].includes(b.type) ? b.type : "note";
+    const r = await recordInteraction(env, { contact_id: +b.contact_id || null, type, direction: b.direction, at: b.at, title: b.title || (type === "note" ? "Note" : null),
+      summary: b.summary, body: b.body, url: b.url, duration: b.duration, urgency: b.urgency, outcome: b.outcome });
+    return r ? json({ ok: true, id: r.id }) : noCrm();
+  }
+  if (route === "crm/activity" && method === "GET") return json({ items: await activity(env, { type: q("type"), limit: q("limit"), before: q("before") }) });
+  if (route === "crm/tasks" && method === "GET") return json({ tasks: await listTasks(env, { open: q("all") !== "1" }) });
+  if (route === "crm/task" && method === "POST") {
+    const r = await saveTask(env, await body(request));
+    return r.error ? json(r, 400) : json(r);
+  }
+  if (route === "crm/task-delete" && method === "POST") return json(await deleteTask(env, (await body(request)).id));
+  if (route === "crm/import" && method === "POST") return json({ ok: true, imported: await importFromKV(env) });
+  return json({ error: "Not found" }, 404);
+}
+
 // Sign this browser in to a client's portal for an hour, without emailing them or updating their last visit
 async function viewAs(request, env) {
   const b = await request.json().catch(() => ({}));
@@ -146,6 +190,7 @@ export async function onRequest({ request, env, params }) {
     if (route === "view-as" && method === "POST") return await viewAs(request, env);
     if (route === "crm" && method === "POST") return await crmSave(request, env);
     if (route === "crm-delete" && method === "POST") return await crmDelete(request, env);
+    if (route.startsWith("crm/")) return await crmRoute(route, method, url, request, env);
     return json({ error: "Not found" }, 404);
   } catch (e) {
     return json({ error: "Something went wrong. Please try again." }, 500);
