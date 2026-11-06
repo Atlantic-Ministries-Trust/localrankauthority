@@ -56,6 +56,20 @@ def add_canonical(html, path):
     return html.replace("</title>", f'</title>\n<link rel="canonical" href="https://localrankauthority.com{path}">', 1)
 
 
+WIDGET_FILE = D / "chat-agent" / "widget.html"
+
+
+def add_widget(html):
+    """The DM Champ chat widget: paste its embed snippet into design/chat-agent/widget.html and it goes on every page."""
+    snippet = WIDGET_FILE.read_text().strip() if WIDGET_FILE.exists() else ""
+    snippet = re.sub(r"<!--.*?-->", "", snippet, flags=re.S).strip()
+    if not snippet.strip():
+        return html
+    if "</body>" in html:
+        return html.replace("</body>", snippet + "\n</body>", 1)
+    return html.rstrip() + "\n" + snippet + "\n"
+
+
 def set_note(html):
     return re.sub(r'<div class="mocknote">.*?</div>', STAGING_NOTE, html, count=1, flags=re.S)
 
@@ -177,21 +191,21 @@ def build_home():
 
 
 def main():
-    (OUT / "index.html").write_text(build_home())
+    (OUT / "index.html").write_text(add_widget(build_home()))
     written = ["index.html"]
     (OUT / "services").mkdir(exist_ok=True)
     for f in sorted(D.glob("svc-*.html")):
-        (OUT / "services" / (f.name[4:])).write_text(set_note(add_canonical(fix_links(f.read_text()), f"/services/{f.stem[4:]}")))
+        (OUT / "services" / (f.name[4:])).write_text(add_widget(set_note(add_canonical(fix_links(f.read_text()), f"/services/{f.stem[4:]}"))))
         written.append("services/" + f.name[4:])
     for f in sorted(D.glob("*.html")):
         if f.name == "homepage-redesign.html" or f.name.startswith("svc-"):
             continue
-        (OUT / f.name).write_text(set_note(add_canonical(fix_links(f.read_text()), f"/{f.stem}")))
+        (OUT / f.name).write_text(add_widget(set_note(add_canonical(fix_links(f.read_text()), f"/{f.stem}"))))
         written.append(f.name)
     for f in sorted((D / "lp").glob("*.html")):
         if f.name == "index.html":
             continue
-        (OUT / f.name).write_text(set_note(fix_links(f.read_text())))
+        (OUT / f.name).write_text(add_widget(set_note(fix_links(f.read_text()))))
         written.append(f.name)
     write_sitemap(written)
     print(f"staged {len(written)} pages into docs/")
