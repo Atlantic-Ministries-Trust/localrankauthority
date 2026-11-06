@@ -180,7 +180,7 @@ LP_CSS = """
 /* landing pages */
 .lp-top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(246,247,243,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .lp-top .wrap{display:flex;align-items:center;gap:16px;height:68px}
-.lp-top img{height:36px;width:auto;display:block}
+.lp-top img{height:52px;width:auto;display:block}
 .lp-top .area{font-size:13.5px;color:var(--muted);margin-right:auto}
 .lp-top .tel{font:700 16px/1 var(--display);text-decoration:none;white-space:nowrap}
 .lp-top .btn{padding:12px 18px;font-size:15px}
