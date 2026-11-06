@@ -22,9 +22,10 @@ STAGING_NOTE = ('<div class="mocknote"><b>Staging preview</b> · not the live si
 
 
 def live_home():
-    """The live homepage from main, so the working pieces are always the current ones."""
-    return subprocess.run(["git", "show", "main:docs/index.html"], cwd=R,
-                          capture_output=True, text=True, check=True).stdout
+    """The pre-redesign homepage, kept in design/reference/legacy-live-home.html."""
+    # The pre-redesign live homepage, saved at launch. Its free score, unlock flow, AI search section, demos and
+    # contact form (and their script and CSS) are carried into the new homepage.
+    return (D / "reference" / "legacy-live-home.html").read_text()
 
 
 # ---------- links ----------
