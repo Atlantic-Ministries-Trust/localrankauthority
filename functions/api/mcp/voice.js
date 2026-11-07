@@ -9,7 +9,7 @@
 import { esc, json, sendEmail } from "../../../lib/audit.js";
 import { saveCrm, crmKey } from "../../../lib/crm.js";
 import { callerHistory, logToolCall, normEmail, normPhone, recordInteraction, saveTask } from "../../../lib/crmdb.js";
-import { VOICE_KB } from "../../../lib/voicekb.js";
+import { liveKb } from "../../../lib/lessons.js";
 
 const PROTOCOL_VERSION = "2025-06-18";
 const SITE = "https://localrankauthority.com";
@@ -157,13 +157,13 @@ function missingDetails(a, need) {
   return miss;
 }
 
-// Keyword search over the generated knowledge base
-function searchKb(query) {
+// Keyword search over the generated knowledge base plus approved lessons (lib/lessons.js)
+async function searchKb(query, env) {
   const words = s(query, 300).toLowerCase().match(/[a-z0-9$]+/g) || [];
   const stop = new Set(["the", "a", "an", "do", "you", "i", "my", "is", "it", "to", "of", "and", "for", "how", "what", "can", "your", "are", "in", "on", "me", "does", "with", "much", "be"]);
   const terms = words.filter(w => !stop.has(w) && w.length > 1);
   if (!terms.length) return [];
-  return VOICE_KB.map(e => {
+  return (await liveKb(env)).map(e => {
     const hay = `${e.q} ${e.tags || ""}`.toLowerCase(), body = e.a.toLowerCase();
     let score = 0;
     for (const t of terms) { if (hay.includes(t)) score += 3; if (body.includes(t)) score += 1; }
@@ -189,7 +189,7 @@ async function run(name, a, env, waitUntil) {
     }
 
     case "search_knowledge_base": {
-      const hits = searchKb(a.query);
+      const hits = await searchKb(a.query, env);
       if (!hits.length) return { say: "No verified answer found. Do not guess. Offer to take a message so Michael can answer.", log: `KB: no match for "${s(a.query, 80)}"` };
       return { say: "Verified answers (say only what these say, in your own short words):\n" + hits.map(h => `Q: ${h.q}\nA: ${h.a}`).join("\n\n"), log: `KB: "${s(a.query, 80)}" → ${hits.length} answers` };
     }

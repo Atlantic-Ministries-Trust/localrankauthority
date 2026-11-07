@@ -6,6 +6,7 @@
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, mergeOffer, newCoupon, normCode, offerView, quote, readCoupon, readOffer } from "../../lib/offer.js";
 import { STAGES, crmKey, readCrm, saveCrm } from "../../lib/crm.js";
+import { inputs as lessonInputs, listLessons, propose as proposeLessons } from "../../lib/lessons.js";
 import { createSignInLink, emailSignInLink, getClient, normEmail, validEmail } from "../../lib/portal.js";
 
 const clean = (v, n = 200) => String(v || "").trim().slice(0, n);
@@ -277,9 +278,24 @@ async function usage(env) {
     tools: { pagespeed: !!env.PSI_KEY, search: !!env.SERPAPI_KEY, gemini: !!env.GEMINI_KEY, workers_ai: !!env.AI } });
 }
 
-const TOOLS = { audit, search, pagespeed, ask, offer, coupon, portal, crm };
+// Weekly lessons for the Miles agents (lib/lessons.js). Full token only: drafts change what Miles can say.
+//   { tool: "lessons", action: "inputs", days }   the week's unanswered questions and what Miles said
+//   { tool: "lessons", action: "propose", drafts, week }   checked drafts; keyword drafts go live, answers wait for Michael
+//   { tool: "lessons", action: "list" }
+async function lessons(b, env, role, waitUntil) {
+  if (!env.CRM) return json({ error: "The CRM database isn't connected." }, 503);
+  if (b.action === "inputs") return json(await lessonInputs(env, { days: b.days }));
+  if (b.action === "list") return json({ lessons: await listLessons(env) });
+  if (b.action === "propose") {
+    const r = await proposeLessons(env, waitUntil, { drafts: b.drafts, week: b.week });
+    return r.error ? json(r, 400) : json(r);
+  }
+  return json({ error: "action must be inputs, propose, or list." }, 400);
+}
 
-export async function onRequestPost({ request, env }) {
+const TOOLS = { audit, search, pagespeed, ask, offer, coupon, portal, crm, lessons };
+
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.AGENT_TOKEN) return json({ error: "Agent access isn't enabled." }, 503);
   const role = await tokenRole(request, env);
   if (!role) return json({ error: "Unauthorized" }, 401);
@@ -292,7 +308,7 @@ export async function onRequestPost({ request, env }) {
     if (b.tool === "usage") return await usage(env);
     const fn = TOOLS[b.tool];
     if (!fn) return json({ error: `Unknown tool. Use one of: ${[...Object.keys(TOOLS), "usage"].join(", ")}.` }, 400);
-    return await fn(b, env, role);
+    return await fn(b, env, role, waitUntil);
   } catch (e) {
     return json({ error: e.message || "Tool failed" }, 502);
   }
