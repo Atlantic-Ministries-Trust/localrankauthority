@@ -307,14 +307,14 @@ function render(){
    <div class="tile"><b>${D.intakes.length}</b><span>Audit requests</span></div>
    <div class="tile"><b>${D.clients.length}</b><span>Portal clients</span></div>
   </div>
-  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["contacts","Contacts"],["activity","Calls & activity"],["tasks","Tasks"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
+  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["contacts","Contacts"],["activity","Calls & activity"],["tasks","Tasks"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"],["lessons","Lessons"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
   <div id="view"></div>`;
   $("#rf").onclick=load;
   $("#so").onclick=async()=>{await fetch("/api/admin/logout",{method:"POST"});location.href="/admin/";};
   app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
   draw();}
 
-function draw(){const v=$("#view");if(["contacts","activity","tasks"].includes(tab))return crmView(v);v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
+function draw(){const v=$("#view");if(["contacts","activity","tasks","lessons"].includes(tab))return crmView(v);v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
   v.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.preventDefault();editor(COS.find(c=>c.key===b.dataset.edit));});
   $("#addp")?.addEventListener("click",()=>editor(null));
   v.querySelectorAll(".pcard").forEach(p=>p.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",p.dataset.key);e.dataTransfer.effectAllowed="move";}));
@@ -347,7 +347,7 @@ const link=u=>/^https?:\/\//i.test(u||"")?`<a href="${esc(u)}" target="_blank" r
 const who=r=>esc(r.name||r.company||ph(r.phone)||r.email||"Unknown");
 const go=id=>{CRM.id=id;tab="contacts";history.replaceState(null,"",id?"#contact-"+id:"#");render();scrollTo({top:0});};
 function crmErr(v,x){if(x.signin)return load();v.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p>${/connected/.test(x.message)?'<p class="muted small" style="margin-top:6px">Connect the D1 database in Cloudflare (Pages project → Settings → Bindings → D1, variable name CRM), then redeploy.</p>':""}</div>`;}
-async function crmView(v){v.innerHTML='<p class="muted">Loading…</p>';try{if(tab==="contacts")await(CRM.id?contactView(v):contactsView(v));else if(tab==="activity")await activityView(v);else await tasksView(v);}catch(x){crmErr(v,x);}}
+async function crmView(v){v.innerHTML='<p class="muted">Loading…</p>';try{if(tab==="contacts")await(CRM.id?contactView(v):contactsView(v));else if(tab==="activity")await activityView(v);else if(tab==="lessons")await lessonsView(v);else await tasksView(v);}catch(x){crmErr(v,x);}}
 
 async function contactsView(v){
   const [s,l]=await Promise.all([api("crm/stats"),api(`crm/contacts?filter=${CRM.filter}&q=${encodeURIComponent(CRM.q)}`)]);
@@ -428,6 +428,28 @@ async function activityView(v){
   v.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>go(+b.dataset.cid));
 }
 
+// Weekly lessons for both Miles agents (lib/lessons.js): new answers wait here for approval; search words apply on their own
+async function lessonsView(v){
+  const r=await api("crm/lessons");const L=r.lessons||[];
+  const pend=L.filter(l=>l.status==="pending"),live=L.filter(l=>l.status==="approved"||l.status==="auto"),old=L.filter(l=>l.status==="rejected"||l.status==="reverted");
+  const ev=l=>{const e=l.evidence||{},c=l.checker||{};return `${e.asked_times?`<p class="small muted">Asked ${e.asked_times} time${e.asked_times===1?"":"s"} this week${e.examples?.length?`: “${esc(e.examples.slice(0,3).join("”, “"))}”`:""}</p>`:""}${c.notes?`<p class="small muted">Checker: ${esc(c.notes)}</p>`:""}${c.sources?.length?`<p class="small muted">Sources: ${esc(c.sources.join(", "))}</p>`:""}`;};
+  const card=l=>`<div class="panel stack" data-l="${l.id}"><label class="crm-form" style="display:grid;gap:6px"><span class="small muted">Question</span><input data-q value="${esc(l.question)}"></label>
+     <label class="crm-form" style="display:grid;gap:6px"><span class="small muted">${l.kind==="question"?"Needs your answer":"What Miles will say"}</span><textarea data-a rows="4" placeholder="Only you know this one. Write what Miles should say, then Approve.">${esc(l.answer||"")}</textarea></label>${ev(l)}
+     <div class="row"><button class="btn btn-amber btn-sm" data-act="approve">Approve</button><button class="btn btn-ghost btn-sm" data-act="reject">Reject</button><span class="small" data-m></span></div></div>`;
+  const row=l=>`<tr><td>${l.kind==="keywords"?'<span class="pill na">Search words</span>':'<span class="pill sign">Answer</span>'}</td><td>${l.kind==="keywords"?`<b>${esc(l.tags)}</b><br><span class="small muted">→ ${esc(l.target_q)}</span>`:`<b>${esc(l.question)}</b><br><span class="small muted">${esc(l.answer||"")}</span>`}</td><td class="small muted">${whenT(l.decided_at||l.created)}</td><td>${l.status==="approved"||l.status==="auto"?`<button class="btn btn-ghost btn-sm" data-undo="${l.id}">Undo</button>`:esc(l.status)}</td></tr>`;
+  const dm=live.filter(l=>l.kind==="answer").map(l=>`Q: ${l.question}\nA: ${l.answer}`).join("\n\n");
+  v.innerHTML=`<div class="stack" style="margin-top:16px">
+   <div class="panel"><p class="eyebrow">How this works</p><p class="small" style="margin-top:4px">Every Monday a drafter agent reads the week's calls and chats, drafts answers to questions Miles couldn't answer, and a separate checker agent rejects anything with a price, promise, or fact it can't trace to the website. New answers wait here until you approve them. Extra search words for answers Miles already has go live on their own, and you can undo them below.</p></div>
+   <h2>Waiting for you${pend.length?` (${pend.length})`:""}</h2>${pend.length?pend.map(card).join(""):'<div class="panel empty">Nothing to review. New drafts arrive Monday mornings.</div>'}
+   <h2>Live now</h2>${live.length?`<div class="panel scroll"><table class="t"><tr><th>Kind</th><th>Lesson</th><th>When</th><th></th></tr>${live.map(row).join("")}</table></div>`:'<div class="panel empty">No lessons live yet.</div>'}
+   ${dm?`<div class="panel stack"><p class="eyebrow">For the website chat (DM Champ)</p><p class="small">Phone Miles uses approved answers right away. Chat Miles needs them pasted: DM Champ → FAQs &amp; Knowledge → Legacy text, add this at the end.</p><textarea rows="6" readonly style="width:100%;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)" id="dmk">${esc(dm)}</textarea><div><button class="btn btn-ghost btn-sm" id="dmc">Copy</button></div></div>`:""}
+   ${old.length?`<details class="panel"><summary class="small"><b>Rejected and undone (${old.length})</b></summary><table class="t" style="margin-top:8px">${old.map(row).join("")}</table></details>`:""}</div>`;
+  v.querySelectorAll("[data-l]").forEach(c=>c.querySelectorAll("[data-act]").forEach(b=>b.onclick=async()=>{const m=c.querySelector("[data-m]");b.disabled=true;
+    try{await api("crm/lesson",{method:"POST",body:JSON.stringify({id:+c.dataset.l,action:b.dataset.act,question:c.querySelector("[data-q]").value,answer:c.querySelector("[data-a]").value})});crmView(v);}catch(x){m.className="msg-err small";m.textContent=x.message;b.disabled=false;}}));
+  v.querySelectorAll("[data-undo]").forEach(b=>b.onclick=async()=>{if(!confirm("Take this lesson back out of Miles's knowledge?"))return;try{await api("crm/lesson",{method:"POST",body:JSON.stringify({id:+b.dataset.undo,action:"undo"})});crmView(v);}catch(x){alert(x.message);}});
+  $("#dmc")?.addEventListener("click",async e=>{try{await navigator.clipboard.writeText($("#dmk").value);e.target.textContent="Copied";}catch{$("#dmk").select();}});
+}
+
 async function tasksView(v){
   const r=await api("crm/tasks");const t0=today();
   v.innerHTML=`<div class="stack" style="margin-top:16px"><form class="row" id="gtf"><input name="title" placeholder="New task (not tied to a contact)" required style="flex:1 1 260px;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)"><input name="due" type="date" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)"><button class="btn btn-amber btn-sm">Add</button></form>
@@ -438,6 +460,7 @@ async function tasksView(v){
   $("#gtf").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{await api("crm/task",{method:"POST",body:JSON.stringify({title:f.get("title"),due:f.get("due")||null})});crmView(v);}catch(x){alert(x.message);}};
 }
 {const m=/^#contact-(\d+)$/.exec(location.hash);if(m){tab="contacts";CRM.id=+m[1];}}
+if(location.hash==="#lessons")tab="lessons";
 load();
 })();
 </script>

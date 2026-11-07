@@ -3,6 +3,7 @@
 import { json, sendEmail } from "../../../lib/audit.js";
 import { saveCrm } from "../../../lib/crm.js";
 import { activity, deleteContact, deleteTask, getContact, importFromKV, listContacts, listTasks, recordInteraction, saveTask, stats, updateContact } from "../../../lib/crmdb.js";
+import { decideLesson, listLessons } from "../../../lib/lessons.js";
 import { clearSessionCookie, getClient, makeSessionCookie, normEmail, randomToken, sessionEmail, validEmail } from "../../../lib/portal.js";
 
 const SITE = "https://localrankauthority.com";
@@ -158,6 +159,12 @@ async function crmRoute(route, method, url, request, env) {
     return r.error ? json(r, 400) : json(r);
   }
   if (route === "crm/task-delete" && method === "POST") return json(await deleteTask(env, (await body(request)).id));
+  // Weekly lessons for both Miles agents (lib/lessons.js)
+  if (route === "crm/lessons" && method === "GET") return json({ lessons: await listLessons(env) });
+  if (route === "crm/lesson" && method === "POST") {
+    const r = await decideLesson(env, await body(request));
+    return r.error ? json(r, 400) : json(r);
+  }
   if (route === "crm/import" && method === "POST") return json({ ok: true, imported: await importFromKV(env) });
   return json({ error: "Not found" }, 404);
 }
