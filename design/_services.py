@@ -552,7 +552,7 @@ description: {s['desc']}
       <h3>What you get</h3>
       <ul style="margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)">{dels}</ul>
       <p style="color:var(--muted)"><b style="color:var(--ink)">Timing:</b> {e(s['timeline'])}</p>
-      <a class="textlink" href="packages.html">See packages and pricing →</a>
+      <a class="textlink" href="packages.html{'#branding' if s['slug'] == 'branding-brand-identity' else ''}">See packages and pricing →</a>
     </div>
   </div>
 </section>{example}{demo}
