@@ -368,10 +368,18 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 @media (max-width:720px){.strip.cred .wrap{grid-template-columns:1fr}}
 .pillar .explore{font-size:14px;color:var(--muted);margin-top:auto}
 .pillar .explore a{color:var(--sign);font-weight:600}
-.case.mm{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(24px,4vw,48px);align-items:start;margin-top:28px}
-.mm-shots{display:grid;gap:14px}.mm-shots img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);display:block}
-.mm-points{display:grid;gap:14px}.mm-points h4{font:800 17px/1.25 var(--display);margin:0 0 4px}
-@media (max-width:860px){.case.mm{grid-template-columns:1fr}}
+/* Real work: screenshots across the top, story below, three equal point cards; one column on small screens */
+.case.mm{display:grid;gap:clamp(20px,3vw,32px);margin-top:28px}
+.mm-shots{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,20px)}
+.mm-shots img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:12px;border:1px solid rgba(255,255,255,.18);display:block}
+.mm-copy h3{font:900 clamp(24px,2.6vw,30px)/1.1 var(--display);margin:0}
+.mm-copy>p{max-width:75ch}
+.mm-points{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
+.mm-points>div{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:18px;display:grid;gap:6px;align-content:start}
+.mm-points h4{font:800 17px/1.25 var(--display);margin:0;color:#fff}
+.mm-points p{margin:0}
+@media (max-width:960px){.mm-points{grid-template-columns:1fr}}
+@media (max-width:600px){.mm-shots{grid-template-columns:1fr}}
 .steps3{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .steps3 li{background:var(--card,#fff);border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;gap:8px;align-content:start}
 .steps3 .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--sign);color:#fff;font:900 16px var(--display)}
