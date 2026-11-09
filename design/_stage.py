@@ -190,8 +190,12 @@ def build_home():
     biz = re.search(r'<script type="application/ld\+json">\s*\{"@context":"https://schema.org","@graph".*?</script>', live_head, re.S).group(0)
     if '"openingHours"' not in biz:
         biz = biz.replace('"slogan":', '"openingHours":"Mo-Fr 09:00-17:00",\n  "slogan":', 1)
+    # 2026-11-09 homepage rebuild: new title and description across search and social tags
+    desc = "Help more customers find and choose your business with SEO, AI search visibility, practical automation, and follow-up. Based in New York, serving nationwide."
+    keep = [re.sub(r'content="[^"]*"', f'content="{desc}"', k) if re.match(r'<meta (name="description"|property="og:description"|name="twitter:description")', k) else k for k in keep]
+    keep = [re.sub(r'content="[^"]*"', 'content="Online Presence and AI Automation | Local Rank Authority"', k) if re.match(r'<meta (property="og:title"|name="twitter:title")', k) else k for k in keep]
     new = re.sub(r"<title>.*?</title>\s*(<!--.*?-->)?",
-                 "<title>Local SEO &amp; AI Search for Service Businesses | Albany, NY</title>\n" + "\n".join(keep) + "\n" + biz,
+                 "<title>Online Presence and AI Automation | Local Rank Authority</title>\n" + "\n".join(keep) + "\n" + biz,
                  new, count=1, flags=re.S)
     new = new.replace('<meta name="claude:viewport-fit-sides" content="cover">\n', "")
 
@@ -202,12 +206,14 @@ def build_home():
                       + scope_css(live_css) + BRIDGE_CSS + "\n</style>", 1)
 
     # demos: the live AI search section + live interactive demos replace the static phone mockup
-    new = new.replace(section(new, "demos"),
-                      '<div class="lv">\n' + live_section(live, "ai-search") + "\n" + live_section(live, "demos") + "\n</div>")
+    # demos: the live interactive demos replace the placeholder (the long AI search explanation now lives on the SEO service page)
+    new = new.replace(section(new, "demos"), '<div class="lv">\n' + live_section(live, "demos") + "\n</div>")
 
     # booking: the live free score (with unlock) and the live contact form replace the mockups
+    # free score keeps #book (older links) and adds #visibility-score; the contact form gets its own place near the end
     book = re.search(r'<section class="book" id="book">.*?</section>', new, re.S).group(0)
-    new = new.replace(book, '<div class="lv" id="book">\n' + live_section(live, "check") + "\n" + live_section(live, "contact") + "\n</div>")
+    new = new.replace(book, '<div class="lv" id="book">\n' + live_section(live, "check") + "\n</div>")
+    new = new.replace('<section id="contact"></section>', '<div class="lv">\n' + live_section(live, "contact") + "\n</div>")
 
     # scripts: header behavior + the full live script + landing-page prefill
     live_script = re.findall(r"<script>\s*\(\(\)=>\{.*?</script>", live, re.S)[-1]

@@ -408,6 +408,14 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 .small{font-size:.82rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 .brand-logo{display:block;height:64px;width:auto;margin-block:-8px}@media (max-width:560px){.brand-logo{height:48px;margin-block:0}}
+
+.anchor-target{display:block;position:relative;top:-90px;visibility:hidden}
+.score-checks{margin:4px 0 0;padding-left:20px;display:grid;gap:6px;color:var(--muted)}.score-checks b{color:var(--ink)}
+.nationwide{font-size:.95rem;color:var(--muted);max-width:70ch}.nationwide a{color:var(--sign);font-weight:700}
+.fine-note{font-size:.88rem;color:var(--muted)}
+.miles-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.miles-num{font:900 2rem var(--display);user-select:all;color:var(--ink)}
+.miles-card p{color:var(--muted);font-size:.95rem}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need every service?", "acceptedAnswer": {"@type": "Answer", "text": "No. We start with your goal and what you already have. You may need one focused project or a few pieces working together. The recommendation should fit your business, not a package."}}, {"@type": "Question", "name": "Can you work with my existing website?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, that's often the best place to start. We review the platform, content, and how customers move through it before recommending improvements or a rebuild."}}, {"@type": "Question", "name": "What does the free Local Visibility Score include?", "acceptedAnswer": {"@type": "Answer", "text": "It tests your homepage's mobile speed with Google PageSpeed, checks the SEO basics (titles, descriptions, headings, schema, sitemap, and robots.txt), looks up where you rank on Google, Bing, and DuckDuckGo for your service and city, and asks AI assistants who they recommend. You see a score for each area right away and can unlock the full findings and fixes by email. Any check that can't run is marked as not scored. For the full picture, including how well your website turns visitors into calls, your whole site, your Google Business Profile against competitors, 15+ directories, and a written 30/60/90-day plan, see the Comprehensive Growth Audit."}}, {"@type": "Question", "name": "What's the difference between AI search visibility and AI agents?", "acceptedAnswer": {"@type": "Answer", "text": "AI search visibility helps customers find and choose you when they ask tools like ChatGPT or Google AI Mode. AI chat and voice agents answer those customers once they contact you. One brings people in, the other makes sure nobody slips away."}}, {"@type": "Question", "name": "Can you guarantee my business gets recommended by ChatGPT?", "acceptedAnswer": {"@type": "Answer", "text": "No one honestly can. AI answers change by question, location, and over time. We strengthen the signals these tools rely on and track your mentions across a consistent set of customer questions."}}, {"@type": "Question", "name": "What is rank and rent?", "acceptedAnswer": {"@type": "Answer", "text": "We build a website that ranks for a service in a specific city, such as \"fence installation in Troy.\" The calls it generates go to one business in that territory for a monthly fee."}}, {"@type": "Question", "name": "Will an AI agent know everything about my business?", "acceptedAnswer": {"@type": "Answer", "text": "Only what you approve. Each agent gets a knowledge base you sign off on, clear limits, and testing before launch. We decide together what it can answer, which details it collects, and when it hands a question to you."}}, {"@type": "Question", "name": "Will an AI receptionist sound robotic?", "acceptedAnswer": {"@type": "Answer", "text": "Modern voice agents sound natural and handle common questions well. We script them around your services, test them before launch, and route anything unusual to you."}}, {"@type": "Question", "name": "Do I own my website?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Your domain, content, and site are yours. Rank-and-rent lead sites are the exception: we own those and rent the leads."}}, {"@type": "Question", "name": "Can you connect booking, payments, and follow-up?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. We can set up forms, appointment booking, deposit links, CRM connections, and follow-up texts and emails around the tools you already use. Any platform or messaging fees are spelled out in your proposal."}}, {"@type": "Question", "name": "How much does a project cost?", "acceptedAnswer": {"@type": "Answer", "text": "Scope comes first. Your goals, your market, integrations, and ongoing support all affect the price. You get a written plan with deliverables and a fixed price before you commit to anything."}}, {"@type": "Question", "name": "Do you only work with businesses in New York?", "acceptedAnswer": {"@type": "Answer", "text": "We're based in New York's Capital Region and most of our clients are in and around Albany, Schenectady, Troy, and Saratoga Springs. We work with local businesses in other markets too. Most of the work happens online, so distance isn't a problem."}}, {"@type": "Question", "name": "How fast will I see results?", "acceptedAnswer": {"@type": "Answer", "text": "Website, chat, voice, and follow-up tools work from launch day. Search rankings usually take a few months to build, depending on your market's competition."}}]}</script>
 </head>
@@ -467,19 +475,26 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 <section class="band" id="check" style="padding-top:0">
   <div class="wrap stack" style="gap:28px">
     <div class="stack">
-      <p class="eyebrow">Free · results in about a minute</p>
-      <h2>Free Local Visibility Score</h2>
-      <p class="lede">We test your website speed, your SEO, where you rank on Google, Bing, and DuckDuckGo, and whether AI assistants recommend you. You'll see a score for each area right away.</p>
-      <a class="more-cta" href="/comprehensive-audit">Need the full picture? See the Comprehensive Growth Audit →</a>
+      <span id="visibility-score" class="anchor-target" aria-hidden="true"></span>
+      <p class="eyebrow">Free Local Visibility Score</p>
+      <h2>Get a useful starting point before deciding what to change.</h2>
+      <p class="lede">Your Free Local Visibility Score checks your website’s speed and essential SEO, search rankings for your service and city, and selected AI answers. See what those checks find and which areas deserve a closer look.</p>
+      <ul class="score-checks">
+        <li><b>Can customers find you?</b> Check search positions on Google and Bing for the service and city you enter.</li>
+        <li><b>Is your website giving search engines useful information?</b> Check essential SEO and mobile speed.</li>
+        <li><b>Does your business appear in the AI answers checked?</b> See the mentions returned for the selected questions.</li>
+      </ul>
+      <p>See initial scores without booking a call. Enter your contact details to unlock the findings and suggested fixes. You can use them yourself or discuss them with Michael.</p>
     </div>
     <form class="audit-form" id="audit-form" novalidate>
       <div class="field"><label for="a-url">Website</label><input type="text" inputmode="url" id="a-url" placeholder="yourbusiness.com" autocomplete="url"></div>
       <div class="field"><label for="a-biz">Business name</label><input type="text" id="a-biz" autocomplete="organization"></div>
       <div class="field"><label for="a-svc">Main service</label><input type="text" id="a-svc" placeholder="plumber"></div>
       <div class="field"><label for="a-city">City and state</label><input type="text" id="a-city" placeholder="Albany, NY"></div>
-      <button class="btn btn-amber" type="submit" id="a-go">Get my free score</button>
+      <button class="btn btn-amber" type="submit" id="a-go">Get My Free Visibility Score</button>
       <p class="err" id="a-err" role="alert" hidden></p>
     </form>
+    <p class="nationwide">This check is built around a service and city. Selling nationwide or working across several markets? <a href="#contact" data-topic="Not sure yet">Talk with Michael</a> about the right assessment for your business.</p>
     <div class="audit-run" id="audit-run" hidden><ol class="steps-live" id="steps-live"></ol></div>
     <div id="audit-out" aria-live="polite"></div>
   </div>
@@ -522,47 +537,42 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 
 <section class="band" id="demos">
   <div class="wrap">
-    <div class="stack"><p class="eyebrow">Try before you buy</p><h2>See what your customers would see</h2><p class="lede">These demos use a fictional plumbing company so you can try each tool the way your customers would.</p></div>
-    <div class="tabs" role="tablist">
-      <button role="tab" id="t-chat" aria-selected="true" aria-controls="p-chat">AI chat agent</button>
-      <button role="tab" id="t-voice" aria-selected="false" aria-controls="p-voice">AI receptionist</button>
-      <button role="tab" id="t-est" aria-selected="false" aria-controls="p-est">Estimate builder</button>
-      <button role="tab" id="t-jingle" aria-selected="false" aria-controls="p-jingle">Jingle sketch</button>
+    <div class="stack"><p class="eyebrow">Interactive demos</p><h2>See what this could do for your business.</h2><p class="lede">Try how customers could get answers, explore an estimate, or hear a brand worth remembering. Choose an example below.</p></div>
+    <div class="tabs" role="tablist" aria-label="Demos">
+      <button role="tab" id="t-chat" aria-selected="true" aria-controls="p-chat" data-demo="chat">AI Chat</button>
+      <button role="tab" id="t-voice" aria-selected="false" aria-controls="p-voice" tabindex="-1" data-demo="voice">Call Miles</button>
+      <button role="tab" id="t-est" aria-selected="false" aria-controls="p-est" tabindex="-1" data-demo="estimate">Estimate Builder</button>
+      <button role="tab" id="t-jingle" aria-selected="false" aria-controls="p-jingle" tabindex="-1" data-demo="jingle">Custom Jingle</button>
     </div>
 
-    <div class="panel" role="tabpanel" id="p-chat" aria-labelledby="t-chat">
-      <div class="side"><span class="sample-tag">Scripted demo</span><h3>A website assistant that books work</h3><p>Pick a question to see how a chat agent answers, qualifies the job, and captures contact details. A live agent is trained on your real services, pricing guidance, and hours.</p><p>Every conversation ends with a lead summary sent to you.</p></div>
+    <div class="panel" role="tabpanel" id="p-chat" aria-labelledby="t-chat" tabindex="0">
+      <div class="side"><span class="sample-tag">Scripted example</span><h3>Give customers an answer while their interest is fresh.</h3><p>Try a few common questions and see how a website assistant can answer, gather useful details, and point someone toward the next step. Your business’s assistant would use information and limits you approve.</p><p class="fine-note">Harbor Point Plumbing, a fictional business.</p><a class="more-cta" href="/services/ai-chat-agents">Explore AI Chat Agents →</a></div>
       <div class="chat"><div class="chat-head"><span class="dot"></span>Harbor Point Plumbing assistant</div><div class="chat-log" id="chatlog"></div><div class="chips" id="chips"></div></div>
     </div>
 
-    <div class="panel" role="tabpanel" id="p-voice" aria-labelledby="t-voice" hidden>
-      <div class="side"><span class="sample-tag">Sample call</span><h3>An AI receptionist for missed calls</h3><p>When you're on a job or it's after hours, the AI answers, gets the details, books a time, and texts you a summary.</p><div class="stack" style="gap:4px"><span class="eyebrow">Live demo line</span><span class="phone-line">Coming before launch</span></div></div>
-      <div class="stack">
-        <div class="transcript">
-          <div><b>AI</b><span>Thanks for calling Harbor Point Plumbing. How can I help?</span></div>
-          <div><b>Caller</b><span>My water heater is leaking in the garage.</span></div>
-          <div><b>AI</b><span>Sorry to hear that. Is water actively pooling, and have you been able to shut off the supply valve?</span></div>
-          <div><b>Caller</b><span>It's pooling. I don't know where the valve is.</span></div>
-          <div><b>AI</b><span>I'll mark this urgent. I have a technician available today between 2 and 4. What's the service address?</span></div>
-        </div>
-        <div class="ticket"><b>Text sent to owner · 11:42 AM</b><span>URGENT · Water heater leak, active pooling</span><span>Booked: Today 2–4 PM</span><span>Caller: Dana R. · Address captured</span></div>
+    <div class="panel" role="tabpanel" id="p-voice" aria-labelledby="t-voice" tabindex="0" hidden>
+      <div class="side"><span class="sample-tag">Live on our main line</span><h3 id="h-voice">Meet Miles, our AI receptionist.</h3><p>Call our main line and experience how Miles welcomes callers, answers questions, and helps them take the next step.</p><a class="more-cta" href="/services/ai-receptionist">Explore AI Receptionist Services →</a></div>
+      <div class="miles-card">
+        <span class="eyebrow">Call Miles</span>
+        <span class="miles-num">(518) 460-1010</span>
+        <a class="btn btn-amber" href="tel:+15184601010" data-event="call_miles">Call Miles at (518) 460-1010</a>
+        <p>You will be speaking with an AI receptionist. Use the number on any phone, or tap to call on mobile.</p>
       </div>
     </div>
 
-    <div class="panel" role="tabpanel" id="p-est" aria-labelledby="t-est" hidden>
-      <div class="side"><span class="sample-tag">Sample pricing</span><h3>Let customers price the job themselves</h3><p>An estimate builder gives visitors a ballpark instantly, then asks for contact details to lock in a quote. You get a qualified lead with the job scope attached.</p><p>We build these for fencing, pressure washing, landscaping, deliveries, event rentals, and more.</p></div>
+    <div class="panel" role="tabpanel" id="p-est" aria-labelledby="t-est" tabindex="0" hidden>
+      <div class="side"><span class="sample-tag">Illustrative pricing for a fictional plumbing business</span><h3>Help customers explore a price before the first conversation.</h3><p>Try the sample estimate builder to see how a visitor can describe a job and explore a preliminary price. For your business, the questions and pricing rules would reflect what you actually offer.</p><a class="more-cta" href="/services/lead-capture-follow-up">Explore Lead Capture and Follow Up →</a></div>
       <div class="est">
         <div class="field"><label for="e-svc">Service</label><select id="e-svc"><option value="drain">Drain cleaning</option><option value="heater">Water heater install</option><option value="repipe">Bathroom repipe</option></select></div>
         <div class="field"><label for="e-size">Home size: <span id="e-size-v">2,000</span> sq ft</label><input type="range" id="e-size" min="800" max="5000" step="100" value="2000"></div>
         <div class="field"><span class="lbl">Add-ons</span><div class="checks"><label><input type="checkbox" id="e-wk"> Weekend visit</label><label><input type="checkbox" id="e-cam"> Camera inspection</label><label><input type="checkbox" id="e-haul"> Haul-away</label></div></div>
-        <div class="quote"><div><span class="eyebrow" style="color:rgba(255,255,255,.7)">Estimated range</span><div class="amt" id="e-amt">$0</div></div><a class="btn btn-amber" href="#contact" data-topic="Estimate builder">Get one for my business</a></div>
+        <div class="quote"><div><span class="eyebrow" style="color:rgba(255,255,255,.7)">Illustrative range</span><div class="amt" id="e-amt">$0</div></div></div>
       </div>
     </div>
 
-    <div class="panel" role="tabpanel" id="p-jingle" aria-labelledby="t-jingle" hidden>
-      <div class="side"><span class="sample-tag">Melody sketch</span><h3>A tune built around your name</h3><p>Press play to hear a melody sketch for our sample business. Finished jingles include professional vocals and production, in 5, 15, and 30-second cuts.</p><button class="btn btn-sign" id="play" type="button" style="align-self:flex-start">▶ Play melody</button></div>
-      <div class="jingle"><div class="staff" id="staff" aria-hidden="true"></div><p class="lyric" id="lyric">Har-bor Point, we're on the way…</p><p style="color:var(--muted);font-size:.9rem">Synthesized in your browser. Turn your sound on.</p></div>
-      <div class="real-jingle"><span class="sample-tag">Real client jingle</span><h3>&ldquo;Make Your Moment Shine&rdquo; for Marquee Moments</h3><p>Marquee Moments, owned by Laiala Margonar, rents 4-foot light-up marquee letters for weddings, birthdays, and events across Albany and the Capital Region. We created this jingle around the name and the promise behind it. Press play to hear the finished version.</p><audio controls preload="none" src="/assets/audio/marquee-moments-make-your-moment-shine.mp3">Your browser can't play this audio.</audio><p style="font-size:.9rem;color:var(--muted)">14 seconds · <a href="https://marqueemoments.net" target="_blank" rel="noopener">marqueemoments.net</a></p></div>
+    <div class="panel" role="tabpanel" id="p-jingle" aria-labelledby="t-jingle" tabindex="0" hidden>
+      <div class="side"><span class="sample-tag">Real client jingle</span><h3 id="h-jingle" tabindex="-1">Hear what a recognizable brand can sound like.</h3><p>Play the finished “Make Your Moment Shine” jingle for Marquee Moments. Hear how the business name and promise come together in a short piece made for its marketing.</p><a class="more-cta" href="/services/custom-jingles">Explore Custom Jingles →</a></div>
+      <div class="real-jingle"><audio controls preload="none" aria-label="Play the Marquee Moments Jingle" data-event="jingle_play" src="/assets/audio/marquee-moments-make-your-moment-shine.mp3">Your browser can't play this audio.</audio><p style="font-size:.9rem;color:var(--muted)">14 seconds · Marquee Moments is owned by Michael’s wife, Laiala Margonar.</p></div>
     </div>
   </div>
 </section>
@@ -625,23 +635,23 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 <section class="band contact" id="contact">
   <div class="wrap">
     <div class="stack" style="gap:20px">
-      <p class="eyebrow" style="color:rgba(255,255,255,.75)">Start here</p>
-      <h2>Discuss your project</h2>
-      <p class="lede">Tell us about your business and what you want to fix. Request a reviewed visibility check or a project quote, and Michael will reply within one business day with next steps.</p>
-      <p class="lede">Prefer to talk? Call <a href="tel:+15184601010" data-event="click_to_call" style="font-weight:700">(518) 460-1010</a></p>
+      <p class="eyebrow" style="color:rgba(255,255,255,.75)">Project inquiry</p>
+      <h2>What would you like to improve?</h2>
+      <p class="lede">Tell Michael a little about your business and where you need help. He will reply within one business day with next steps.</p>
+      <p class="lede">Prefer to call? <a href="tel:+15184601010" data-event="click_to_call" style="font-weight:700">(518) 460-1010</a></p>
     </div>
     <form class="card" id="lead" novalidate>
       <div class="field"><label for="f-name">Your name</label><input type="text" id="f-name" autocomplete="name" required></div>
       <div class="field"><label for="f-biz">Business name</label><input type="text" id="f-biz" autocomplete="organization" required></div>
       <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" autocomplete="email" required></div>
-      <div class="field"><label for="f-phone">Phone</label><input type="tel" id="f-phone" autocomplete="tel"></div>
-      <div class="field full"><label for="f-site">Website (if you have one)</label><input type="url" id="f-site" placeholder="https://"></div>
-      <div class="field full"><label for="f-topic">What can we help with?</label><select id="f-topic"><option>Reviewed visibility check</option><option>Comprehensive Growth Audit</option><option>Help with my audit results</option><option>Website design</option><option>Local SEO &amp; AI search visibility</option><option>Lead capture &amp; follow-up</option><option>Review system</option><option>Ongoing care</option><option>Estimate builder</option><option>AI chat agent</option><option>AI voice agent</option><option>Custom jingle</option><option>Rank and rent leads</option><option>Not sure yet</option></select></div>
-      <div class="field full"><label for="f-msg">Anything else?</label><textarea id="f-msg" rows="3"></textarea></div>
+      <div class="field"><label for="f-phone">Phone (optional)</label><input type="tel" id="f-phone" autocomplete="tel"></div>
+      <div class="field full"><label for="f-site">Website (optional)</label><input type="url" id="f-site" placeholder="https://"></div>
+      <div class="field full"><label for="f-topic">What would you like help with?</label><select id="f-topic"><option>Getting found online</option><option>Turning visits into inquiries or sales</option><option>Responding and following up</option><option>Reviews and repeat business</option><option>Branding or a jingle</option><option>Growth Audit</option><option>Something else</option><option selected>Not sure yet</option></select></div>
+      <div class="field full"><label for="f-msg">What would a good outcome look like?</label><textarea id="f-msg" rows="3"></textarea></div>
       <input type="text" name="_gotcha" id="f-gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
       <p class="err full" id="f-err" role="alert" hidden></p>
-      <button class="btn btn-amber full" type="submit" id="f-send" style="justify-content:center">Send my request</button>
-      <div class="ok" id="f-ok" role="status" hidden><b style="font-family:var(--display);font-size:1.15rem">Thanks, your request is in</b><p>Mike will reply within one business day. Here's a copy of what you sent:</p><pre id="f-sum"></pre></div>
+      <button class="btn btn-amber full" type="submit" id="f-send" style="justify-content:center">Send My Request</button>
+      <div class="ok" id="f-ok" role="status" hidden><b style="font-family:var(--display);font-size:1.15rem">Thanks for getting in touch. Michael will reply within one business day.</b><p>Here's a copy of what you sent:</p><pre id="f-sum"></pre></div>
     </form>
   </div>
 </section>
@@ -661,7 +671,7 @@ const $=s=>document.querySelector(s);
 let lastAudit=null,stepTimer;
 const ST={pass:"Good",warn:"Needs work",fail:"Problem"};
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const STEPS=["Loading your homepage","Checking SEO basics","Running Google's mobile speed test","Searching Google, Bing, and DuckDuckGo","Asking AI assistants who they recommend","Scoring your results"];
+const STEPS=["Loading your homepage","Checking SEO basics","Running Google's mobile speed test","Searching Google and Bing","Asking AI assistants who they recommend","Scoring your results"];
 function runSteps(){
   const ol=$("#steps-live");ol.innerHTML=STEPS.map(t=>`<li>${t}</li>`).join("");
   const li=[...ol.children];let i=0;li[0].className="now";
@@ -764,7 +774,7 @@ function renderReport(d){
   const show=k=>{root.querySelectorAll(".rep-tabs [role=tab]").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===k));root.querySelectorAll("[data-panel]").forEach(p=>p.hidden=p.dataset.panel!==k);};
   root.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.tab);if(b.classList.contains("bar-row"))root.querySelector(".rep-tabs").scrollIntoView({behavior:"smooth",block:"nearest"});}));
   root.querySelectorAll(".filters").forEach(g=>g.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));const f=b.dataset.f;g.nextElementSibling.querySelectorAll(".fd").forEach(li=>li.hidden=f!=="all"&&li.dataset.status!==f);}));
-  if(full){$("#cta-call").addEventListener("click",()=>{$("#f-topic").value="Help with my audit results";});$("#u-pdf").addEventListener("click",()=>window.print());}
+  if(full){$("#cta-call").addEventListener("click",()=>{const s=$("#f-topic");if(![...s.options].some(o=>o.text==="Help with my audit results"))s.add(new Option("Help with my audit results"));s.value="Help with my audit results";});$("#u-pdf").addEventListener("click",()=>window.print());}
   else $("#unlock-form").addEventListener("submit",unlock);
   animate(root);
   root.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
@@ -786,7 +796,7 @@ $("#audit-form").addEventListener("submit",async e=>{
   $("#audit-out").innerHTML="";$("#audit-run").hidden=false;runSteps();
   try{lastAudit=await post("/api/audit",{url:v("a-url"),business:v("a-biz"),service:v("a-svc"),city:v("a-city")});renderReport(lastAudit);}
   catch(x){err.textContent=x.message;err.hidden=false;}
-  finally{clearInterval(stepTimer);$("#audit-run").hidden=true;btn.disabled=false;btn.textContent="Get my free score";}
+  finally{clearInterval(stepTimer);$("#audit-run").hidden=true;btn.disabled=false;btn.textContent="Get My Free Visibility Score";}
 });
 async function unlock(e){
   e.preventDefault();
@@ -825,8 +835,17 @@ async function unlock(e){
 })();
 
 /* ---------- demo tabs ---------- */
-const tabs=[...document.querySelectorAll('[role=tab]')];
-tabs.forEach(t=>t.addEventListener("click",()=>{tabs.forEach(x=>{const on=x===t;x.setAttribute("aria-selected",on);$("#"+x.getAttribute("aria-controls")).hidden=!on;});}));
+const tabs=[...document.querySelectorAll('#demos [role=tab]')];
+const pick=(t,focus)=>{tabs.forEach(x=>{const on=x===t;x.setAttribute("aria-selected",on);x.tabIndex=on?0:-1;$("#"+x.getAttribute("aria-controls")).hidden=!on;});if(focus)t.focus();
+  try{window.dataLayer&&dataLayer.push({event:"demo_tab",demo:t.dataset.demo});}catch(_){}};
+tabs.forEach((t,i)=>{t.addEventListener("click",()=>pick(t));t.addEventListener("keydown",e=>{const k={ArrowRight:1,ArrowLeft:-1}[e.key];
+  if(k){e.preventDefault();pick(tabs[(i+k+tabs.length)%tabs.length],true);}else if(e.key==="Home"){e.preventDefault();pick(tabs[0],true);}else if(e.key==="End"){e.preventDefault();pick(tabs[tabs.length-1],true);}});});
+/* "Hear the Jingle" links elsewhere on the page open the jingle tab and focus its heading */
+document.querySelectorAll("[data-open-demo]").forEach(a=>a.addEventListener("click",e=>{const t=tabs.find(x=>x.dataset.demo===a.dataset.openDemo);if(!t)return;e.preventDefault();pick(t);
+  document.getElementById("demos").scrollIntoView({behavior:"smooth"});setTimeout(()=>{const h=document.getElementById("h-"+a.dataset.openDemo);h&&h.focus({preventScroll:true});},400);}));
+/* engagement events, kept separate from inquiries: a call-button tap is not a completed call */
+document.querySelectorAll("[data-event=call_miles]").forEach(a=>a.addEventListener("click",()=>{try{window.dataLayer&&dataLayer.push({event:"call_miles_click"});}catch(_){}}));
+document.querySelectorAll("audio[data-event=jingle_play]").forEach(au=>au.addEventListener("play",()=>{try{window.dataLayer&&dataLayer.push({event:"jingle_play"});}catch(_){}},{once:true}));
 
 /* ---------- chat demo ---------- */
 const tree={
@@ -855,10 +874,10 @@ function est(){
 
 /* ---------- jingle ---------- */
 const notes=[[67,.3],[67,.15],[69,.3],[71,.45],[0,.15],[74,.3],[72,.3],[71,.3],[69,.6],[0,.2],[67,.3],[69,.3],[71,.3],[74,.3],[79,.9]];
-const staff=$("#staff");notes.forEach(([n])=>{const s=document.createElement("span");s.style.height=n?((n-60)/20*100)+"%":"6%";staff.appendChild(s);});
+const staff=$("#staff");if(staff)notes.forEach(([n])=>{const s=document.createElement("span");s.style.height=n?((n-60)/20*100)+"%":"6%";staff.appendChild(s);});
 const lyr=["Har-","bor","Point,","we're","","on","the","way","…","","call","us","to-","day!","♪"];
 let ctx,playing=false;
-$("#play").addEventListener("click",()=>{
+$("#play")?.addEventListener("click",()=>{
   if(playing)return;
   try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();}catch(e){$("#lyric").textContent="Audio isn't available in this browser.";return;}
   playing=true;let t=ctx.currentTime+.05,ms=0;const bars=[...staff.children];
@@ -875,9 +894,9 @@ $("#play").addEventListener("click",()=>{
 /* ---------- CTA topic prefill + form ---------- */
 const FORM_ENDPOINT="/api/contact";
 /* "Request your audit" links arrive as /?topic=...#contact */
-const qTopic=new URLSearchParams(location.search).get("topic");
-if(qTopic&&[...$("#f-topic").options].some(o=>o.text===qTopic))$("#f-topic").value=qTopic;
-document.querySelectorAll("[data-topic]").forEach(a=>a.addEventListener("click",()=>{$("#f-topic").value=a.dataset.topic;}));
+const setTopic=tp=>{const s=$("#f-topic");if(!tp||!s)return;if(![...s.options].some(o=>o.text===tp))s.add(new Option(tp,tp));s.value=tp;};
+setTopic(new URLSearchParams(location.search).get("topic"));
+document.querySelectorAll("[data-topic]").forEach(a=>a.addEventListener("click",()=>setTopic(a.dataset.topic)));
 $("#lead").addEventListener("submit",async e=>{
   e.preventDefault();
   const v=id=>$("#"+id).value.trim(),err=$("#f-err");
@@ -889,7 +908,7 @@ $("#lead").addEventListener("submit",async e=>{
     _subject:"New inquiry: "+v("f-topic")+" · "+v("f-biz"),
     _replyto:v("f-email"),
     name:v("f-name"),business:v("f-biz"),email:v("f-email"),phone:v("f-phone"),
-    website:v("f-site"),topic:v("f-topic"),message:v("f-msg"),
+    website:v("f-site"),topic:v("f-topic"),message:v("f-msg")?"Good outcome: "+v("f-msg"):"",
     audit_id:lastAudit?lastAudit.id:"",
     _gotcha:$("#f-gotcha").value
   };
@@ -897,12 +916,12 @@ $("#lead").addEventListener("submit",async e=>{
   try{
     const r=await fetch(FORM_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});
     if(!r.ok)throw new Error(r.status);
-    $("#f-sum").textContent=`${data.topic}\nName: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nPhone: ${data.phone||"—"}\nWebsite: ${data.website||"—"}\nNotes: ${data.message||"—"}`;
+    $("#f-sum").textContent=`${data.topic}\nName: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nPhone: ${data.phone||"—"}\nWebsite: ${data.website||"—"}\n${data.message||"Good outcome: —"}`;
     $("#f-ok").hidden=false;btn.hidden=true;
     e.target.querySelectorAll("input,select,textarea").forEach(el=>el.disabled=true);
   }catch(x){
     err.textContent="Your request didn't go through. Check your connection and try again in a moment.";err.hidden=false;
-    btn.disabled=false;btn.textContent="Send my request";
+    btn.disabled=false;btn.textContent="Send My Request";
   }
 });
 })();

@@ -39,7 +39,7 @@ PAGES = [
   faqs=[("How long does local SEO take to work?", "Profile and website fixes can help within weeks. Ranking gains usually build over a few months, depending on how competitive your service and town are."),
         ("Can you guarantee first place on Google or in ChatGPT?", "No one honestly can. Google and AI tools decide their own results. We improve the signals they rely on and show you the results every month."),
         ("I already have a website. Do I need a new one?", "Usually not. We start with what you have and only recommend a rebuild if the site is holding you back."),
-        ("What does the free score check?", "Your homepage speed, SEO basics, where you rank on Google, Bing, and DuckDuckGo for your service and city, and whether AI assistants recommend you."),
+        ("What does the free score check?", "Your homepage speed, SEO basics, where you rank on Google and Bing for your service and city, and the mentions returned in selected AI answers."),
         ("Do I have to sign a long contract?", "No. You get a written plan with a fixed price before you commit, and no long-term lock-in.")]),
  dict(slug="website-design-albany-ny", service="Website Design", keyword="website design in Albany, NY",
   title="Website Design in Albany, NY | Websites That Book Jobs",

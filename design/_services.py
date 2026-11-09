@@ -55,7 +55,15 @@ SERVICES = [
    ("Do you work with businesses outside the Capital Region?", "Yes. We're based near Albany and work with local businesses across the US. The work is the same wherever your customers are."),
    ("Will I have to write anything?", "No. We write the pages and answers, and you approve them. We'll ask you for details only you know, like the jobs you most want more of."),
   ],
-  related=["google-business-profile-listings", "review-systems", "website-design"], demo=None),
+  related=["google-business-profile-listings", "review-systems", "website-design"], demo=None,
+  deep=dict(eyebrow="AI search visibility", title="Be part of the answer",
+   lede="More customers ask ChatGPT, Google AI Mode, or Perplexity who to hire. Those tools draw on what's published about you: your site, your reviews, and what others say about you. We make sure that information is accessible, accurate, and credible.",
+   cards=[("Access", "Important pages are crawlable by search engines and AI search crawlers. Crawler permission alone doesn't mean a page is fetched, indexed, or recommended."),
+          ("Clarity", "Services, service areas, credentials, and customer questions are spelled out plainly."),
+          ("Evidence", "Real reviews, project examples, and relevant mentions on other trusted sites."),
+          ("Measurement", "We check a defined set of customer questions and record whether you're mentioned, which competitors appear, and the sources shown, alongside referral traffic and inquiries. It's a sample of answers, not every customer's experience.")],
+   platforms=["Google AI Overviews", "Google AI Mode", "ChatGPT search", "Perplexity", "Bing Copilot"],
+   note="This work is often called generative engine optimization (GEO) or answer engine optimization (AEO). It overlaps with SEO, clear content, consistent business facts, and credible references elsewhere online. No one can guarantee an AI recommendation. We improve the signals these tools rely on and report what changes.")),
 
  dict(slug="google-business-profile-listings", lane="found", name="Google Business Profile & Listings",
   service_type="Google Business Profile optimization and local citation management",
@@ -408,7 +416,7 @@ SERVICES = [
     quote="One of my favorite parts was the custom jingle they created for us! “MarqueeMoments.net — make your moment shine” captures our business perfectly. It’s catchy, memorable, and gives our marketing so much personality. I still catch myself singing it!",
     quote_by="Laiala Margonar, Marquee Moments", quote_note="Marquee Moments is my wife Laiala’s business.", case="case-marquee-moments.html"),
   related=["review-systems", "ongoing-care", "website-design"],
-  demo=("jingle sketch", "Play a melody sketch for a fictional plumbing company, made in your browser. Finished jingles add professional vocals and production.")),
+  demo=("custom jingle", "Play the finished “Make Your Moment Shine” jingle for Marquee Moments in the demo section.")),
 
  dict(slug="ongoing-care", lane="remember", name="Ongoing Care & Reporting",
   service_type="Website care, local SEO maintenance, and monthly reporting",
@@ -497,8 +505,32 @@ def page(s):
     </div>
   </div>
 </section>"""
+    deep = ""
+    if s.get("deep"):
+        d = s["deep"]
+        cards = "".join(f'<div class="card"><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in d["cards"])
+        chips = "".join(f'<span class="chip-plain">{e(x)}</span>' for x in d.get("platforms", []))
+        deep = f"""
+<section class="sec-tight" id="ai-search">
+  <div class="wrap stack">
+    <p class="eyebrow">{e(d['eyebrow'])}</p>
+    <h2 class="h2">{e(d['title'])}</h2>
+    <p class="lede">{e(d['lede'])}</p>
+    <div class="cards" style="margin-top:22px">{cards}</div>
+    {f'<p class="eyebrow" style="margin-top:22px">Platforms we check</p><div class="chips-plain">{chips}</div>' if chips else ''}
+    <p style="color:var(--muted);max-width:72ch;margin-top:14px">{e(d['note'])}</p>
+  </div>
+</section>"""
     demo = ""
-    if s["demo"]:
+    if s["slug"] == "ai-receptionist":
+        demo = """
+<section class="ctaband sec-tight" id="call-miles">
+  <div class="wrap">
+    <div><p class="eyebrow" style="color:var(--on-sign-muted)">Try it</p><h2>Meet Miles, our AI receptionist.</h2><p>Call our main line and experience how Miles welcomes callers, answers questions, and helps them take the next step. You will be speaking with an AI receptionist.</p></div>
+    <div class="btns"><a class="btn btn-primary" href="tel:+15184601010" data-event="call_miles">Call Miles at (518) 460-1010</a></div>
+  </div>
+</section>"""
+    elif s["demo"]:
         label, text = s["demo"]
         demo = f"""
 <section class="ctaband sec-tight">
@@ -555,7 +587,7 @@ description: {s['desc']}
       <a class="textlink" href="packages.html{'#branding' if s['slug'] == 'branding-brand-identity' else ''}">See packages and pricing →</a>
     </div>
   </div>
-</section>{example}{demo}
+</section>{deep}{example}{demo}
 <section class="sec-tight">
   <div class="wrap faq">
     <div class="stack"><p class="eyebrow">Questions</p><h2 class="h2" style="font-size:clamp(28px,3.4vw,40px)">{e(s['name'])}: common questions</h2></div>

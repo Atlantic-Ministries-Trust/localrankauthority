@@ -16,7 +16,7 @@
 Local service businesses that depend on calls and bookings: contractors and home services, professional offices, event and rental companies, seasonal businesses, shops and studios.
 
 ## How working together usually goes
-1. Free Local Visibility Score: about a minute, free, no call needed. It checks website speed, SEO basics, where the business ranks on Google, Bing, and DuckDuckGo, and whether AI assistants recommend it. https://localrankauthority.com/#book
+1. Free Local Visibility Score: about a minute, free, no call needed. It checks website speed, SEO basics, where the business ranks on Google and Bing for its service and city, and the mentions returned in selected AI answers. https://localrankauthority.com/#book
 2. Comprehensive Growth Audit: $2,000, delivered in 5 business days. A 20 to 25 page report, a private client portal, copy ready to paste, a finished landing page, a 30/60/90-day plan, and a 45-minute walkthrough with Michael. The full $2,000 is credited toward any setup package started within 30 days. https://localrankauthority.com/comprehensive-audit
 3. A setup package that fixes the biggest problems, with a written proposal and a fixed price.
 4. Monthly care: steady improvement and a plain-English monthly report.
@@ -360,44 +360,48 @@ Questions:
 
 
 ## General questions
-- Q: How do I get my business recommended by ChatGPT, Gemini, and other AI assistants?
-  A: AI assistants recommend businesses they can confirm from many trusted sources: your website, your Google Business Profile, reviews, directories, local news, and "best of" lists. We make sure your services, service area, and credentials are stated clearly on your site, that your listings agree with each other, and that other trusted sites talk about you. Then we track which customer questions name you each month.
-- Q: What is generative engine optimization (GEO) or answer engine optimization (AEO)?
-  A: Both names describe the same work: making your business easy for AI tools like ChatGPT, Google AI Overviews and AI Mode, Perplexity, and Bing Copilot to find, understand, and cite. It builds on local SEO and adds clear answers to customer questions, consistent business facts across the web, and mentions on sites these tools trust.
-- Q: What's the difference between AI search visibility and AI agents?
-  A: AI search visibility helps customers find and choose you when they ask tools like ChatGPT or Google AI Mode. AI chat and voice agents answer those customers once they contact you. One brings people in, the other makes sure nobody slips away.
-- Q: Can you guarantee my business gets recommended by ChatGPT?
-  A: No one honestly can. AI answers change by question, location, and over time. We strengthen the signals these tools rely on and track your mentions across a consistent set of customer questions.
-- Q: How do you measure AI visibility?
-  A: We ask AI assistants the same set of real customer questions every month, such as "best plumber in Troy NY," and record whether you're named, who is named instead, and which sources they cite. You see the results in your monthly report alongside rankings, calls, and inquiries.
-- Q: What does local SEO include?
-  A: Your Google Business Profile, service and town pages on your website, reviews, business listings across directories, technical fixes, and tracking. The goal is to show up in the Google Maps results and organic results when nearby customers search for what you do.
-- Q: Do I need every service?
-  A: No. We start with your goal and what you already have. You may need one focused project or a few pieces working together. The recommendation should fit your business, not a package.
-- Q: Can you work with my existing website?
-  A: Yes, that's often the best place to start. We review the platform, content, and how customers move through it before recommending improvements or a rebuild.
-- Q: What is rank and rent?
-  A: We build a website that ranks for a service in a specific city, such as "fence installation in Troy." The calls it generates go to one business in that territory for a monthly fee.
-- Q: Will an AI agent know everything about my business?
-  A: Only what you approve. Each agent gets a knowledge base you sign off on, clear limits, and testing before launch. We decide together what it can answer, which details it collects, and when it hands a question to you.
-- Q: Will an AI receptionist sound robotic?
-  A: Modern voice agents sound natural and handle common questions well. We script them around your services, test them before launch, and route anything unusual to you.
-- Q: Can you connect booking, payments, and follow-up?
-  A: Yes. We can set up forms, appointment booking, deposit links, CRM connections, and follow-up texts and emails around the tools you already use. Any platform or messaging fees are spelled out in your proposal.
-- Q: What does the free Local Visibility Score include?
-  A: It tests your homepage's mobile speed with Google PageSpeed, checks the SEO basics (titles, descriptions, headings, schema, sitemap, and robots.txt), looks up where you rank on Google, Bing, and DuckDuckGo for your service and city, and asks AI assistants who they recommend. You see a score for each area right away and can unlock the full findings and fixes by email.
-- Q: How is the Comprehensive Growth Audit different from the free score?
-  A: The free score checks your homepage in about a minute. The Comprehensive Growth Audit is 5 business days of expert review of your whole site, Google Business Profile, listings, competitors, and AI answers. You get a 20–25 page report, a client portal, copy ready to paste, a finished landing page, a 30/60/90-day plan, and a 45-minute walkthrough with Michael.
-- Q: How much does local SEO cost?
-  A: The Comprehensive Growth Audit is $2,000, credited in full toward any package you start within 30 days. Setup packages and monthly care are priced in a written proposal with a fixed price before you commit to anything.
-- Q: Do I own my website?
-  A: Yes. Your domain, content, and site are yours. Rank-and-rent lead sites are the exception: we own those and rent the leads.
-- Q: How fast will I see results?
-  A: Website, chat, voice, and follow-up tools work from launch day. Search rankings usually take a few months to build, depending on your market's competition. Changes in AI answers typically take 3 to 6 months to show.
-- Q: Who will I work with?
-  A: Michael Carlson, directly. There are no account managers. Michael has owned Atlantic Flagpole since 2008 and has more than 15 years in e-commerce and local business.
+- Q: Can you help a business like mine?
+  A: We work with businesses selling services or products, including those serving a defined area and those selling nationwide. Share your business, market, and goal so Michael can confirm whether the work is a fit. A local search project, online store, and AI follow-up system need different approaches.
+- Q: Will I have to replace my website or existing tools?
+  A: Not automatically. We review what you already have and what is preventing it from doing the job you need. The recommendation may be focused improvements, a supported integration, or a rebuild where the findings justify one.
+- Q: How much of my time will this take?
+  A: Before you commit, the project scope identifies what we handle and what you need to provide or approve. That can include access, accurate business information, examples, and feedback. The audit includes a 45-minute walkthrough; implementation needs depend on the project.
+- Q: What do I get from the paid audit that the free score does not provide?
+  A: The free score gives you automated checks of website basics, service-and-city search rankings, and selected AI answers. The $2,000 audit adds expert review, competitor research, prioritized recommendations, ready-to-use copy, a landing page, and a walkthrough. It is a plan you can use independently.
+- Q: What will it cost and am I committing to a monthly plan?
+  A: The audit is $2,000. Implementation packages and optional ongoing support are priced separately, with their scope and terms provided before you commit. View Implementation Options for starting prices. Software and messaging fees, when applicable, are identified in your proposal.
+- Q: Do I own the website and content you create?
+  A: Yes, as set out in your agreement. Rank-and-rent lead sites are a separate arrangement: Local Rank Authority owns those sites and rents the leads. Any third-party software, licensing, and platform requirements are identified in the proposal.
 - Q: Do you work with businesses outside New York?
-  A: Yes. We're based in New York's Capital Region and work with local service businesses across the US. The work happens online, and walkthroughs and check-ins are by phone or video, so distance isn't a problem.
+  A: Yes. Local Rank Authority is based in New York and works with businesses across the United States. Project discussions, walkthroughs, and check-ins can happen by phone or video.
+- Q: What does search visibility work include?
+  A: Depending on your business, it can include technical SEO, useful product or service content, relevant business listings, reviews, and clearer information about what you offer. For businesses serving a defined area, it can also include Google Business Profile and service-area content. Your proposal identifies the work that fits your market.
+- Q: Can you guarantee a number one ranking or an AI recommendation?
+  A: No. Search rankings and AI answers depend on systems we do not control. We work on the information, accessibility, content, and credibility that support discovery, then report what changes.
+- Q: What are GEO and AEO?
+  A: Generative engine optimization and answer engine optimization are terms used for work that helps answer systems find, understand, and reference information about a business. This overlaps with SEO, clear content, consistent business facts, and credible references elsewhere online.
+- Q: How do you measure AI visibility?
+  A: We check a defined set of questions relevant to your business and record whether you are mentioned, which competitors appear, and the sources shown. We compare those observations over time alongside available referral traffic and inquiries. They are a sample of answers, not a complete measure of every customer’s experience.
+- Q: How soon will I see results?
+  A: Changes to a form, follow-up process, or website can begin helping once they are launched and tested. Search visibility takes time and varies with your starting point, competition, and scope. Your plan identifies what can be delivered quickly and what needs longer observation.
+- Q: Can I try your AI receptionist before discussing a project?
+  A: Yes. Call Miles on our main line at (518) 460-1010 and say you are trying the demo. Ask questions or try a short example for your type of business. Contact details are not required to explore. If you want Michael to follow up, ask Miles and he will switch to the normal inquiry process.
+- Q: What is the difference between AI search visibility and AI automation?
+  A: AI search visibility concerns how your business appears when people use AI tools to research a product, service, or provider. AI automation helps with tasks inside your business, such as answering common questions, collecting inquiry details, routing requests, and following up.
+- Q: What can an AI chat agent or receptionist do?
+  A: Depending on the approved scope and integrations, it can answer common questions, collect contact and job details, direct people to a booking process, and hand off requests that need a person. Its permissions and limits are agreed before launch.
+- Q: Will the AI know my business and when to hand off?
+  A: We build its knowledge around business information you approve and test common situations before launch. We agree on what it can answer, what it should collect, and when it should send the conversation to you. Ongoing review matters because business information changes.
+- Q: Can you connect my booking system or CRM?
+  A: We review the tools you use and confirm what their integrations support before promising a connection. Your proposal identifies the systems, scope, and any software or messaging fees. Some connections may need a different approach or additional development.
+- Q: What does the free visibility score check?
+  A: It checks your homepage’s speed and SEO basics, looks up rankings for your service and city on Google and Bing, and checks selected AI answers. You see initial scores before unlocking detailed findings by email. For a nationwide store or a business without a local service market, talk with Michael about the most useful assessment.
+- Q: How much does implementation cost?
+  A: The Comprehensive Growth Audit is $2,000, credited in full toward any package you start within 30 days. Setup packages and monthly care are priced in a written proposal with a fixed price before you commit to anything.
+- Q: Do I need the paid audit before implementation?
+  A: The audit is the starting point for implementation packages. It gives us a basis for recommending the scope and priorities. If you have a specific standalone project in mind, describe it to Michael so he can confirm the appropriate starting point.
+- Q: What is rank and rent?
+  A: Local Rank Authority develops a lead-generating website for a defined service and territory and rents the resulting leads to a business. This is a different arrangement from building a website you own. Site ownership, territory, lead handling, and pricing must be agreed separately.
 
 ## Finding your way around the website
 Help visitors find pages like a support assistant on a store website: say where to tap or click, and share the direct link.

@@ -25,9 +25,9 @@ def clean(s):
 
 
 def homepage_faqs():
-    t = (D / "homepage-redesign.html").read_text()
-    sec = re.search(r'<section id="faq".*?</section>', t, re.S).group(0)
-    return [(clean(q), clean(a)) for q, a in re.findall(r"<summary>(.*?)</summary>\s*<p>(.*?)</p>", sec, re.S)]
+    """All 21 answers from the Questions and Answers page (design/content/faq.html); the homepage shows six of them."""
+    t = (D / "content" / "faq.html").read_text()
+    return [(clean(q), clean(a)) for q, a in re.findall(r"<summary>(.*?)</summary>\s*<p>(.*?)</p>", t, re.S)]
 
 
 BUSINESS = """# Local Rank Authority: facts for the chat assistant
@@ -48,7 +48,7 @@ BUSINESS = """# Local Rank Authority: facts for the chat assistant
 Local service businesses that depend on calls and bookings: contractors and home services, professional offices, event and rental companies, seasonal businesses, shops and studios.
 
 ## How working together usually goes
-1. Free Local Visibility Score: about a minute, free, no call needed. It checks website speed, SEO basics, where the business ranks on Google, Bing, and DuckDuckGo, and whether AI assistants recommend it. https://localrankauthority.com/#book
+1. Free Local Visibility Score: about a minute, free, no call needed. It checks website speed, SEO basics, where the business ranks on Google and Bing for its service and city, and the mentions returned in selected AI answers. https://localrankauthority.com/#book
 2. Comprehensive Growth Audit: $2,000, delivered in 5 business days. A 20 to 25 page report, a private client portal, copy ready to paste, a finished landing page, a 30/60/90-day plan, and a 45-minute walkthrough with Michael. The full $2,000 is credited toward any setup package started within 30 days. https://localrankauthority.com/comprehensive-audit
 3. A setup package that fixes the biggest problems, with a written proposal and a fixed price.
 4. Monthly care: steady improvement and a plain-English monthly report.
@@ -143,7 +143,7 @@ def main():
     parts = [BUSINESS, PRICES_CONFIRMED_TEXT if PRICES_CONFIRMED else PRICES_PENDING_TEXT, services_section()]
     faqs = homepage_faqs()
     if not PRICES_CONFIRMED:
-        faqs = [(q, PENDING_COST_ANSWER if q == "How much does local SEO cost?" else a) for q, a in faqs]
+        faqs = [(q, PENDING_COST_ANSWER if q in ("How much does local SEO cost?", "How much does implementation cost?") else a) for q, a in faqs]
     parts.append("\n## General questions\n" + "\n".join(f"- Q: {q}\n  A: {a}" for q, a in faqs))
     parts.append(SITE_GUIDE)
     parts.append("""
