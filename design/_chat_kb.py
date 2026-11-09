@@ -54,13 +54,18 @@ Local service businesses that depend on calls and bookings: contractors and home
 4. Monthly care: steady improvement and a plain-English monthly report.
 """
 
+BRANDING_PRICES = ("- Branding packages (one time, published at https://localrankauthority.com/packages#branding): "
+                   "Brand Refresh $2,000 (about 2 weeks), Brand Identity $5,500 (3 to 4 weeks), Brand + Rollout $12,000 (6 to 8 weeks). "
+                   "They start with a Brand Discovery Session for $500, credited in full toward any branding package started within 30 days; no audit needed. "
+                   "Printing, vehicle wraps, signs, and installation are quoted separately.\n")
+
 PRICES_CONFIRMED_TEXT = """
 ## Prices
 - Free Local Visibility Score: free.
 - Comprehensive Growth Audit: $2,000.
 - Setup packages: Get Found $7,500 (4 to 6 weeks), Win the Conversation $19,000 (8 to 10 weeks), Market Authority $25,000 (10 to 12 weeks).
 - Monthly care, starting at: Essentials $2,500, Growth $5,000, Authority $7,500, Dominate $10,000 per month.
-- Not included: costs paid to other companies, such as ad spend, call tracking, phone and texting fees, and software subscriptions. Each is listed in the proposal.
+""" + BRANDING_PRICES + """- Not included: costs paid to other companies, such as ad spend, call tracking, phone and texting fees, and software subscriptions. Each is listed in the proposal.
 - Full details: https://localrankauthority.com/packages
 """
 
@@ -70,7 +75,7 @@ PRICES_PENDING_TEXT = """
 - Comprehensive Growth Audit: $2,000, credited toward a setup package started within 30 days.
 - Setup packages and monthly care are quoted in a written proposal with a fixed price, after the audit or a call with Michael. The scope depends on the business, its market, and what it already has.
 - Costs paid to other companies (ad spend, call tracking, phone and texting fees, software subscriptions) are listed separately in the proposal.
-- Do not quote any other dollar amounts. If someone wants a ballpark, offer a call with Michael at (518) 460-1010 or the free score.
+""" + BRANDING_PRICES + """- Do not quote any dollar amounts other than the ones listed here. If someone wants a ballpark, offer a call with Michael at (518) 460-1010 or the free score.
 """
 
 
@@ -104,6 +109,7 @@ def write_voice_kb(general_faqs):
             entries.append({"q": k.strip(), "a": v.strip(), "tags": "business facts"})
     prices = PRICES_CONFIRMED_TEXT if PRICES_CONFIRMED else PRICES_PENDING_TEXT
     entries.append({"q": "Prices and what things cost", "a": " ".join(l[2:] for l in prices.strip().splitlines() if l.startswith("- ")), "tags": "price cost pricing how much"})
+    entries.append({"q": "How much does branding cost?", "a": BRANDING_PRICES[2:].strip(), "tags": "branding brand identity logo rebrand refresh price cost how much package discovery session"})
     entries.append({"q": "How working together usually goes", "a": " ".join(l[3:] for l in BUSINESS.split("## How working together usually goes")[1].strip().splitlines()), "tags": "process steps start"})
     for s in _services.SERVICES:
         url = f"https://localrankauthority.com/services/{s['slug']}"
