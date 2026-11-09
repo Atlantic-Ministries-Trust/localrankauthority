@@ -119,7 +119,8 @@ table.t td{border-bottom:1px solid #EDF1EE}table.t tr:hover td{background:#FAFCF
 .pins{list-style:none;padding:0;margin:6px 0 0;font-size:.9rem}.pins li{padding:4px 0;border-bottom:1px solid #EDF1EE}
 .quote{border-left:4px solid var(--sign);background:#F8FAF9;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:12px}.quote p:last-child{margin-top:6px;white-space:pre-line}
 mark{background:#FFE9A8;color:inherit;border-radius:3px;padding:0 2px}
-.finding.s-fail{border-left:4px solid var(--pin)}.finding.s-warn{border-left:4px solid var(--warn)}.finding.s-pass{border-left:4px solid var(--good)}
+.finding.s-review{border-left:4px solid var(--muted)}.finding.s-fail{border-left:4px solid var(--pin)}.finding.s-warn{border-left:4px solid var(--warn)}.finding.s-pass{border-left:4px solid var(--good)}
+.how{margin-top:8px;font-size:.85rem;color:var(--muted)}.how summary{cursor:pointer;font-weight:700;color:var(--sign)}.how ul{margin:6px 0 0;padding-left:18px}
 .fix{margin-top:8px;background:#EEF5F1;border-radius:8px;padding:8px 10px}.fix b{color:var(--sign)}
 .bar{grid-template-columns:minmax(120px,170px) 1fr 44px}
 .pr-only{display:none}
@@ -223,7 +224,7 @@ try{await api("message",{method:"POST",body:JSON.stringify({text:$("#mt").value}
 
 
 /* ---------- a free Local Visibility Score, inside the dashboard: /portal/?score=<id>&k=<key> ---------- */
-const STL={pass:"Good",warn:"Needs work",fail:"Problem"},STC={pass:"good",warn:"ok",fail:"bad"},ORDER={fail:0,warn:1,pass:2};
+const STL={pass:"Good",warn:"Needs work",fail:"Problem",review:"Needs review"},STC={pass:"good",warn:"ok",fail:"bad",review:"na"},ORDER={fail:0,warn:1,review:2,pass:3};
 const METRICS=[["lcp","Main content loads",2500,4000,"ms"],["fcp","First content appears",1800,3000,"ms"],["tbt","Page frozen",200,600,"ms"],["cls","Layout shift",.1,.25,""],["si","Visual load speed",3400,5800,"ms"]];
 const fmtM=(v,u)=>u==="ms"?(v>=1000?(v/1000).toFixed(1)+" s":Math.round(v)+" ms"):(+v).toFixed(2);
 const plainT=x=>String(x||"").replace(/\*\*/g,"").replace(/^\s*[\*\-]\s+/gm,"• ");
@@ -237,16 +238,19 @@ function vizFor(s,biz){const x=s.extra||{};
     const items=[["recommend","We asked Google's AI: who would you recommend?"],["about",`We asked Google's AI: what is ${biz}?`]].filter(([k])=>x.answers[k]);
     return items.map(([k,l])=>`<div class="quote"><p class="eyebrow">${esc(l)}</p><p>${hl(x.answers[k])}</p></div>`).join("");}
   return "";}
+function evHtml(e){if(!e)return "";const when=e.checked_at?new Date(e.checked_at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";
+  const bits=[e.provider&&`Source: ${e.provider}${e.engine?" · "+e.engine:""}${e.model?" · "+e.model:""}`,e.query&&`Search: “${e.query}”`,e.ranking_type&&`Result type: ${e.ranking_type}`,e.location&&`Location: ${e.location}`,e.depth&&`Results checked: top ${e.depth}`,e.prompt&&`Question asked: “${e.prompt}”`,e.search&&e.search,when&&`Checked: ${when}`,(e.matched_facts||[]).length&&`Matched your site's own description: ${e.matched_facts.join(", ")}`].filter(Boolean);
+  return bits.length?`<details class="how"><summary>How we checked</summary><ul>${bits.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></details>`:"";}
 function scoreView(r){const i=r.input||{},secs=r.sections||[],when=new Date(r.createdAt||Date.now()).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
 let h=`<div class="pr-only pr-head"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" height="44"><span>localrankauthority.com · (518) 460-1010<br>Local Visibility Score · ${esc(when)}</span></div>
 <div class="row spread"><div><p class="eyebrow">Local Visibility Score · ${esc(when)}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(i.business||i.host)}</h1><p style="color:var(--muted)">${esc([i.host,[i.service,i.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p></div>
 <div class="row noprint"><a class="copy" href="/portal/">← All my scores</a><button class="btn btn-ghost" id="pdf" type="button">Save as PDF</button><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael &nbsp;·&nbsp; (518) 460-1010</a></div></div>`;
 h+=`<section class="panel hero-p"><div>${gauge(r.overall)}<p style="text-align:center;font-weight:700">Grade ${esc(r.grade||"–")}</p></div><div><h2>How you scored</h2><div class="bars" style="margin-top:12px">${secs.map(s=>`<button class="bar" data-go="sec-${esc(s.key)}"><span>${esc(s.label)}</span><span class="track"><i class="fill-${tone100(s.score)}" style="width:${s.score??0}%"></i></span><b>${s.score??"–"}</b></button>`).join("")}</div>
 <p style="color:var(--muted);margin-top:14px;font-size:.95rem">Tap a score to jump to its findings. Every problem includes how to fix it.</p></div></section>`;
-for(const s of secs){const f=(s.findings||[]).slice().sort((a,b)=>ORDER[a.status]-ORDER[b.status]),c={pass:0,warn:0,fail:0};f.forEach(x=>c[x.status]++);
+for(const s of secs){const f=(s.findings||[]).slice().sort((a,b)=>ORDER[a.status]-ORDER[b.status]),c={pass:0,warn:0,fail:0,review:0};f.forEach(x=>c[x.status]=(c[x.status]||0)+1);
   const inner=`<p style="color:var(--muted)">${esc(s.summary||"")}</p>${s.available===false?`<p style="margin-top:10px">${esc(s.note||"")}</p>`:""}
-  ${f.length?`<p class="row" style="gap:8px;margin-top:12px"><span class="pill bad">${c.fail} ${c.fail===1?"problem":"problems"}</span><span class="pill ok">${c.warn} need work</span><span class="pill good">${c.pass} good</span></p>`:""}
-  ${vizFor(s,i.business)}${f.map(x=>`<div class="finding s-${x.status}"><div class="row" style="gap:10px"><span class="pill ${STC[x.status]}">${STL[x.status]}</span><b>${esc(x.title)}</b></div><p style="margin-top:6px">${esc(x.detail)}</p>${x.fix&&x.status!=="pass"?`<p class="fix"><b>How to fix:</b> ${esc(x.fix)}</p>`:""}</div>`).join("")}`;
+  ${f.length?`<p class="row" style="gap:8px;margin-top:12px"><span class="pill bad">${c.fail} ${c.fail===1?"problem":"problems"}</span><span class="pill ok">${c.warn} need work</span><span class="pill good">${c.pass} good</span>${c.review?`<span class="pill na">${c.review} need review</span>`:""}</p>`:""}
+  ${vizFor(s,i.business)}${f.map(x=>`<div class="finding s-${x.status}"><div class="row" style="gap:10px"><span class="pill ${STC[x.status]}">${STL[x.status]}</span><b>${esc(x.title)}</b></div><p style="margin-top:6px">${esc(x.detail)}</p>${x.fix&&(x.status==="fail"||x.status==="warn")?`<p class="fix"><b>How to fix:</b> ${esc(x.fix)}</p>`:""}${evHtml(x.evidence)}</div>`).join("")}`;
   h+=`<section class="panel" id="sec-${esc(s.key)}"><div class="row spread"><div><p class="eyebrow">${esc(s.label)}</p><h2>${esc(s.label)}: ${s.score??"–"}/100</h2></div><span class="pill ${tone100(s.score)}" style="font-size:.9rem">${s.score??"–"}/100</span></div>${inner}</section>`;}
 h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Next step</p><h2 style="color:#fff">Want these fixed for you?</h2><p>Book a free 20-minute call. Michael will walk through this report with you and show you the three fastest wins. Or get the Comprehensive Growth Audit for the full picture: your whole site, Google Business Profile, listings, competitors, and a fixes-first plan.</p><div class="row noprint"><a class="btn btn-amber" href="/#book">Book a 20-minute call</a><a class="btn btn-ghost" href="/comprehensive-audit">See the Growth Audit</a></div><p class="pr-only" style="color:#fff">Call Michael at (518) 460-1010 · localrankauthority.com</p></section>
 <p style="color:var(--muted);font-size:.85rem">Rankings and AI answers change daily and vary by location. No one can guarantee rankings or AI recommendations.</p>`;
