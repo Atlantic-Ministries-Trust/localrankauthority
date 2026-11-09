@@ -2,6 +2,8 @@
 
 Website for localrankauthority.com, with a free Local Visibility Audit that shows a teaser report and unlocks the full report after a visitor enters their contact details.
 
+**Making changes:** see [WORKFLOW.md](WORKFLOW.md) for how experiments, staging, and the live site fit together.
+
 ## How it's organized
 
 | Path | What it is |
@@ -29,7 +31,7 @@ Repeat audits of the same site and search within 24 hours reuse the saved report
 ## Setup on Cloudflare
 
 1. **Create the Pages project.** Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git → pick `Atlantic-Ministries-Trust/localrankauthority`.
-   Framework preset: None. Build command: leave empty. Build output directory: `docs`.
+   Framework preset: None. Build command: `bash design/build.sh`. Build output directory: `docs`.
 2. **Storage.** Storage & Databases → KV → Create namespace `lra-reports`.
    Then in the Pages project: Settings → Bindings → Add → KV namespace → Variable name `REPORTS` → `lra-reports`.
 3. **AI model.** Settings → Bindings → Add → Workers AI → Variable name `AI`.
