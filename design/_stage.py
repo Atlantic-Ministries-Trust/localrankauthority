@@ -59,11 +59,25 @@ def add_canonical(html, path):
     return html.replace("</title>", f'</title>\n<link rel="canonical" href="https://localrankauthority.com{path}">', 1)
 
 
+ICONS = ('<link rel="icon" href="/assets/favicon.ico" sizes="any">\n'
+         '<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">\n'
+         '<link rel="apple-touch-icon" href="/assets/icon-180.png">\n'
+         '<link rel="manifest" href="/assets/site.webmanifest">')
+
+
+def add_icons(html):
+    """The favicon and home-screen icon on every page (the homepage already carries them from the live head)."""
+    if 'rel="icon"' in html:
+        return html
+    return html.replace("</title>", "</title>\n" + ICONS, 1)
+
+
 WIDGET_FILE = D / "chat-agent" / "widget.html"
 
 
 def add_widget(html):
     """The DM Champ chat widget: paste its embed snippet into design/chat-agent/widget.html and it goes on every page."""
+    html = add_icons(html)
     snippet = WIDGET_FILE.read_text().strip() if WIDGET_FILE.exists() else ""
     snippet = re.sub(r"<!--.*?-->", "", snippet, flags=re.S).strip()
     if not snippet.strip():
