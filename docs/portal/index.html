@@ -108,6 +108,28 @@ table.t td{border-bottom:1px solid #EDF1EE}table.t tr:hover td{background:#FAFCF
 .pfoot img{height:40px;width:auto;display:block}
 .pfoot a{color:var(--sign);font-weight:700;text-decoration:none}
 .next .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}.next .btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+/* ---- free score report inside the dashboard ---- */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:8px}
+.metric{border:1px solid #E3E9E5;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:2px;background:#F8FAF9}.metric b{font:900 1.4rem var(--display)}.metric small{color:var(--muted)}
+.tone-good{color:var(--good)}.tone-ok{color:var(--warn)}.tone-bad{color:var(--pin)}
+.ladders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.ladder{border:1px solid #E3E9E5;border-radius:10px;padding:14px;background:#F8FAF9}.ladder ol{margin:8px 0 0;padding-left:20px;font-size:.92rem}
+.ladder .you{margin-top:8px;font-weight:800;border-radius:8px;padding:6px 10px}.ladder .you.in{background:#E6F4EC;color:var(--good)}.ladder .you.out{background:#FBEAE6;color:var(--pin)}
+.pins{list-style:none;padding:0;margin:6px 0 0;font-size:.9rem}.pins li{padding:4px 0;border-bottom:1px solid #EDF1EE}
+.quote{border-left:4px solid var(--sign);background:#F8FAF9;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:12px}.quote p:last-child{margin-top:6px;white-space:pre-line}
+mark{background:#FFE9A8;color:inherit;border-radius:3px;padding:0 2px}
+.finding.s-fail{border-left:4px solid var(--pin)}.finding.s-warn{border-left:4px solid var(--warn)}.finding.s-pass{border-left:4px solid var(--good)}
+.fix{margin-top:8px;background:#EEF5F1;border-radius:8px;padding:8px 10px}.fix b{color:var(--sign)}
+.bar{grid-template-columns:minmax(120px,170px) 1fr 44px}
+.pr-only{display:none}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff}header,.pfoot,.noprint{display:none!important}
+  .pr-only{display:block}.pr-head{display:flex!important;justify-content:space-between;align-items:center;border-bottom:3px solid var(--sign);padding-bottom:10px;font-size:.8rem;color:var(--muted);text-align:right}
+  .pwrap{padding:0;gap:14px}.panel{box-shadow:none;break-inside:auto}.finding,.metric,.ladder,.quote,.hero-p{break-inside:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
 <body>
@@ -152,14 +174,14 @@ function scoresPanel(scores){const when=d=>d?new Date(d).toLocaleDateString(unde
 const first=scores[scores.length-1],last=scores[0],diff=scores.length>1&&first.overall!=null&&last.overall!=null?last.overall-first.overall:null;
 const again=s=>"/?"+new URLSearchParams({url:s.url||s.host||"",biz:s.business||"",svc:s.service||"",city:s.city||""}).toString()+"#check";
 return section("Your Local Visibility Scores","Free scores",`${diff!=null?`<p style="margin-bottom:10px"><span class="pill ${diff>=0?"good":"bad"}">${diff>=0?"+":""}${diff} points</span> <span style="color:var(--muted)">since your first score</span></p>`:""}
-<div class="scroll"><table class="t"><tr><th>Date</th><th>Business</th><th>Search</th><th>Score</th><th></th></tr>${scores.map(s=>`<tr><td>${esc(when(s.at))}</td><td><b>${esc(s.business||s.host)}</b><br><span style="color:var(--muted);font-size:.85rem">${esc(s.host||"")}</span></td><td>${esc([s.service,s.city].filter(Boolean).join(" in "))}</td><td><span class="pill ${tone100(s.overall)}">${s.overall??"–"}/100</span></td><td style="white-space:nowrap"><a class="copy" href="/?r=${encodeURIComponent(s.id)}&k=${encodeURIComponent(s.key||"")}#check">View &amp; save PDF</a></td></tr>`).join("")}</table></div>
+<div class="scroll"><table class="t"><tr><th>Date</th><th>Business</th><th>Search</th><th>Score</th><th></th></tr>${scores.map(s=>`<tr><td>${esc(when(s.at))}</td><td><b>${esc(s.business||s.host)}</b><br><span style="color:var(--muted);font-size:.85rem">${esc(s.host||"")}</span></td><td>${esc([s.service,s.city].filter(Boolean).join(" in "))}</td><td><span class="pill ${tone100(s.overall)}">${s.overall??"–"}/100</span></td><td style="white-space:nowrap"><a class="copy" href="/portal/?score=${encodeURIComponent(s.id)}&k=${encodeURIComponent(s.key||"")}">View &amp; save PDF</a></td></tr>`).join("")}</table></div>
 <div class="row" style="margin-top:16px"><a class="btn btn-amber" href="${esc(again(last))}">Check my score again</a><span style="color:var(--muted);font-size:.92rem">Run it again after you make changes to see your progress. It's free and takes about a minute.</span></div>`);}
 
 function scoresView(me){const s=me.scores,last=s[0];
 let h=`<div class="row spread"><div><p class="eyebrow">Your dashboard</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(me.business||last.business||"Your scores")}</h1><p style="color:var(--muted)">${esc(me.email)}</p></div>
 <div class="row"><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael &nbsp;·&nbsp; (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
 h+=`<section class="panel hero-p"><div>${gauge(last.overall)}<p style="text-align:center;font-weight:700">Latest score${last.grade?` · Grade ${esc(last.grade)}`:""}</p></div><div><h2>${esc(last.business||last.host)}</h2><p style="color:var(--muted);margin-top:6px">${esc([last.host,[last.service,last.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p>
-<p style="margin-top:12px"><a class="btn btn-ghost" href="/?r=${encodeURIComponent(last.id)}&k=${encodeURIComponent(last.key||"")}#check">See the full report</a></p></div></section>`;
+<p style="margin-top:12px"><a class="btn btn-ghost" href="/portal/?score=${encodeURIComponent(last.id)}&k=${encodeURIComponent(last.key||"")}">See the full report</a></p></div></section>`;
 h+=scoresPanel(s);
 h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Go deeper</p><h2 style="color:#fff">Want the full picture?</h2><p>The Comprehensive Growth Audit goes far beyond the free score: your whole site, your Google Business Profile, your listings, your competitors, and what AI assistants say, with a fixes-first action plan and a walkthrough call with Michael.</p><div class="row"><a class="btn btn-amber" href="/comprehensive-audit">See the Growth Audit</a><a class="btn btn-ghost" style="color:#fff" href="/#book">Book a 20-minute call</a></div></section>`;
 app.innerHTML=h;$("#so").addEventListener("click",async()=>{await fetch("/api/portal/logout",{method:"POST"});location.href="/portal/";});}
@@ -199,7 +221,43 @@ app.querySelector(".progress i").style.width=(plan.length?Math.round(n/plan.leng
 $("#mf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#mb"),m=$("#mm");b.disabled=true;
 try{await api("message",{method:"POST",body:JSON.stringify({text:$("#mt").value})});m.className="msg-ok";m.textContent="Sent. Michael will reply by email.";$("#mt").value="";}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;}});}
 
+
+/* ---------- a free Local Visibility Score, inside the dashboard: /portal/?score=<id>&k=<key> ---------- */
+const STL={pass:"Good",warn:"Needs work",fail:"Problem"},STC={pass:"good",warn:"ok",fail:"bad"},ORDER={fail:0,warn:1,pass:2};
+const METRICS=[["lcp","Main content loads",2500,4000,"ms"],["fcp","First content appears",1800,3000,"ms"],["tbt","Page frozen",200,600,"ms"],["cls","Layout shift",.1,.25,""],["si","Visual load speed",3400,5800,"ms"]];
+const fmtM=(v,u)=>u==="ms"?(v>=1000?(v/1000).toFixed(1)+" s":Math.round(v)+" ms"):(+v).toFixed(2);
+const plainT=x=>String(x||"").replace(/\*\*/g,"").replace(/^\s*[\*\-]\s+/gm,"• ");
+function vizFor(s,biz){const x=s.extra||{};
+  if(s.key==="website"&&x.metrics){const rows=METRICS.filter(([k])=>x.metrics[k]!=null).map(([k,label,good,poor,u])=>{const v=x.metrics[k],c=v<=good?"good":v<=poor?"ok":"bad";
+    return `<div class="metric"><span>${esc(label)}</span><b class="tone-${c}">${fmtM(v,u)}</b><small>Goal: under ${fmtM(good,u)}</small></div>`;});
+    return rows.length?`<p class="eyebrow" style="margin-top:16px">Mobile speed, measured by Google</p><div class="mgrid">${rows.join("")}</div>`:"";}
+  if(s.key==="rankings"&&x.engines){const live=x.engines.filter(e=>!e.error);if(!live.length)return "";
+    return `<p class="eyebrow" style="margin-top:16px">Who shows up for “${esc(x.keyword||"")}”</p><div class="ladders">${live.map(e=>`<div class="ladder"><h3>${esc(e.engine)}</h3><ol>${(e.competitors||[]).map(c=>`<li>${esc(c.domain)}</li>`).join("")}</ol><p class="you ${e.position?"in":"out"}">${e.position?`You: #${e.position}`:"You: not in the top 10"}</p>${e.places&&e.places.length?`<p class="eyebrow" style="margin-top:10px">Google Maps top 3</p><ul class="pins">${e.places.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}</div>`).join("")}</div>`;}
+  if(s.key==="ai"&&x.answers){const re=biz?new RegExp(biz.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"):null,hl=q=>{const e=esc(plainT(q));return re?e.replace(re,m=>`<mark>${m}</mark>`):e;};
+    const items=[["recommend","We asked Google's AI: who would you recommend?"],["about",`We asked Google's AI: what is ${biz}?`]].filter(([k])=>x.answers[k]);
+    return items.map(([k,l])=>`<div class="quote"><p class="eyebrow">${esc(l)}</p><p>${hl(x.answers[k])}</p></div>`).join("");}
+  return "";}
+function scoreView(r){const i=r.input||{},secs=r.sections||[],when=new Date(r.createdAt||Date.now()).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
+let h=`<div class="pr-only pr-head"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" height="44"><span>localrankauthority.com · (518) 460-1010<br>Local Visibility Score · ${esc(when)}</span></div>
+<div class="row spread"><div><p class="eyebrow">Local Visibility Score · ${esc(when)}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(i.business||i.host)}</h1><p style="color:var(--muted)">${esc([i.host,[i.service,i.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p></div>
+<div class="row noprint"><a class="copy" href="/portal/">← All my scores</a><button class="btn btn-ghost" id="pdf" type="button">Save as PDF</button><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael &nbsp;·&nbsp; (518) 460-1010</a></div></div>`;
+h+=`<section class="panel hero-p"><div>${gauge(r.overall)}<p style="text-align:center;font-weight:700">Grade ${esc(r.grade||"–")}</p></div><div><h2>How you scored</h2><div class="bars" style="margin-top:12px">${secs.map(s=>`<button class="bar" data-go="sec-${esc(s.key)}"><span>${esc(s.label)}</span><span class="track"><i class="fill-${tone100(s.score)}" style="width:${s.score??0}%"></i></span><b>${s.score??"–"}</b></button>`).join("")}</div>
+<p style="color:var(--muted);margin-top:14px;font-size:.95rem">Tap a score to jump to its findings. Every problem includes how to fix it.</p></div></section>`;
+for(const s of secs){const f=(s.findings||[]).slice().sort((a,b)=>ORDER[a.status]-ORDER[b.status]),c={pass:0,warn:0,fail:0};f.forEach(x=>c[x.status]++);
+  const inner=`<p style="color:var(--muted)">${esc(s.summary||"")}</p>${s.available===false?`<p style="margin-top:10px">${esc(s.note||"")}</p>`:""}
+  ${f.length?`<p class="row" style="gap:8px;margin-top:12px"><span class="pill bad">${c.fail} ${c.fail===1?"problem":"problems"}</span><span class="pill ok">${c.warn} need work</span><span class="pill good">${c.pass} good</span></p>`:""}
+  ${vizFor(s,i.business)}${f.map(x=>`<div class="finding s-${x.status}"><div class="row" style="gap:10px"><span class="pill ${STC[x.status]}">${STL[x.status]}</span><b>${esc(x.title)}</b></div><p style="margin-top:6px">${esc(x.detail)}</p>${x.fix&&x.status!=="pass"?`<p class="fix"><b>How to fix:</b> ${esc(x.fix)}</p>`:""}</div>`).join("")}`;
+  h+=`<section class="panel" id="sec-${esc(s.key)}"><div class="row spread"><div><p class="eyebrow">${esc(s.label)}</p><h2>${esc(s.label)}: ${s.score??"–"}/100</h2></div><span class="pill ${tone100(s.score)}" style="font-size:.9rem">${s.score??"–"}/100</span></div>${inner}</section>`;}
+h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Next step</p><h2 style="color:#fff">Want these fixed for you?</h2><p>Book a free 20-minute call. Michael will walk through this report with you and show you the three fastest wins. Or get the Comprehensive Growth Audit for the full picture: your whole site, Google Business Profile, listings, competitors, and a fixes-first plan.</p><div class="row noprint"><a class="btn btn-amber" href="/#book">Book a 20-minute call</a><a class="btn btn-ghost" href="/comprehensive-audit">See the Growth Audit</a></div><p class="pr-only" style="color:#fff">Call Michael at (518) 460-1010 · localrankauthority.com</p></section>
+<p style="color:var(--muted);font-size:.85rem">Rankings and AI answers change daily and vary by location. No one can guarantee rankings or AI recommendations.</p>`;
+app.innerHTML=h;$("#pdf").addEventListener("click",()=>window.print());
+app.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{const t=document.getElementById(b.dataset.go);if(t)t.scrollIntoView({behavior:"smooth"});}));}
+async function openScore(q){const r=await fetch(`/api/score?id=${encodeURIComponent(q.get("score"))}&k=${encodeURIComponent(q.get("k")||"")}`,{credentials:"same-origin"});const d=await r.json().catch(()=>({}));
+  if(r.status===403){loginView("Sign in to see this report. Use the email you unlocked it with.");return;}
+  if(!r.ok){app.innerHTML=section("We couldn't open that report","Local Visibility Score",`<p>${esc(d.error||"Something went wrong.")}</p><p style="margin-top:12px"><a class="btn btn-amber" href="/#check">Run a new free score</a></p>`);return;}
+  document.title=`${d.report.input?.business||"Your"} Local Visibility Score | Local Rank Authority`;scoreView(d.report);}
 async function start(){const q=new URLSearchParams(location.search);
+if(q.get("score")){try{await openScore(q);}catch(x){app.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p></div>`;}return;}
 try{const me=await api("me");if(!me.audits.length&&(me.scores||[]).length){scoresView(me);return;}
 if(!me.audits.length){app.innerHTML=section("Your audit is on its way","Client portal",`<p>We'll email you as soon as it's ready. Questions? Call (518) 460-1010.</p>`);return;}
 const id=q.get("a")&&me.audits.some(x=>x.id===q.get("a"))?q.get("a"):me.audits[me.audits.length-1].id;

@@ -259,7 +259,7 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 .rep-head{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 .rep-head h3{font-size:1.8rem}
 .muted{color:var(--muted)}
-.ring{width:64px;height:64px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--sign) calc(var(--p)*1%),var(--line) 0)}
+.ring{width:64px;height:64px;border-radius:50%;flex:none;display:grid;grid-template-columns:100%;grid-template-rows:100%;place-items:center;background:conic-gradient(var(--sign) calc(var(--p)*1%),var(--line) 0)}
 .ring span{width:calc(100% - 12px);height:calc(100% - 12px);border-radius:50%;background:var(--surface);display:grid;place-items:center;font:900 1.2rem var(--display);font-variant-numeric:tabular-nums}
 .ring.big{width:110px;height:110px}
 .ring.big span{width:calc(100% - 18px);height:calc(100% - 18px);font-size:2.2rem;background:var(--bg)}
@@ -313,7 +313,7 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 .needle{transform-origin:100px 100px;transform-box:view-box;transform:rotate(-90deg);transition:transform 1.3s cubic-bezier(.2,.9,.3,1.15)}
 .needle line{stroke:var(--ink);stroke-width:4;stroke-linecap:round}.needle circle{fill:var(--ink)}
 .g-tick{font:500 10px var(--mono);fill:var(--muted)}
-.gauge-num{position:absolute;left:0;right:0;bottom:2px;text-align:center;display:flex;justify-content:center;align-items:baseline;gap:4px}
+.gauge-num{position:relative;margin-top:2px;text-align:center;display:flex;justify-content:center;align-items:baseline;gap:4px}
 .gauge-num b{font:900 2.6rem var(--display);font-variant-numeric:tabular-nums;line-height:1}
 .gauge-num span{font:500 .85rem var(--mono);color:var(--muted)}
 .rep-grade{font:800 .9rem var(--display);padding:5px 14px;border-radius:999px;color:#fff}
@@ -344,6 +344,7 @@ footer .wrap{display:flex;gap:24px 64px;flex-wrap:wrap}
 .rep-tabs .ring{width:46px;height:46px}.rep-tabs .ring span{font-size:.95rem}
 .ring.good{background:conic-gradient(var(--good) calc(var(--p)*1%),var(--line) 0)}
 .ring.ok{background:conic-gradient(var(--amber) calc(var(--p)*1%),var(--line) 0)}
+.ring.ok{display:grid;padding:0;border:0;gap:0;grid-column:auto;flex-direction:row} /* .ok is also the contact form's success box; keep it off the score rings */
 .ring.bad{background:conic-gradient(var(--pin) calc(var(--p)*1%),var(--line) 0)}
 .ring.none{background:var(--line)}
 .rep-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:18px}
@@ -796,13 +797,15 @@ async function unlock(e){
     const d=await post("/api/unlock",{id:lastAudit.id,name:v("u-name"),email:v("u-email"),phone:v("u-phone"),business:lastAudit.input.business,_gotcha:v("u-gotcha")});
     const contact={"f-name":v("u-name"),"f-email":v("u-email"),"f-phone":v("u-phone"),"f-biz":lastAudit.input.business,"f-site":lastAudit.input.url};
     lastAudit={...d.report,emailed:d.emailed,key:d.key};renderReport(lastAudit);
-    if(d.key)try{history.replaceState(null,"",`/?r=${encodeURIComponent(lastAudit.id)}&k=${encodeURIComponent(d.key)}#check`);}catch(_){}
+    if(d.key)try{history.replaceState(null,"",`/?r=${encodeURIComponent(lastAudit.id)}&k=${encodeURIComponent(d.key)}#check`);}catch(_){} // a refresh opens it in the dashboard
     for(const[id,val]of Object.entries(contact))if(!$("#"+id).value)$("#"+id).value=val;
   }catch(x){err.textContent=x.message;err.hidden=false;btn.disabled=false;btn.textContent="Unlock my full report";}
 }
 
 /* ---------- saved report: /?r=<id>&k=<key> opens a full report (from the email, the dashboard, or /admin) ---------- */
 (async()=>{const q=new URLSearchParams(location.search),id=q.get("r");if(!id)return;
+  // Saved reports now open inside the dashboard; links sent before that change are forwarded there
+  location.replace(`/portal/?score=${encodeURIComponent(id)}&k=${encodeURIComponent(q.get("k")||"")}`);return;
   const out=$("#audit-out");out.innerHTML=`<p class="muted" style="padding:18px 0">Loading your report…</p>`;
   try{const r=await fetch(`/api/score?id=${encodeURIComponent(id)}&k=${encodeURIComponent(q.get("k")||"")}`,{credentials:"same-origin"});const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.error||"We couldn't load that report.");
