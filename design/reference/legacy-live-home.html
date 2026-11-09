@@ -732,7 +732,7 @@ function animate(root){
 function renderReport(d){
   const full=!d.locked,i=d.input,secs=d.sections,root=$("#audit-out");
   const head=`<div class="rep-hero">
-    <div class="rep-score">${gauge(d.overall)}<div class="rep-grade g-${tone(d.overall)}">Grade ${esc(d.grade)}</div></div>
+    <div class="rep-score">${gauge(d.overall)}${d.benchmark&&d.benchmark.standing?`<div class="rep-grade g-${tone(d.overall)}">${esc(d.benchmark.standing.label)}</div>`:`<div class="rep-grade g-${tone(d.overall)}">Overall</div>`}</div>
     <div class="rep-id"><p class="eyebrow">Local Visibility Score</p><h3>${esc(i.business)}</h3><p class="muted">${esc(i.host)} · ${esc(i.service)} in ${esc(i.city)}</p>
       <div class="bars">${secs.map(s=>`<button type="button" class="bar-row" data-tab="${s.key}"><span>${esc(s.label)}</span><span class="b-track"><i class="${tone(s.score)}" data-w="${s.score??0}"></i></span><b>${s.score??"–"}</b></button>`).join("")}</div></div>
     <div class="rep-shots" aria-label="Screenshots of ${esc(i.host)}">

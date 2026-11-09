@@ -12,6 +12,7 @@ export async function onRequestGet({ request, env }) {
   if (!report) return json({ error: "We couldn't find that report. It may have expired. Run a new free score and it takes about a minute." }, 404);
   if (!(await canView(request, env, report, key))) return json({ error: "This report link isn't valid. Use the link in your email, or sign in at localrankauthority.com/portal." }, 403);
   const { view, ...rest } = report;
-  return new Response(JSON.stringify({ report: { ...rest, locked: false }, key: view?.key || null }),
+  const benchmark = await env.REPORTS.get(`bench:${report.id}`, "json");
+  return new Response(JSON.stringify({ report: { ...rest, locked: false, ...(benchmark ? { benchmark } : {}) }, key: view?.key || null }),
     { headers: { "content-type": "application/json", "cache-control": "private, no-store", "x-robots-tag": "noindex" } });
 }

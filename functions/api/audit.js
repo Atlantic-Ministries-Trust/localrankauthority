@@ -1,9 +1,10 @@
 // POST /api/audit: runs the audit, stores the full report, and returns only the teaser.
 import { json, normalizeUrl, runAudit, teaser } from "../../lib/audit.js";
+import { saveBenchmark } from "../../lib/benchmark.js";
 
 const DAY = 86400;
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.REPORTS) return json({ error: "The audit isn't set up yet. Please use the contact form and we'll run it for you." }, 503);
 
   let body;
@@ -37,5 +38,7 @@ export async function onRequestPost({ request, env }) {
     env.REPORTS.put(cacheKey, report.id, { expirationTtl: DAY }),
     env.REPORTS.put(rlKey, String(used + 1), { expirationTtl: DAY })
   ]);
+  // Score the Map Pack competitors in the background: standing + method check (lib/benchmark.js)
+  if (waitUntil) waitUntil(saveBenchmark(report, env).catch(e => console.log("benchmark", e && e.message)));
   return json(teaser(report));
 }

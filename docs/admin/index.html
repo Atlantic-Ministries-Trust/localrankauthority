@@ -307,14 +307,14 @@ function render(){
    <div class="tile"><b>${D.intakes.length}</b><span>Audit requests</span></div>
    <div class="tile"><b>${D.clients.length}</b><span>Portal clients</span></div>
   </div>
-  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["contacts","Contacts"],["activity","Calls & activity"],["tasks","Tasks"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"],["lessons","Lessons"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
+  <div class="tabs" role="tablist">${[["pipeline","Pipeline"],["contacts","Contacts"],["activity","Calls & activity"],["tasks","Tasks"],["companies","Companies"],["inbox","Inbox"],["coupons","Discount codes"],["lessons","Lessons"],["health","Score health"]].map(([k,v])=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${v}</button>`).join("")}</div>
   <div id="view"></div>`;
   $("#rf").onclick=load;
   $("#so").onclick=async()=>{await fetch("/api/admin/logout",{method:"POST"});location.href="/admin/";};
   app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
   draw();}
 
-function draw(){const v=$("#view");if(["contacts","activity","tasks","lessons"].includes(tab))return crmView(v);v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
+function draw(){const v=$("#view");if(tab==="health")return healthView(v);if(["contacts","activity","tasks","lessons"].includes(tab))return crmView(v);v.innerHTML=tab==="pipeline"?pipelineView():tab==="inbox"?inboxView():tab==="coupons"?couponsView():companiesView();
   v.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.preventDefault();editor(COS.find(c=>c.key===b.dataset.edit));});
   $("#addp")?.addEventListener("click",()=>editor(null));
   v.querySelectorAll(".pcard").forEach(p=>p.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",p.dataset.key);e.dataTransfer.effectAllowed="move";}));
@@ -354,6 +354,16 @@ const link=u=>/^https?:\/\//i.test(u||"")?`<a href="${esc(u)}" target="_blank" r
 const who=r=>esc(r.name||r.company||ph(r.phone)||r.email||"Unknown");
 const go=id=>{CRM.id=id;tab="contacts";history.replaceState(null,"",id?"#contact-"+id:"#");render();scrollTo({top:0});};
 function crmErr(v,x){if(x.signin)return load();v.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p>${/connected/.test(x.message)?'<p class="muted small" style="margin-top:6px">Connect the D1 database in Cloudflare (Pages project → Settings → Bindings → D1, variable name CRM), then redeploy.</p>':""}</div>`;}
+async function healthView(v){v.innerHTML='<p class="muted">Loading…</p>';try{const d=await api("score-health");
+  const kv=o=>Object.entries(o).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<li>${esc(k)} <b>${n}</b></li>`).join("")||'<li class="muted">None</li>';
+  const ag=d.agreement;
+  v.innerHTML=`<div class="stack" style="margin-top:16px">
+   <div class="panel"><h3>Does the free score agree with Google?</h3><p style="margin-top:6px">After every free score, the businesses Google shows in the Map Pack for the same search are scored the same way. If the method is right, businesses Google ranks higher should score higher.</p>
+    <p style="font:900 2rem var(--display,inherit);margin-top:10px">${ag==null?"–":ag+"%"}</p><p class="muted small">${ag==null?"Not enough runs yet.":`of ${d.pairs} business-vs-business comparisons agree with Google's Map Pack order`} · ${d.runs} runs (${d.ok} compared, ${d.noMapPack} searches with no Map Pack, ${d.errors} errors)</p>
+    <p class="small muted" style="margin-top:6px">Rule of thumb: above 70% the method is tracking reality; below 50% the weights need another look.</p></div>
+   <div class="crm-grid"><div class="panel"><h3>Where businesses stand</h3><ul>${kv(d.standings)}</ul></div>
+    <div class="panel"><h3>Checks that most often need review</h3><ul>${kv(d.review)}</ul><h3 style="margin-top:12px">Categories that couldn't be measured</h3><ul>${kv(d.missing)}</ul><p class="small muted">From the last ${d.reportsChecked} reports. Method versions: ${esc(Object.entries(d.methods).map(([k,n])=>k+" ("+n+")").join(", ")||"–")}</p></div></div>
+   ${d.disagreements.length?`<div class="panel"><h3>Recent disagreements to look at</h3><ul>${d.disagreements.map(x=>`<li><a href="/portal/?score=${encodeURIComponent(x.id)}" target="_blank" rel="noopener">${esc(new Date(x.at).toLocaleDateString())}</a> · ${Math.round(x.rate*100)}% agree · ${x.ranked.map(r=>`${esc(r.name)} (Maps #${r.mapsRank}, score ${r.score??"–"})`).join(", ")}</li>`).join("")}</ul></div>`:""}</div>`;}catch(x){v.innerHTML=`<p class="msg-err">${esc(x.message)}</p>`;}}
 async function crmView(v){v.innerHTML='<p class="muted">Loading…</p>';try{if(tab==="contacts")await(CRM.id?contactView(v):contactsView(v));else if(tab==="activity")await activityView(v);else if(tab==="lessons")await lessonsView(v);else await tasksView(v);}catch(x){crmErr(v,x);}}
 
 async function contactsView(v){

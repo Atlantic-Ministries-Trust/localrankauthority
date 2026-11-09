@@ -2,6 +2,7 @@
 import { recordInteraction } from "../../lib/crmdb.js";
 import { completeRankings, esc, json, reportEmailHtml, sendEmail } from "../../lib/audit.js";
 import { reportLink, saveUnlocked, scoreEmailHtml } from "../../lib/freescore.js";
+import { saveBenchmark } from "../../lib/benchmark.js";
 
 export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.REPORTS) return json({ error: "The audit isn't set up yet." }, 503);
@@ -23,6 +24,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
   // Keep the unlocked report with a private link, and add it to this email's free-score dashboard
   report = await saveUnlocked(env, report, lead);
   const link = reportLink(report);
+  // Rerun the competitor benchmark with the full report (Bing and reputation are added on unlock)
+  waitUntil(saveBenchmark(report, env).catch(e => console.log("benchmark", e && e.message)));
 
   const record = { ...lead, reportId: report.id, site: report.input.host, overall: report.overall, at: new Date().toISOString(), ip: request.headers.get("cf-connecting-ip") || "" };
   await env.REPORTS.put(`lead:${record.at}:${report.id}`, JSON.stringify(record));
@@ -48,5 +51,6 @@ export async function onRequestPost({ request, env, waitUntil }) {
   ]));
 
   const { view, ...shown } = report;
-  return json({ report: shown, key: view.key, link, emailed: !!env.RESEND_KEY });
+  const benchmark = await env.REPORTS.get(`bench:${report.id}`, "json");
+  return json({ report: { ...shown, ...(benchmark ? { benchmark } : {}) }, key: view.key, link, emailed: !!env.RESEND_KEY });
 }

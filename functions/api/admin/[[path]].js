@@ -172,6 +172,29 @@ async function crmRoute(route, method, url, request, env) {
 }
 
 // Sign this browser in to a client's portal for an hour, without emailing them or updating their last visit
+// Score health: is the free score agreeing with what Google actually shows? (lib/benchmark.js runs on every score)
+async function scoreHealth(env) {
+  const keys = (await listAll(env, "bench:")).slice(-300);
+  const benches = (await Promise.all(keys.map(k => env.REPORTS.get(k, "json").then(b => b && { id: k.slice(6), ...b })))).filter(Boolean);
+  const ok = benches.filter(b => b.status === "ok");
+  const checks = ok.filter(b => b.check?.pairs);
+  const pairs = checks.reduce((s, b) => s + b.check.pairs, 0), agree = checks.reduce((s, b) => s + b.check.agree, 0);
+  const standings = {}; for (const b of ok) if (b.standing) standings[b.standing.label] = (standings[b.standing.label] || 0) + 1;
+  // Which checks most often can't reach a verdict or don't run (from the reports themselves)
+  const reports = (await Promise.all(benches.slice(-120).map(b => env.REPORTS.get(`report:${b.id}`, "json")))).filter(Boolean);
+  const review = {}, missing = {}, methods = {};
+  for (const r of reports) {
+    methods[r.method || "2026-10"] = (methods[r.method || "2026-10"] || 0) + 1;
+    for (const s of r.sections || []) {
+      if (!s.available || s.score == null) missing[s.label] = (missing[s.label] || 0) + 1;
+      for (const f of s.findings || []) if (f.status === "review") review[f.title] = (review[f.title] || 0) + 1;
+    }
+  }
+  const disagreements = checks.filter(b => b.check.rate != null && b.check.rate < 0.5).slice(-15).map(b => ({ id: b.id, at: b.at, rate: b.check.rate, ranked: b.check.ranked }));
+  return json({ runs: benches.length, ok: ok.length, noMapPack: benches.filter(b => b.status === "no-map-pack").length, errors: benches.filter(b => b.status === "error").length,
+    agreement: pairs ? Math.round(agree / pairs * 100) : null, pairs, standings, review, missing, methods, reportsChecked: reports.length, disagreements });
+}
+
 // Older free scores (unlocked before 2026-11-09): give the report its private link, keep it, and add it to that person's dashboard
 async function saveScore(request, env) {
   const b = await request.json().catch(() => ({}));
@@ -222,6 +245,7 @@ export async function onRequest({ request, env, params }) {
     if (route === "report" && method === "GET") return await report(url, env);
     if (route === "view-as" && method === "POST") return await viewAs(request, env);
     if (route === "save-score" && method === "POST") return await saveScore(request, env);
+    if (route === "score-health" && method === "GET") return await scoreHealth(env);
     if (route === "send-portal-link" && method === "POST") return await sendPortalLink(request, env);
     if (route === "crm" && method === "POST") return await crmSave(request, env);
     if (route === "crm-delete" && method === "POST") return await crmDelete(request, env);
