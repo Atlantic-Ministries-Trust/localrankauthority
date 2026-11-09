@@ -96,6 +96,8 @@ export const TOOLS = [
     description: "Call this ONCE at the END of EVERY call, right after the caller says they are finished and before you close. It is the only record of the call: nothing else captures what you said. Write it from what was ACTUALLY said: never pad it, never invent a detail. Every fact, price, date, or promise you gave goes in told_them. Do not mention this tool to the caller or read the recap aloud.",
     inputSchema: { type: "object", properties: {
       call_topic: { type: "string", description: "Short title, e.g. \"Roofer in Troy wants more Google Maps calls\"." },
+      call_purpose: { type: "string", enum: ["inquiry", "demo", "demo_follow_up_requested"], description: "\"demo\" if the caller only tried the receptionist demo; \"demo_follow_up_requested\" if they tried it and asked Michael to follow up; \"inquiry\" for every other call." },
+      demo_use_case: { type: "string", description: "For demo calls: the caller's business type and the use case explored. Keep role-play details separate from real ones." },
       caller_name: { type: "string" }, caller_phone: { type: "string" }, caller_email: { type: "string" }, business: { type: "string" }, website: { type: "string" },
       caller_wanted: { type: "string", description: "What the caller asked for, in their words." },
       told_them: { type: "array", items: { type: "string" }, description: "Every substantive thing you told the caller: facts, prices, dates, promises. One per entry. Empty if nothing." },
@@ -299,15 +301,20 @@ async function run(name, a, env, waitUntil) {
         svc.length && `Services discussed: ${svc.join(", ")}`,
         a.caller_mood && `Caller mood: ${a.caller_mood}`
       ].filter(Boolean).join("\n\n");
-      const urgency = a.needs_follow_up === true || ["frustrated", "angry"].includes(a.caller_mood) || open.length ? "high" : "normal";
-      const r = await recordInteraction(env, { type: "call", title: s(a.call_topic, 200) || "Phone call", outcome: s(a.outcome, 200), urgency,
-        summary: s(a.caller_wanted, 1000) || null, body, contact: hasPerson ? contact : { name: "Unknown caller", source: "phone (AI receptionist)" },
-        meta: { tool: "log_call_recap", told_them: told, actions_taken: acts, open_questions: open, services: svc, mood: a.caller_mood || null, needs_follow_up: a.needs_follow_up === true } });
-      if (r?.contact_id && a.needs_follow_up === true) await saveTask(env, { contact_id: r.contact_id, title: `Follow up on call: ${s(a.call_topic, 80)}`, due: businessDay() });
-      emailOwner(env, waitUntil, `Call recap: ${s(a.call_topic, 80)}${a.needs_follow_up === true ? " · needs follow-up" : ""}`,
+      // Demo calls (the receptionist demo on the website) are logged for the record but never become a sales follow-up
+      const purpose = ["demo", "demo_follow_up_requested"].includes(a.call_purpose) ? a.call_purpose : "inquiry";
+      const demoOnly = purpose === "demo", followUp = purpose === "demo_follow_up_requested" || (!demoOnly && a.needs_follow_up === true);
+      const label = demoOnly ? "DEMO" : purpose === "demo_follow_up_requested" ? "DEMO FOLLOW UP REQUESTED" : "";
+      const body2 = [label && `Call purpose: ${label}`, s(a.demo_use_case) && `Demo use case: ${s(a.demo_use_case)}`, body].filter(Boolean).join("\n\n");
+      const urgency = demoOnly ? "low" : followUp || ["frustrated", "angry"].includes(a.caller_mood) || open.length ? "high" : "normal";
+      const r = await recordInteraction(env, { type: "call", title: `${label ? label + ": " : ""}${s(a.call_topic, 200) || "Phone call"}`, outcome: s(a.outcome, 200), urgency,
+        summary: s(a.caller_wanted, 1000) || null, body: body2, contact: hasPerson ? { ...contact, ...(demoOnly ? { tags: ["demo caller"] } : {}) } : { name: demoOnly ? "Demo caller" : "Unknown caller", source: "phone (AI receptionist)" },
+        meta: { tool: "log_call_recap", call_purpose: purpose, demo_use_case: s(a.demo_use_case, 500) || null, told_them: told, actions_taken: acts, open_questions: open, services: svc, mood: a.caller_mood || null, needs_follow_up: followUp } });
+      if (r?.contact_id && followUp) await saveTask(env, { contact_id: r.contact_id, title: `${purpose === "demo_follow_up_requested" ? "Demo follow-up requested" : "Follow up on call"}: ${s(a.call_topic, 80)}`, due: businessDay() });
+      emailOwner(env, waitUntil, `${label ? label + " · " : ""}Call recap: ${s(a.call_topic, 80)}${followUp ? " · needs follow-up" : ""}`,
         [["Caller", [contact.name, contact.business].filter(Boolean).join(" · ")], ["Phone", contact.phone], ["Email", contact.email], ["Outcome", s(a.outcome)], ["Caller wanted", s(a.caller_wanted)],
          ["Told them", told], ["Actions", acts], ["Open questions", open], ["Mood", a.caller_mood]], "", r?.contact_id);
-      return { say: "Recap saved. Close the call warmly. Do not mention the recap.", log: `Recap: ${s(a.call_topic, 80)}${a.needs_follow_up ? " (follow-up)" : ""}` };
+      return { say: "Recap saved. Close the call warmly. Do not mention the recap.", log: `Recap${label ? " [" + label + "]" : ""}: ${s(a.call_topic, 80)}${followUp ? " (follow-up)" : ""}` };
     }
 
     default:
