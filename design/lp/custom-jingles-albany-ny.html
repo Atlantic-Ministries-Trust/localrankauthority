@@ -362,7 +362,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 /* ---- homepage rebuild 2026-11-09 ---- */
 /* header: links never wrap; as space runs out, Client login then the phone step out (both stay in the menu and footer) */
 .nav ul a{white-space:nowrap}
-.nav{gap:20px}.nav ul{gap:22px;margin-left:8px}
+@media (min-width:1101px){.nav{gap:20px}.nav ul{gap:22px;margin-left:8px}}
 @media (max-width:1260px) and (min-width:1101px){.nav .signin{display:none}}
 @media (max-width:1180px) and (min-width:1101px){.nav .phone{display:none}}
 .nav .btn .lbl-sm{display:none}@media (max-width:640px){.nav .btn .lbl-lg{display:none}.nav .btn .lbl-sm{display:inline}}
