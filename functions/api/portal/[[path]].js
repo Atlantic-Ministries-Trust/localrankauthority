@@ -2,8 +2,9 @@
 // needs the signed session cookie and only returns that client's own audits.
 import { esc, json, sendEmail } from "../../../lib/audit.js";
 import { clearSessionCookie, emailSignInLink, getClient, makeSessionCookie, normEmail, rescanIfDue, sessionEmail, validEmail } from "../../../lib/portal.js";
+import { listScores } from "../../../lib/freescore.js";
 
-const SENT = "If that email has an audit with us, a sign-in link is on its way. Check your inbox (and spam) in a minute.";
+const SENT = "If that email has a score or audit with us, a sign-in link is on its way. Check your inbox (and spam) in a minute.";
 
 async function login(request, env) {
   let b;
@@ -16,8 +17,11 @@ async function login(request, env) {
   if (tries >= 10) return json({ error: "Too many sign-in requests today. Call (518) 460-1010 and we'll help." }, 429);
   await env.REPORTS.put(ipKey, String(tries + 1), { expirationTtl: 86400 });
   const client = await getClient(env, email);
+  // Free-score visitors get the same sign-in link to see their saved scores
+  const scores = client ? [] : await listScores(env, email);
+  const who = client || (scores.length ? { email, name: "", business: scores[scores.length - 1].business || "", free: true } : null);
   // Same answer whether or not the email has an account, so the form can't be used to discover clients
-  if (client) await emailSignInLink(env, client);
+  if (who) await emailSignInLink(env, who);
   return json({ ok: true, message: SENT });
 }
 
@@ -37,11 +41,12 @@ async function ownedAudit(env, email, id) {
 }
 
 async function me(email, env) {
-  const client = await getClient(env, email);
-  if (!client) return json({ error: "No account" }, 404);
-  const audits = (await Promise.all((client.audits || []).map(id => env.REPORTS.get(`paudit:${id}`, "json")))).filter(Boolean)
-    .map(a => ({ id: a.id, business: a.business, date: a.data?.date || a.published, overall: a.data?.overall?.score ?? null }));
-  return json({ name: client.name, business: client.business, email, audits });
+  const [client, scores] = await Promise.all([getClient(env, email), listScores(env, email)]);
+  if (!client && !scores.length) return json({ error: "No account" }, 404);
+  const audits = client ? (await Promise.all((client.audits || []).map(id => env.REPORTS.get(`paudit:${id}`, "json")))).filter(Boolean)
+    .map(a => ({ id: a.id, business: a.business, date: a.data?.date || a.published, overall: a.data?.overall?.score ?? null })) : [];
+  const last = scores[scores.length - 1] || {};
+  return json({ name: client?.name || "", business: client?.business || last.business || "", email, audits, scores: scores.slice().reverse() });
 }
 
 async function audit(url, email, env, waitUntil) {

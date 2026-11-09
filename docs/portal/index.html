@@ -115,12 +115,28 @@ return head+`<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="M
 <polyline points="${pts.map(p=>p[0]+","+p[1]).join(" ")}" fill="none" stroke="var(--sign)" stroke-width="3"/>
 ${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--amber)"/><text x="${p[0]}" y="${p[1]-10}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">${p[2].overall??"–"}</text><text x="${p[0]}" y="${H-5}" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(new Date(p[2].date).toLocaleDateString(undefined,{month:"short"}))}</text>`).join("")}</svg>`;}
 
-function loginView(note){app.innerHTML=`<div class="login panel"><p class="eyebrow">Client portal</p><h2>Sign in to see your audit</h2>
+function loginView(note){app.innerHTML=`<div class="login panel"><p class="eyebrow">Your dashboard</p><h2>Sign in to see your scores and audits</h2>
 ${note?`<p class="msg-err">${esc(note)}</p>`:""}<p style="color:var(--muted);margin:6px 0 16px">Enter the email you gave us. We'll send a one-time sign-in link, so there's no password to remember.</p>
 <form id="lf" class="field"><label for="le">Email</label><input id="le" type="email" autocomplete="email" required><button class="btn btn-amber" type="submit" id="lb" style="justify-content:center;margin-top:8px">Email me a sign-in link</button><p id="lm" role="status"></p></form>
-<p style="color:var(--muted);font-size:.9rem;margin-top:14px">Don't have an audit yet? <a href="/comprehensive-audit">See the Comprehensive Growth Audit</a> or <a href="/#check">get your free score</a>.</p></div>`;
+<p style="color:var(--muted);font-size:.9rem;margin-top:14px">Haven't run a score yet? <a href="/#check">Get your free score</a> (about a minute), or <a href="/comprehensive-audit">see the Comprehensive Growth Audit</a>.</p></div>`;
 $("#lf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#lb"),m=$("#lm");b.disabled=true;b.textContent="Sending…";
 try{const d=await api("login",{method:"POST",body:JSON.stringify({email:$("#le").value})});m.className="msg-ok";m.textContent=d.message;}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;b.textContent="Email me a sign-in link";}});}
+
+function scoresPanel(scores){const when=d=>d?new Date(d).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";
+const first=scores[scores.length-1],last=scores[0],diff=scores.length>1&&first.overall!=null&&last.overall!=null?last.overall-first.overall:null;
+const again=s=>"/?"+new URLSearchParams({url:s.url||s.host||"",biz:s.business||"",svc:s.service||"",city:s.city||""}).toString()+"#check";
+return section("Your Local Visibility Scores","Free scores",`${diff!=null?`<p style="margin-bottom:10px"><span class="pill ${diff>=0?"good":"bad"}">${diff>=0?"+":""}${diff} points</span> <span style="color:var(--muted)">since your first score</span></p>`:""}
+<div class="scroll"><table class="t"><tr><th>Date</th><th>Business</th><th>Search</th><th>Score</th><th></th></tr>${scores.map(s=>`<tr><td>${esc(when(s.at))}</td><td><b>${esc(s.business||s.host)}</b><br><span style="color:var(--muted);font-size:.85rem">${esc(s.host||"")}</span></td><td>${esc([s.service,s.city].filter(Boolean).join(" in "))}</td><td><span class="pill ${tone100(s.overall)}">${s.overall??"–"}/100</span></td><td style="white-space:nowrap"><a class="copy" href="/?r=${encodeURIComponent(s.id)}&k=${encodeURIComponent(s.key||"")}#check">View &amp; save PDF</a></td></tr>`).join("")}</table></div>
+<div class="row" style="margin-top:16px"><a class="btn btn-amber" href="${esc(again(last))}">Check my score again</a><span style="color:var(--muted);font-size:.92rem">Run it again after you make changes to see your progress. It's free and takes about a minute.</span></div>`);}
+
+function scoresView(me){const s=me.scores,last=s[0];
+let h=`<div class="row spread"><div><p class="eyebrow">Your dashboard</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(me.business||last.business||"Your scores")}</h1><p style="color:var(--muted)">${esc(me.email)}</p></div>
+<div class="row"><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael · (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
+h+=`<section class="panel hero-p"><div>${gauge(last.overall)}<p style="text-align:center;font-weight:700">Latest score${last.grade?` · Grade ${esc(last.grade)}`:""}</p></div><div><h2>${esc(last.business||last.host)}</h2><p style="color:var(--muted);margin-top:6px">${esc([last.host,[last.service,last.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p>
+<p style="margin-top:12px"><a class="btn btn-ghost" href="/?r=${encodeURIComponent(last.id)}&k=${encodeURIComponent(last.key||"")}#check">See the full report</a></p></div></section>`;
+h+=scoresPanel(s);
+h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Go deeper</p><h2 style="color:#fff">Want the full picture?</h2><p>The Comprehensive Growth Audit goes far beyond the free score: your whole site, your Google Business Profile, your listings, your competitors, and what AI assistants say, with a fixes-first action plan and a walkthrough call with Michael.</p><div class="row"><a class="btn btn-amber" href="/comprehensive-audit">See the Growth Audit</a><a class="btn btn-ghost" style="color:#fff" href="/#book">Book a 20-minute call</a></div></section>`;
+app.innerHTML=h;$("#so").addEventListener("click",async()=>{await fetch("/api/portal/logout",{method:"POST"});location.href="/portal/";});}
 
 function section(title,eyebrow,inner,id=""){return `<section class="panel"${id?` id="${id}"`:""}><p class="eyebrow">${esc(eyebrow)}</p><h2>${esc(title)}</h2>${inner}</section>`;}
 
@@ -158,10 +174,12 @@ $("#mf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#mb")
 try{await api("message",{method:"POST",body:JSON.stringify({text:$("#mt").value})});m.className="msg-ok";m.textContent="Sent. Michael will reply by email.";$("#mt").value="";}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;}});}
 
 async function start(){const q=new URLSearchParams(location.search);
-try{const me=await api("me");if(!me.audits.length){app.innerHTML=section("Your audit is on its way","Client portal",`<p>We'll email you as soon as it's ready. Questions? Call (518) 460-1010.</p>`);return;}
+try{const me=await api("me");if(!me.audits.length&&(me.scores||[]).length){scoresView(me);return;}
+if(!me.audits.length){app.innerHTML=section("Your audit is on its way","Client portal",`<p>We'll email you as soon as it's ready. Questions? Call (518) 460-1010.</p>`);return;}
 const id=q.get("a")&&me.audits.some(x=>x.id===q.get("a"))?q.get("a"):me.audits[me.audits.length-1].id;
 let pick="";if(me.audits.length>1)pick=`<div class="row">${me.audits.map(x=>`<a class="copy" href="?a=${encodeURIComponent(x.id)}">${esc(x.date||"Audit")} · ${x.overall??"–"}/100</a>`).join("")}</div>`;
-const a=await api("audit?id="+encodeURIComponent(id));render(me,a);if(pick)app.insertAdjacentHTML("afterbegin",pick);}
+const a=await api("audit?id="+encodeURIComponent(id));render(me,a);if(pick)app.insertAdjacentHTML("afterbegin",pick);
+if((me.scores||[]).length)app.insertAdjacentHTML("beforeend",scoresPanel(me.scores));}
 catch(x){if(x.signin)loginView(q.get("e")==="expired"?"That sign-in link has expired or was already used. Request a new one below.":"");else app.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p></div>`;}}
 start();})();
 </script>

@@ -743,7 +743,7 @@ function renderReport(d){
     return `<section class="rep-panel" role="tabpanel" data-panel="${s.key}"${ix?" hidden":""}>${body}</section>`;
   }).join("");
   const foot=full
-    ?`<div class="unlock done"><div class="stack" style="gap:8px"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Next step</p><h3>Want these fixed for you?</h3><p>${d.emailed?"A copy of this report is on its way to your inbox. ":""}Book a free 20-minute strategy call. We'll walk through your report and show you the three fastest wins.</p></div><div class="stack" style="gap:10px;justify-self:start"><a class="btn btn-amber" href="#contact" id="cta-call">Book my free strategy call</a><a href="/comprehensive-audit" style="color:#fff;font-weight:700;text-underline-offset:3px">Or get the Comprehensive Growth Audit →</a></div></div>`
+    ?`<div class="unlock done"><div class="stack" style="gap:8px"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Next step</p><h3>Want these fixed for you?</h3><p>${d.key?`Your report is saved: the link is in your email, and it's in your <a href="/portal/" style="color:#fff;text-underline-offset:3px">free dashboard</a> anytime. `:d.emailed?"A copy of this report is on its way to your inbox. ":""}Book a free 20-minute strategy call. We'll walk through your report and show you the three fastest wins.</p></div><div class="stack" style="gap:10px;justify-self:start"><a class="btn btn-amber" href="#contact" id="cta-call">Book my free strategy call</a><button type="button" class="btn" id="u-pdf" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,.55)">Save as PDF</button><a href="/comprehensive-audit" style="color:#fff;font-weight:700;text-underline-offset:3px">Or get the Comprehensive Growth Audit →</a></div></div>`
     :`<form class="unlock" id="unlock-form" novalidate>
       <div class="stack" style="gap:10px"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Your full report is ready</p><h3>Unlock every finding, free</h3>
         <ul class="perks"><li>Every issue we found, with step-by-step fixes</li><li>Your Google and Bing rankings and who's beating you</li><li>What Google's AI says when customers ask for your service</li><li>A copy emailed to you to keep</li></ul></div>
@@ -757,11 +757,13 @@ function renderReport(d){
       <p class="err" id="u-err" role="alert" hidden></p>
       <p class="fine">Free. We use your details to send your report and follow up about it. No spam, ever.</p>
     </form>`;
-  root.innerHTML=`<div class="report">${head}${tabs}<div class="panels">${panels}</div>${foot}</div>`;
+  const printHead=full?`<div class="pr-only pr-head"><b>Local Rank Authority</b><span>localrankauthority.com · (518) 460-1010</span><span>Local Visibility Score · ${esc(new Date(d.createdAt||Date.now()).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"}))}</span></div>`:"";
+  const printFoot=full?`<div class="pr-only pr-foot"><b>Want these fixed for you?</b> Call Michael at (518) 460-1010 or visit localrankauthority.com. Rankings and AI answers change daily and vary by location.</div>`:"";
+  root.innerHTML=`<div class="report${full?" full":""}">${printHead}${head}${tabs}<div class="panels">${panels}</div>${foot}${printFoot}</div>`;
   const show=k=>{root.querySelectorAll(".rep-tabs [role=tab]").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===k));root.querySelectorAll("[data-panel]").forEach(p=>p.hidden=p.dataset.panel!==k);};
   root.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{show(b.dataset.tab);if(b.classList.contains("bar-row"))root.querySelector(".rep-tabs").scrollIntoView({behavior:"smooth",block:"nearest"});}));
   root.querySelectorAll(".filters").forEach(g=>g.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));const f=b.dataset.f;g.nextElementSibling.querySelectorAll(".fd").forEach(li=>li.hidden=f!=="all"&&li.dataset.status!==f);}));
-  if(full)$("#cta-call").addEventListener("click",()=>{$("#f-topic").value="Help with my audit results";});
+  if(full){$("#cta-call").addEventListener("click",()=>{$("#f-topic").value="Help with my audit results";});$("#u-pdf").addEventListener("click",()=>window.print());}
   else $("#unlock-form").addEventListener("submit",unlock);
   animate(root);
   root.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
@@ -793,10 +795,31 @@ async function unlock(e){
   try{
     const d=await post("/api/unlock",{id:lastAudit.id,name:v("u-name"),email:v("u-email"),phone:v("u-phone"),business:lastAudit.input.business,_gotcha:v("u-gotcha")});
     const contact={"f-name":v("u-name"),"f-email":v("u-email"),"f-phone":v("u-phone"),"f-biz":lastAudit.input.business,"f-site":lastAudit.input.url};
-    lastAudit={...d.report,emailed:d.emailed};renderReport(lastAudit);
+    lastAudit={...d.report,emailed:d.emailed,key:d.key};renderReport(lastAudit);
+    if(d.key)try{history.replaceState(null,"",`/?r=${encodeURIComponent(lastAudit.id)}&k=${encodeURIComponent(d.key)}#check`);}catch(_){}
     for(const[id,val]of Object.entries(contact))if(!$("#"+id).value)$("#"+id).value=val;
   }catch(x){err.textContent=x.message;err.hidden=false;btn.disabled=false;btn.textContent="Unlock my full report";}
 }
+
+/* ---------- saved report: /?r=<id>&k=<key> opens a full report (from the email, the dashboard, or /admin) ---------- */
+(async()=>{const q=new URLSearchParams(location.search),id=q.get("r");if(!id)return;
+  const out=$("#audit-out");out.innerHTML=`<p class="muted" style="padding:18px 0">Loading your report…</p>`;
+  try{const r=await fetch(`/api/score?id=${encodeURIComponent(id)}&k=${encodeURIComponent(q.get("k")||"")}`,{credentials:"same-origin"});const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||"We couldn't load that report.");
+    lastAudit={...d.report,key:d.key};renderReport(lastAudit);}
+  catch(x){out.innerHTML=`<p class="err" style="padding:18px 0">${esc(x.message)} <a href="/portal/">Sign in to your dashboard</a> to see your saved scores.</p>`;out.scrollIntoView({block:"start"});}
+})();
+
+/* ---------- Save as PDF: print only the report, every section and finding open ---------- */
+(()=>{let undo=[];
+  addEventListener("beforeprint",()=>{const rep=document.querySelector("#audit-out .report.full");if(!rep)return;
+    document.documentElement.classList.add("printing-report");
+    for(let el=rep;el&&el!==document.body;el=el.parentElement)for(const sib of el.parentElement.children)if(sib!==el&&!sib.classList.contains("np")){sib.classList.add("np");undo.push(()=>sib.classList.remove("np"));}
+    rep.querySelectorAll("[data-panel][hidden]").forEach(p=>{p.hidden=false;undo.push(()=>p.hidden=true);});
+    rep.querySelectorAll(".fd[hidden]").forEach(li=>{li.hidden=false;undo.push(()=>li.hidden=true);});
+    rep.querySelectorAll("details:not([open])").forEach(dt=>{dt.open=true;undo.push(()=>dt.open=false);});});
+  addEventListener("afterprint",()=>{document.documentElement.classList.remove("printing-report");undo.forEach(f=>f());undo=[];});
+})();
 
 /* ---------- demo tabs ---------- */
 const tabs=[...document.querySelectorAll('[role=tab]')];

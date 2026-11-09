@@ -5,6 +5,7 @@ import { saveCrm } from "../../../lib/crm.js";
 import { activity, deleteContact, deleteTask, getContact, importFromKV, listContacts, listTasks, recordInteraction, saveTask, stats, updateContact } from "../../../lib/crmdb.js";
 import { decideLesson, listLessons } from "../../../lib/lessons.js";
 import { clearSessionCookie, getClient, makeSessionCookie, normEmail, randomToken, sessionEmail, validEmail } from "../../../lib/portal.js";
+import { listScores } from "../../../lib/freescore.js";
 
 const SITE = "https://localrankauthority.com";
 const SENT = "If that's the owner's email, a sign-in link is on its way.";
@@ -102,7 +103,7 @@ async function data(env) {
 async function report(url, env) {
   const id = String(url.searchParams.get("id") || "").slice(0, 80);
   const r = id ? await env.REPORTS.get(`report:${id}`, "json") : null;
-  if (!r) return json({ error: "This free report has expired (they're kept 30 days)." }, 404);
+  if (!r) return json({ error: "This free report has expired (reports unlocked before 2026-11-09 were kept 30 days)." }, 404);
   return json({ id: r.id, input: r.input, overall: r.overall, sections: (r.sections || []).map(s => ({ label: s.label, score: s.score, summary: s.summary })) });
 }
 
@@ -173,9 +174,11 @@ async function crmRoute(route, method, url, request, env) {
 async function viewAs(request, env) {
   const b = await request.json().catch(() => ({}));
   const client = await getClient(env, b.email);
-  if (!client) return json({ error: "No portal for that email." }, 404);
+  // Free-score visitors have a portal too (their saved scores)
+  const email = client?.email || ((await listScores(env, b.email)).length ? normEmail(b.email) : null);
+  if (!email) return json({ error: "No portal for that email." }, 404);
   return new Response(JSON.stringify({ ok: true }), {
-    headers: { "content-type": "application/json", "set-cookie": await makeSessionCookie(env, client.email, 1 / 24) }
+    headers: { "content-type": "application/json", "set-cookie": await makeSessionCookie(env, email, 1 / 24) }
   });
 }
 
