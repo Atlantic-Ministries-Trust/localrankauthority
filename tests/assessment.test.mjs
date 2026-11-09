@@ -167,3 +167,16 @@ test("competitor benchmark: standing and Map Pack agreement, without extra searc
     assert.equal(fetches, 2, "only the two competitor homepages are fetched; no searches");
   } finally { globalThis.fetch = realFetch; }
 });
+
+test("reference sites (dictionaries, encyclopedias) can't pass as search results", () => {
+  // Captured Nov 10, 2026: Bing (US market) for "light-up letter rentals albany, ny"
+  const bing = [
+    { link: "https://en.wikipedia.org/wiki/Letter_(alphabet)", title: "Letter (alphabet) - Wikipedia" },
+    { link: "https://www.britannica.com/topic/letter-character", title: "Letter | Definition, History, & Facts | Britannica" },
+    { link: "https://simple.wikipedia.org/wiki/Letter", title: "Letter - Simple English Wikipedia" },
+    { link: "https://www.merriam-webster.com/dictionary/letter", title: "Letter Definition & Meaning - Merriam-Webster" },
+    { link: "https://alphalitletters.com/", title: "Light-up letter rentals | Alpha Lit" }];
+  const r = searchRelevance("light-up letter rentals albany, ny", bing);
+  assert.equal(r.ok, false, JSON.stringify(r));
+  assert.equal(searchRelevance("party rentals albany, ny", RELEVANT).ok, true, "real local results still pass");
+});
