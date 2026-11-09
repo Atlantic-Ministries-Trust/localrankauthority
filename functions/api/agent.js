@@ -3,6 +3,7 @@
 // AGENT_TOKEN can use every tool. AGENT_TOKEN_RESEARCH (for cloud sessions that read untrusted websites) can only research:
 // it can't publish to portals, send invites, change the offer, or create discount codes. In the sales pipeline it can
 // only add prospects and notes (never read the pipeline, change stages, or delete).
+import { benchmarkReport } from "../../lib/benchmark.js";
 import { bareHost, completeRankings, findLocation, gemini, json, mentions, normalizeUrl, runAudit, serp, timedFetch, workersAi } from "../../lib/audit.js";
 import { DEFAULT_OFFER, couponProblem, mergeOffer, newCoupon, normCode, offerView, quote, readCoupon, readOffer } from "../../lib/offer.js";
 import { STAGES, crmKey, readCrm, saveCrm } from "../../lib/crm.js";
@@ -34,6 +35,8 @@ async function audit(b, env) {
   const input = { business: clean(b.business, 120), service: clean(b.service, 120), city: clean(b.city, 120) };
   if (!url || !input.business || !input.service || !input.city) return json({ error: "Send url, business, service, and city." }, 400);
   const report = await completeRankings(await runAudit({ url, ...input }, env), env).catch(e => ({ error: e.message }));
+  // Paid audits get the same competitor benchmark as free scores: standing vs the leader + method check
+  if (!report.error) report.benchmark = await benchmarkReport(report, env).catch(e => ({ status: "error", error: String(e && e.message || e).slice(0, 200) }));
   return json(report);
 }
 
