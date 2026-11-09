@@ -10,17 +10,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@700;800;900&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-:root{--bg:#F5F7F4;--surface:#FFFFFF;--ink:#11201A;--muted:#55645C;--line:#D8DFDA;--sign:#0B5D3F;--sign-ink:#FFFFFF;--sign-deep:#075139;--amber:#FFBE00;--amber-ink:#2A1E00;--pin:#C8432B;--warn:#B87400;--good:#1B7F4C;
+:root{color-scheme:light;--bg:#F3F6F4;--shadow:0 1px 2px rgba(17,32,26,.05),0 10px 30px rgba(17,32,26,.07);--radius:14px;--surface:#FFFFFF;--ink:#11201A;--muted:#55645C;--line:#D8DFDA;--sign:#0B5D3F;--sign-ink:#FFFFFF;--sign-deep:#075139;--amber:#FFBE00;--amber-ink:#2A1E00;--pin:#C8432B;--warn:#B87400;--good:#1B7F4C;
   --display:"Overpass","Arial Narrow",Arial,sans-serif;--body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--r:6px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1512;--surface:#15201B;--ink:#E8EEEA;--muted:#9AAAA1;--line:#2A3832;--sign:#0E6B49;--sign-deep:#08442F;--amber:#FFBE00;--pin:#E66A52;--warn:#E5A53A;--good:#4CC489;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0D1512;--surface:#15201B;--ink:#E8EEEA;--muted:#9AAAA1;--line:#2A3832;--sign:#0E6B49;--sign-deep:#08442F;--amber:#FFBE00;--pin:#E66A52;--warn:#E5A53A;--good:#4CC489;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--body)}
 h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance}h2{font-size:clamp(1.7rem,3.5vw,2.3rem);font-weight:900}h3{font-size:1.15rem;font-weight:800}p{margin:0}a{color:inherit}
 :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .wrap{max-width:1000px;margin:0 auto;padding-inline:max(20px,env(safe-area-inset-left,0px))}
-header{background:var(--sign-deep);color:var(--sign-ink)}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:12px}
+header{background:#fff;color:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(17,32,26,.03);position:relative}header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:linear-gradient(90deg,var(--sign) 0 70%,var(--amber) 70% 100%)}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:14px}
 .logo{display:flex;align-items:center;gap:10px;font:900 1.05rem var(--display);text-decoration:none;letter-spacing:.02em}.logo svg{width:30px;height:30px;flex:none}
-.top-call{font:800 .95rem var(--display);text-decoration:none;white-space:nowrap;margin-left:auto}
+.top-call{font:800 .95rem var(--display);text-decoration:none;white-space:nowrap;margin-left:auto;color:var(--sign)}
 .top-call .tc-short{display:none}
 @media (max-width:560px){.top-call .tc-full{display:none}.top-call .tc-short{display:inline;padding:8px 12px;border:2px solid currentColor;border-radius:var(--r)}}
 .btn{display:inline-flex;align-items:center;font:700 1rem var(--display);padding:13px 20px;border-radius:var(--r);text-decoration:none;border:2px solid transparent}
@@ -83,6 +81,33 @@ table.t td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:to
 [hidden]{display:none!important}
 button.btn{cursor:pointer}
 .brand-logo{display:block;height:64px;width:auto;margin-block:-8px}@media (max-width:560px){.brand-logo{height:48px;margin-block:0}}
+
+/* ---- light, branded look (2026-11-09) ---- */
+body{background:var(--bg);color:var(--ink)}
+.pwrap{gap:24px;padding-top:34px}
+.panel{background:#fff;border:1px solid #E3E9E5;border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+.panel h2{color:var(--sign-deep)}
+h1{color:var(--sign-deep);letter-spacing:-.01em}
+.eyebrow{color:var(--sign);font-weight:500}
+.btn{border-radius:10px;transition:transform .12s ease,box-shadow .12s ease}
+.btn-amber{box-shadow:0 2px 0 #D99A00}.btn-amber:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(217,154,0,.35)}
+.btn-ghost{color:var(--sign);border-color:var(--sign);background:#fff}.btn-ghost:hover{background:#EEF5F1}
+.copy{border-radius:8px;border-color:#D3DDD7;color:var(--sign);font-weight:700;background:#fff}.copy:hover{background:#EEF5F1}
+table.t th{background:#F3F6F4;border-bottom:1px solid #E3E9E5;color:var(--sign-deep);text-transform:uppercase;letter-spacing:.04em;font-size:.74rem}
+table.t td{border-bottom:1px solid #EDF1EE}table.t tr:hover td{background:#FAFCFB}
+.finding,.rw{background:#fff;border-color:#E3E9E5;border-radius:10px}
+.rw{background:#F8FAF9}
+.track,.progress{background:#E7ECE9}
+.next{background:linear-gradient(135deg,var(--sign-deep),var(--sign));border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.hero-p{border-top:4px solid var(--sign)}
+.login{margin-top:56px}
+.login.panel{border-top:4px solid var(--sign)}
+.field input,.field textarea{background:#fff;border-color:#D3DDD7;border-radius:10px}.field input:focus,.field textarea:focus{outline:3px solid rgba(255,190,0,.45);border-color:var(--sign)}
+.pfoot{border-top:1px solid #E3E9E5;background:#fff;margin-top:40px}
+.pfoot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding-block:22px;font-size:.88rem;color:var(--muted)}
+.pfoot img{height:40px;width:auto;display:block}
+.pfoot a{color:var(--sign);font-weight:700;text-decoration:none}
+.next .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}.next .btn-ghost:hover{background:rgba(255,255,255,.1)}
 </style>
 </head>
 <body>
@@ -92,6 +117,7 @@ button.btn{cursor:pointer}
   <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free score</a>
 </div></header>
 <main><div class="pwrap" id="app" aria-live="polite"><p style="color:var(--muted)">Loading your portal…</p></div></main>
+<footer class="pfoot"><div class="wrap"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="112" height="40"><span>Questions? Call Michael at <a href="tel:+15184601010">(518) 460-1010</a> or reply to any email from us.</span><span>© Local Rank Authority · <a href="/privacy">Privacy</a></span></div></footer>
 <script>
 (()=>{
 const $=s=>document.querySelector(s), app=$("#app");
@@ -131,7 +157,7 @@ return section("Your Local Visibility Scores","Free scores",`${diff!=null?`<p st
 
 function scoresView(me){const s=me.scores,last=s[0];
 let h=`<div class="row spread"><div><p class="eyebrow">Your dashboard</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(me.business||last.business||"Your scores")}</h1><p style="color:var(--muted)">${esc(me.email)}</p></div>
-<div class="row"><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael · (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
+<div class="row"><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael &nbsp;·&nbsp; (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
 h+=`<section class="panel hero-p"><div>${gauge(last.overall)}<p style="text-align:center;font-weight:700">Latest score${last.grade?` · Grade ${esc(last.grade)}`:""}</p></div><div><h2>${esc(last.business||last.host)}</h2><p style="color:var(--muted);margin-top:6px">${esc([last.host,[last.service,last.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p>
 <p style="margin-top:12px"><a class="btn btn-ghost" href="/?r=${encodeURIComponent(last.id)}&k=${encodeURIComponent(last.key||"")}#check">See the full report</a></p></div></section>`;
 h+=scoresPanel(s);
@@ -144,7 +170,7 @@ function render(me,a){const d=a.data||{},biz=d.business||{},plan=d.action_plan||
 const doneN=plan.filter(x=>done[x.id]).length,pct=plan.length?Math.round(doneN/plan.length*100):0;
 const PH={critical:"Fix first",quick:"Quick wins",30:"Days 1–30",60:"Days 31–60",90:"Days 61–90"};
 let h=`<div class="row spread"><div><p class="eyebrow">Comprehensive Growth Audit · ${esc(d.date||"")}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(biz.name||me.business)}</h1><p style="color:var(--muted)">${esc([biz.website,biz.city].filter(Boolean).join(" · "))}</p></div>
-<div class="row">${a.has_pdf?`<a class="btn btn-ghost" href="/api/portal/pdf?id=${encodeURIComponent(a.id)}">Download PDF</a>`:""}<a class="btn btn-amber" href="tel:+15184601010">Book a call · (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
+<div class="row">${a.has_pdf?`<a class="btn btn-ghost" href="/api/portal/pdf?id=${encodeURIComponent(a.id)}">Download PDF</a>`:""}<a class="btn btn-amber" href="tel:+15184601010">Book a call &nbsp;·&nbsp; (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
 h+=`<section class="panel hero-p"><div>${gauge(d.overall?.score)}<p style="text-align:center;font-weight:700">Grade ${esc(d.overall?.grade||"–")}</p></div><div><h2>${esc(d.summary?.headline||"Your audit")}</h2>
 <div class="grid2" style="margin-top:12px"><div><h3>What's working</h3><ul>${(d.summary?.strengths||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>
 <div><h3>Biggest opportunities</h3><ol>${(d.summary?.opportunities||[]).map(o=>`<li><b>${esc(o.title)}</b>${o.outcome?`: ${esc(o.outcome)}`:""}</li>`).join("")}</ol></div></div></div></section>`;
