@@ -33,7 +33,7 @@ Group the misses and open questions that ask the same thing. For each group, dec
    - Record where each fact came from.
 3. **Only Michael can answer it**, because nothing on the site covers it: for example, whether he works in a certain town, a custom price, or a policy question. Draft `{"kind": "question", "question": "..."}` and leave the answer to him.
 
-Also read `told_them` against the same sources. Note anything Miles said that is wrong or not supported, such as a price other than the free score and the $2,000 audit, a guarantee, a made-up result, or a promise about timing. Notes are one sentence each, quoting what Miles said and the problem.
+Also read `told_them` against the same sources. Note anything Miles said that is wrong or not supported, such as a price other than the free score, the $2,000 audit, or the published branding prices ($500 discovery session, $2,000, $5,500, $12,000), a guarantee, a made-up result, or a promise about timing. Notes are one sentence each, quoting what Miles said and the problem.
 
 Add evidence to every draft: `"evidence": {"asked_times": N, "examples": ["caller wording", ...]}`. Strip any name, phone number, or email from the examples.
 
@@ -48,7 +48,7 @@ Start a **fresh subagent** as the checker. Give it only the drafts, the notes, a
 
 The checker fails a draft if:
 - Any fact in the answer isn't found in the sources.
-- It names a price other than "free" for the score or $2,000 for the Comprehensive Growth Audit.
+- It names a price other than "free" for the score, $2,000 for the Comprehensive Growth Audit, or the published branding prices ($500 discovery session; Brand Refresh $2,000, Brand Identity $5,500, Brand + Rollout $12,000).
 - It promises or guarantees anything, or sounds like a sales pitch rather than a plain answer.
 - It shares private information, or gives legal, tax, or financial advice.
 - A `keywords` draft's tags would make the wrong answer come up for other questions.
