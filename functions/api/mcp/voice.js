@@ -41,6 +41,7 @@ const contactProps = {
   phone: { type: "string", description: "Best callback number the caller gave or confirmed, any format." },
   email: { type: "string", description: "Email the caller gave, read back letter by letter and confirmed." },
   email_read_back: { type: "boolean", description: "true only after you read the email back letter by letter and the caller said it is right." },
+  use_email_on_file: { type: "boolean", description: "true when recall_caller_history found an email on file and the caller said yes to using it. Pass their caller-ID number as phone and leave email empty: the server fills it in, and no read-back is needed." },
   business: { type: "string", description: "The caller's business name." },
   website: { type: "string", description: "The caller's website, if they have one." },
   town: { type: "string", description: "Town or city and state the business serves." }
@@ -83,10 +84,12 @@ export const TOOLS = [
   },
   {
     name: "send_link_by_email",
-    description: "Email the caller one page from the Local Rank Authority website, such as the free score or a service page. Only after they ask for it or agree, and only after reading the email back letter by letter.",
+    description: "Email the caller one page from the Local Rank Authority website, such as the free score or a service page. Only after they ask for it or agree. If recall_caller_history found an email on file, ask if they want it sent there and, on yes, pass use_email_on_file: true with their caller-ID phone. Otherwise collect the email and read it back letter by letter.",
     inputSchema: { type: "object", properties: {
       to_email: { type: "string" }, email_read_back: { type: "boolean" }, caller_name: { type: "string" },
-      link: { type: "string", enum: Object.keys(LINKS), description: "Which page to send." } }, required: ["to_email", "link"] }
+      use_email_on_file: { type: "boolean", description: "true to send to the email already on file for this caller's phone number." },
+      phone: { type: "string", description: "The caller's caller-ID number; required with use_email_on_file." },
+      link: { type: "string", enum: Object.keys(LINKS), description: "Which page to send." } }, required: ["link"] }
   },
   {
     name: "log_call_recap",
@@ -157,6 +160,27 @@ function missingDetails(a, need) {
   return miss;
 }
 
+// Contact details already in the CRM for a caller's phone number, so returning callers aren't asked again.
+async function onFile(env, phone) {
+  if (!normPhone(phone)) return null;
+  const h = await callerHistory(env, { phone });
+  return h && h.found ? h : null;
+}
+
+// A hint Miles can say without reading out the address: "starts with M, at gmail.com"
+function emailHint(e) {
+  const [user, domain] = String(e || "").split("@");
+  return user && domain ? `starts with "${user[0].toUpperCase()}", at ${domain}` : "";
+}
+
+// When the caller agreed to use the email on file, fill it in server-side (Miles never hears the full address).
+async function withEmailOnFile(a, env) {
+  if (a.use_email_on_file !== true) return a;
+  const h = await onFile(env, a.phone || a.caller_phone);
+  if (!h || !normEmail(h.email)) return { ...a, use_email_on_file: false, no_email_on_file: true };
+  return { ...a, email: h.email, email_read_back: true, caller_name: s(a.caller_name) || h.name || "" };
+}
+
 // Keyword search over the generated knowledge base plus approved lessons (lib/lessons.js)
 async function searchKb(query, env) {
   const words = s(query, 300).toLowerCase().match(/[a-z0-9$]+/g) || [];
@@ -180,10 +204,14 @@ async function run(name, a, env, waitUntil) {
       if (!h) return { say: "History lookup is unavailable right now. Carry on normally.", log: "History lookup unavailable" };
       if (!h.found) return { say: "found=false. First-time caller: carry on normally and do not mention that you looked.", log: "History: first-time caller" };
       const recent = h.recent.map(r => `${r.type} on ${r.at.slice(0, 10)}: ${r.title || ""}${r.outcome ? ` (${r.outcome})` : ""}`).join("; ");
+      const hint = normEmail(h.email) ? emailHint(h.email) : "";
       return {
         say: `found=true. Name: ${h.name || "not on file"}. Business: ${h.company?.name || "not on file"}${h.company?.stage ? ` (stage: ${h.company.stage})` : ""}. ` +
           `Status: ${h.status}${h.tags.includes("client") ? ", existing client" : ""}. Earlier contact: ${recent || "none listed"}. Open follow-ups: ${h.open_tasks}. ` +
-          "Acknowledge it naturally in one short sentence. Do not read this list out.",
+          `Email on file: ${hint ? `yes, ${hint}` : "none"}. ` +
+          "Acknowledge it naturally in one short sentence. Do not read this list out. " +
+          (h.name ? `Confirm the name instead of asking for it ("Is this ${String(h.name).split(" ")[0]}?"). ` : "") +
+          (hint ? "Never ask for their email again. When you need it, ask whether to use the one on file, using only the hint (for example \"your Gmail, the one starting with M?\"), never the full address. On yes, pass use_email_on_file: true with their caller-ID phone. Their caller-ID number is on file too, so just confirm it's the best number." : ""),
         log: `History found: ${Object.entries(h.counts).map(([k, v]) => `${v} ${k}`).join(", ")}`
       };
     }
@@ -195,6 +223,7 @@ async function run(name, a, env, waitUntil) {
     }
 
     case "capture_lead": {
+      a = await withEmailOnFile(a, env);
       const miss = a.details_unavailable === true ? [] : missingDetails(a, ["name", "phone", "email"]);
       if (!s(a.interest)) miss.push("what they want help with, in their words");
       if (miss.length) return { say: `Not saved yet. Ask for: ${miss.join("; ")}. Then call capture_lead again. If they cannot or will not give it, call again with details_unavailable: true.`, log: `Lead: asked for missing details (${miss.length})` };
@@ -212,6 +241,7 @@ async function run(name, a, env, waitUntil) {
     }
 
     case "take_message": {
+      a = await withEmailOnFile(a, env);
       const miss = a.details_unavailable === true ? [] : missingDetails(a, ["name", "phone"]);
       if (s(a.email) && normEmail(a.email) && a.email_read_back !== true && a.details_unavailable !== true) miss.push("to read the email back letter by letter and have them confirm it");
       if (miss.length) return { say: `Not saved yet. Ask for: ${miss.join("; ")}. Then call take_message again. If they cannot or will not give it, call again with details_unavailable: true.`, log: `Message: asked for missing details (${miss.length})` };
@@ -237,7 +267,9 @@ async function run(name, a, env, waitUntil) {
     }
 
     case "send_link_by_email": {
-      const to = normEmail(a.to_email);
+      a = await withEmailOnFile(a, env);
+      if (a.no_email_on_file) return { say: "There's no email on file for that number. Ask for their email, read it back letter by letter, then try again.", log: "Link: no email on file" };
+      const to = normEmail(a.use_email_on_file ? a.email : a.to_email);
       const link = LINKS[a.link];
       if (!link) return { say: `That page isn't one you can send. Available: ${Object.keys(LINKS).join(", ")}.`, log: "Link: unknown page" };
       if (!to) return { say: "Ask for their email address, read it back letter by letter, then try again.", log: "Link: missing email" };
