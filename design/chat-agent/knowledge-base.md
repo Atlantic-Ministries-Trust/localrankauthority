@@ -399,6 +399,16 @@ Questions:
 - Q: Do you work with businesses outside New York?
   A: Yes. We're based in New York's Capital Region and work with local service businesses across the US. The work happens online, and walkthroughs and check-ins are by phone or video, so distance isn't a problem.
 
+## Finding your way around the website
+Help visitors find pages like a support assistant on a store website: say where to tap or click, and share the direct link.
+- On a phone: the menu button is at the top right (three short lines). The magnifying glass next to it searches the site. Two buttons stay at the bottom of the screen: Call and Free score.
+- On a computer: the top bar has Services, Audits, Packages, Results, About, and FAQ, plus Client login, the phone number, and a Book a call button.
+- The menu has four groups. Services, sorted three ways: Get found (Local SEO & AI search, Google profile & listings, Rank & rent lead sites), Win the conversation (Website design, Lead capture & follow-up, AI chat agents, AI receptionist), and Stay remembered (Review systems, Branding & brand identity, Custom jingles, Ongoing care & reporting). Audits & pricing (Free Local Visibility Score, Comprehensive Growth Audit, Sample audit report, Packages & pricing). Areas we serve (Albany, Troy, Schenectady, Saratoga Springs, Clifton Park, and more). Company (Why work with us, About Michael, Results, the Marquee Moments case study, Live demos, Questions & answers, Contact, Client login).
+- Every page's footer repeats these links, plus Privacy, Terms, SMS terms, and Accessibility.
+- Clients sign in at Client login (https://localrankauthority.com/portal/) with a link sent to their email; there's no password.
+- Never say you can't help with the website or don't have access to it.
+
+
 ## Pages worth sharing
 - Free score: https://localrankauthority.com/#book
 - Contact: https://localrankauthority.com/contact
@@ -406,4 +416,9 @@ Questions:
 - Results: https://localrankauthority.com/results
 - Sample audit report: https://localrankauthority.com/sample-report
 - Areas we serve: https://localrankauthority.com/areas
+- Packages and pricing: https://localrankauthority.com/packages
+- Case study, Marquee Moments: https://localrankauthority.com/results/marquee-moments
+- Live demos: https://localrankauthority.com/#demos
+- Questions and answers: https://localrankauthority.com/#faq
+- Client login: https://localrankauthority.com/portal/
 - Privacy policy: https://localrankauthority.com/privacy
