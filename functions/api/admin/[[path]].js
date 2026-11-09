@@ -5,7 +5,8 @@ import { saveCrm } from "../../../lib/crm.js";
 import { activity, deleteContact, deleteTask, getContact, importFromKV, listContacts, listTasks, recordInteraction, saveTask, stats, updateContact } from "../../../lib/crmdb.js";
 import { decideLesson, listLessons } from "../../../lib/lessons.js";
 import { clearSessionCookie, getClient, makeSessionCookie, normEmail, randomToken, sessionEmail, validEmail } from "../../../lib/portal.js";
-import { listScores } from "../../../lib/freescore.js";
+import { listScores, reportLink, saveUnlocked } from "../../../lib/freescore.js";
+import { emailSignInLink } from "../../../lib/portal.js";
 
 const SITE = "https://localrankauthority.com";
 const SENT = "If that's the owner's email, a sign-in link is on its way.";
@@ -171,6 +172,28 @@ async function crmRoute(route, method, url, request, env) {
 }
 
 // Sign this browser in to a client's portal for an hour, without emailing them or updating their last visit
+// Older free scores (unlocked before 2026-11-09): give the report its private link, keep it, and add it to that person's dashboard
+async function saveScore(request, env) {
+  const b = await request.json().catch(() => ({}));
+  const id = String(b.reportId || "").slice(0, 80), email = normEmail(b.email);
+  if (!validEmail(email)) return json({ error: "That lead has no valid email." }, 400);
+  const report = id ? await env.REPORTS.get(`report:${id}`, "json") : null;
+  if (!report) return json({ error: "This free report has already expired (older reports were kept 30 days). Run a fresh score for them instead." }, 404);
+  const saved = await saveUnlocked(env, report, { email, name: String(b.name || "").slice(0, 120) });
+  return json({ ok: true, link: reportLink(saved), email });
+}
+
+// Emails the person a one-time sign-in link to their dashboard (only when you press the button)
+async function sendPortalLink(request, env) {
+  const b = await request.json().catch(() => ({}));
+  const email = normEmail(b.email);
+  const client = await getClient(env, email);
+  const scores = client ? [] : await listScores(env, email);
+  if (!client && !scores.length) return json({ error: "Nothing saved for that email yet. Press 'Save to their dashboard' first." }, 404);
+  const ok = await emailSignInLink(env, client || { email, name: String(b.name || ""), business: scores[scores.length - 1].business || "", free: true });
+  return ok ? json({ ok: true }) : json({ error: "The email didn't send. Check the email service." }, 502);
+}
+
 async function viewAs(request, env) {
   const b = await request.json().catch(() => ({}));
   const client = await getClient(env, b.email);
@@ -198,6 +221,8 @@ export async function onRequest({ request, env, params }) {
     if (route === "data" && method === "GET") return await data(env);
     if (route === "report" && method === "GET") return await report(url, env);
     if (route === "view-as" && method === "POST") return await viewAs(request, env);
+    if (route === "save-score" && method === "POST") return await saveScore(request, env);
+    if (route === "send-portal-link" && method === "POST") return await sendPortalLink(request, env);
     if (route === "crm" && method === "POST") return await crmSave(request, env);
     if (route === "crm-delete" && method === "POST") return await crmDelete(request, env);
     if (route.startsWith("crm/")) return await crmRoute(route, method, url, request, env);
