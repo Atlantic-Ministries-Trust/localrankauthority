@@ -64,6 +64,19 @@ form.intake{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
 .codebox{display:flex;flex-direction:column;gap:8px;max-width:420px;margin-top:6px}.codebox label{font-weight:700}
 .coderow{display:flex;gap:8px}.coderow input{flex:1;font:inherit;padding:11px 12px;border-radius:var(--r);border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;text-transform:uppercase}
 .coderow input::placeholder{color:rgba(255,255,255,.6);text-transform:none}.codebox .btn-ghost{color:#fff;background:transparent;cursor:pointer}
+/* sign-shaped buttons, matching the main site (2026-11-10): logo-sign corners, one thin white inner line on yellow, logo arrow */
+:root{--sign-arrow:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22948%20173%20180%20164%22%3E%3Cpolygon%20points%3D%22948%2C322.727%201042.091%2C219.636%20993%2C173%201128%2C173%201128%2C303.909%201081.364%2C257.273%201009.364%2C336.636%20948%2C336.636%22/%3E%3C/svg%3E")}
+.btn{border-radius:12px;position:relative}
+.btn-amber{box-shadow:inset 0 0 0 1.5px #fff}
+.btn-amber,.btn-ghost{padding-right:52px}
+.btn-ghost{outline:1.5px solid var(--amber);outline-offset:2px}
+.btn-amber::after,.btn-ghost::after{content:"";position:absolute;right:16px;top:50%;width:21px;height:19px;transform:translateY(-50%);background:var(--sign);-webkit-mask:var(--sign-arrow) center/contain no-repeat;mask:var(--sign-arrow) center/contain no-repeat;transition:transform .15s ease}
+.btn-ghost::after{background:var(--amber)}
+.btn:hover::after{transform:translate(2px,calc(-50% - 2px))}
+.btn-amber:focus-visible,.btn-ghost:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+header .btn{padding-right:40px!important}header .btn::after{right:12px;width:17px;height:15px}
+@media (prefers-reduced-motion:reduce){.btn::after{transition:none}}
+
 .codebox [hidden]{display:none!important}#c-msg{font-weight:600}#c-msg s{opacity:.7}#c-msg.bad{color:#FFD7CF}
 .brand-logo{display:block;height:64px;width:auto;margin-block:-8px}@media (max-width:560px){.brand-logo{height:48px;margin-block:0}}
 </style>
