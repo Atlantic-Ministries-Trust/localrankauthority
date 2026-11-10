@@ -2,7 +2,7 @@
 // Each test can fail if the assessment draws the wrong conclusion, not just if text is missing.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { describeVerdict, searchRelevance, scoreFrom, completeRankings, reputationSection, overallOf, METHOD_VERSION } from "../lib/audit.js";
+import { describeVerdict, searchRelevance, scoreFrom, completeRankings, reputationSection, overallOf, gbpSection, METHOD_VERSION } from "../lib/audit.js";
 import { visibilityScore, organicPoints, reputationScore, aiShareScore, standing, rankAgreement, comparableOverall } from "../lib/scoring.js";
 
 // Real inputs from the Marquee Moments report (Oct 27, 2026) and its homepage (fetched Nov 9, 2026)
@@ -179,4 +179,41 @@ test("reference sites (dictionaries, encyclopedias) can't pass as search results
   const r = searchRelevance("light-up letter rentals albany, ny", bing);
   assert.equal(r.ok, false, JSON.stringify(r));
   assert.equal(searchRelevance("party rentals albany, ny", RELEVANT).ok, true, "real local results still pass");
+});
+
+// ---- Google Business Profile (free score: category + basics; the Growth Audit reviews all 14 details) ----
+const PACK = [{ rank: 1, title: "LI Marquee Letter Rentals", type: "Marquee letter rental service", you: false },
+              { rank: 2, title: "Three Sisters Party Co.", type: "Marquee letter rental service", you: false },
+              { rank: 3, title: "Party Rentals Of Albany", type: "Party equipment rental service", you: false }];
+const IN = { service: "marquee letter rentals", city: "Albany, NY" };
+
+test("GBP: category that doesn't match the service or the leaders is flagged, generic words don't count", () => {
+  const s = gbpSection({ found: true, type: "Party equipment rental service", hours: true, phone: "x", website: "https://marqueemoments.net", address: "Schenectady", query: "q", checked_at: "t" }, PACK, IN, "marqueemoments.net");
+  const cat = s.findings.find(f => f.title === "Primary category");
+  assert.equal(cat.status, "warn");
+  assert.match(cat.detail, /Marquee letter rental service/);
+});
+
+test("GBP: matching category and all basics pass", () => {
+  const s = gbpSection({ found: true, type: "Marquee letter rental service", hours: true, phone: "x", website: "https://marqueemoments.net/", address: "Schenectady", query: "q", checked_at: "t" }, PACK, IN, "marqueemoments.net");
+  assert.equal(s.score, 100);
+  assert.ok(s.findings.every(f => f.status === "pass"));
+});
+
+test("GBP: missing basics are named; wrong website link is flagged", () => {
+  const s = gbpSection({ found: true, type: "Plumber", hours: null, phone: null, website: "https://facebook.com/joes", address: "Troy", query: "q", checked_at: "t" }, PACK, { service: "plumber", city: "Troy, NY" }, "joesplumbing.test");
+  const basics = s.findings.find(f => f.title === "Profile basics");
+  assert.equal(basics.status, "warn");
+  assert.match(basics.detail, /3 of 5 basics found\. Missing: hours, phone/);
+  assert.equal(s.findings.find(f => f.title === "Profile links to your website").status, "warn");
+  assert.ok(s.extra.nudge.includes("5 of the 14"), "the free check states its scope honestly");
+});
+
+test("GBP: no profile found, or not checked yet", () => {
+  const nf = gbpSection({ found: false, query: "q", checked_at: "t" }, PACK, IN, "x.test");
+  assert.equal(nf.score, 0);
+  assert.equal(nf.findings[0].status, "fail");
+  const locked = gbpSection(null);
+  assert.equal(locked.available, false);
+  assert.equal(locked.score, null, "not checked yet never counts as zero");
 });

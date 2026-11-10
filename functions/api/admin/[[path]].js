@@ -190,9 +190,16 @@ async function scoreHealth(env) {
       for (const f of s.findings || []) if (f.status === "review") review[f.title] = (review[f.title] || 0) + 1;
     }
   }
+  // Does the free score lead to Growth Audit requests? Unlocked free scores (by email) vs audit intakes and audit contact requests
+  const scoreEmails = new Set((await listAll(env, "fscores:")).map(k => k.slice(8)));
+  const intakes = (await Promise.all((await listAll(env, "intake:")).slice(-500).map(k => env.REPORTS.get(k, "json")))).filter(Boolean);
+  const contacts = (await Promise.all((await listAll(env, "contact:")).slice(-500).map(k => env.REPORTS.get(k, "json")))).filter(Boolean);
+  const auditEmails = new Set([...intakes.map(i => String(i.email || "").toLowerCase()), ...contacts.filter(c => /growth audit/i.test(c.topic || "")).map(c => String(c.email || "").toLowerCase())].filter(Boolean));
+  const converted = [...scoreEmails].filter(e => auditEmails.has(e)).length;
+  const funnel = { unlocked: scoreEmails.size, requestedAudit: converted, rate: scoreEmails.size ? Math.round(converted / scoreEmails.size * 100) : null };
   const disagreements = checks.filter(b => b.check.rate != null && b.check.rate < 0.5).slice(-15).map(b => ({ id: b.id, at: b.at, rate: b.check.rate, ranked: b.check.ranked }));
   return json({ runs: benches.length, ok: ok.length, noMapPack: benches.filter(b => b.status === "no-map-pack").length, errors: benches.filter(b => b.status === "error").length,
-    agreement: pairs ? Math.round(agree / pairs * 100) : null, pairs, standings, review, missing, methods, reportsChecked: reports.length, disagreements });
+    agreement: pairs ? Math.round(agree / pairs * 100) : null, pairs, standings, review, missing, methods, reportsChecked: reports.length, disagreements, funnel });
 }
 
 // Older free scores (unlocked before 2026-11-09): give the report its private link, keep it, and add it to that person's dashboard
