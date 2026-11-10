@@ -7,7 +7,6 @@ secrets.local.txt
 # Generated pages: Cloudflare builds these on every deploy (bash design/build.sh). Edit design/, not docs/.
 /docs/*.html
 !/docs/audit-intake.html
-!/docs/comprehensive-audit.html
 /docs/services/
 /docs/results/
 /docs/sitemap.xml

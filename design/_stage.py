@@ -292,8 +292,6 @@ def write_search_index(pages):
             for q, a in re.findall(r"<summary>([^<]{3,300})</summary>\s*<p>(.*?)</p>", faq.group(0) if faq else "", re.S):
                 out.append({"u": "/#faq", "t": clean(q), "d": clean(a)[:180], "h": "Questions", "x": clean(a)[:600]})
         out.append({"u": url, "t": title, "d": desc[:200], "h": heads, "x": clean(body)[:1500]})
-    out.append({"u": "/comprehensive-audit", "t": "Comprehensive Growth Audit ($2,000)", "d": "The full diagnosis of your website, Google profile, listings, competitors, and AI answers, with a 30/60/90-day plan and a walkthrough with Michael.",
-                "h": "Growth Audit · audit · report · $2,000", "x": "Comprehensive Growth Audit 20 to 25 page report client portal landing page 30/60/90-day plan walkthrough credited toward a package"})
     out.append({"u": "/portal/", "t": "Client login", "d": "Sign in to your client portal to see your audit, action plan, and messages.", "h": "portal login sign in", "x": ""})
     (OUT / "search-index.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
 
