@@ -412,12 +412,13 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
   html.printing-report #audit-out a{color:inherit;text-decoration:none}
 }
 
-/* ---- sign-shaped buttons (test 2026-11-10): the logo's rounded sign, white inner line, thin amber outer line, logo arrow ---- */
+/* ---- sign-shaped buttons (test 2026-11-10): the logo's rounded sign, one thin white inner line like the logo (outlined buttons keep a thin amber outer line), logo arrow ---- */
 :root{--sign-arrow:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22948%20173%20180%20164%22%3E%3Cpolygon%20points%3D%22948%2C322.727%201042.091%2C219.636%20993%2C173%201128%2C173%201128%2C303.909%201081.364%2C257.273%201009.364%2C336.636%20948%2C336.636%22/%3E%3C/svg%3E")}
 .btn,html .lv .btn{border-radius:12px;position:relative}
-.btn-primary{box-shadow:inset 0 0 0 3px var(--amber),inset 0 0 0 5px #fff,0 8px 24px -10px rgba(140,100,0,.55)}
-html .lv .btn-amber{box-shadow:inset 0 0 0 1px var(--amber),inset 0 0 0 3px #fff}
-.btn-primary,html .lv .btn-amber,.btn-ghost,html .lv .btn-ghost{outline:1.5px solid var(--amber);outline-offset:2px;padding-right:52px}
+.btn-primary{box-shadow:inset 0 0 0 2px var(--amber),inset 0 0 0 3.5px #fff,0 8px 24px -10px rgba(140,100,0,.55)}
+html .lv .btn-amber{box-shadow:inset 0 0 0 1.5px #fff}
+.btn-primary,html .lv .btn-amber,.btn-ghost,html .lv .btn-ghost{padding-right:52px}
+.btn-ghost,html .lv .btn-ghost{outline:1.5px solid var(--amber);outline-offset:2px}
 .btn-primary::after,html .lv .btn-amber::after,.btn-ghost::after,html .lv .btn-ghost::after{content:"";position:absolute;right:16px;top:50%;width:21px;height:19px;transform:translateY(-50%);background:var(--sign);-webkit-mask:var(--sign-arrow) center/contain no-repeat;mask:var(--sign-arrow) center/contain no-repeat;transition:transform .15s ease}
 .on-sign .btn-ghost::after,.ctaband .btn-ghost::after,html .lv .sign .btn-ghost::after{background:var(--amber)}
 .btn:hover::after,html .lv .btn:hover::after{transform:translate(2px,calc(-50% - 2px))}
