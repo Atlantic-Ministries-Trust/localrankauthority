@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Client Portal | Local Rank Authority</title>
+<meta name="robots" content="noindex">
+<!-- Sample data only: a design preview on the try-sample-report branch. Never merged. -->
+<link rel="canonical" href="https://localrankauthority.com/portal/">
+<link rel="icon" href="/assets/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="apple-touch-icon" href="/assets/icon-180.png"><link rel="manifest" href="/assets/site.webmanifest"><meta name="theme-color" content="#075139">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@700;800;900&family=Public+Sans:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{color-scheme:light;--bg:#F3F6F4;--shadow:0 1px 2px rgba(17,32,26,.05),0 10px 30px rgba(17,32,26,.07);--radius:14px;--surface:#FFFFFF;--ink:#11201A;--muted:#55645C;--line:#D8DFDA;--sign:#0B5D3F;--sign-ink:#FFFFFF;--sign-deep:#075139;--amber:#FFBE00;--amber-ink:#2A1E00;--pin:#C8432B;--warn:#B87400;--good:#1B7F4C;
+  --display:"Overpass","Arial Narrow",Arial,sans-serif;--body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--r:6px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--body)}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance}h2{font-size:clamp(1.7rem,3.5vw,2.3rem);font-weight:900}h3{font-size:1.15rem;font-weight:800}p{margin:0}a{color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:1000px;margin:0 auto;padding-inline:max(20px,env(safe-area-inset-left,0px))}
+header{background:#fff;color:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(17,32,26,.03);position:relative}header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:linear-gradient(90deg,var(--sign) 0 70%,var(--amber) 70% 100%)}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:10px;font:900 1.05rem var(--display);text-decoration:none;letter-spacing:.02em}.logo svg{width:30px;height:30px;flex:none}
+.top-call{font:800 .95rem var(--display);text-decoration:none;white-space:nowrap;margin-left:auto;color:var(--sign)}
+.top-call .tc-short{display:none}
+@media (max-width:560px){.top-call .tc-full{display:none}.top-call .tc-short{display:inline;padding:8px 12px;border:2px solid currentColor;border-radius:var(--r)}}
+.btn{display:inline-flex;align-items:center;font:700 1rem var(--display);padding:13px 20px;border-radius:var(--r);text-decoration:none;border:2px solid transparent}
+.btn-amber{background:var(--amber);color:var(--amber-ink)}.btn-ghost{border-color:currentColor}
+.hero{background:var(--sign);color:var(--sign-ink);padding-block:clamp(44px,7vw,80px)}
+.hero .wrap{display:flex;flex-direction:column;gap:18px}
+.crumbs{font:500 .78rem var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}.crumbs a{text-underline-offset:3px}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:900}.hero p{font-size:1.15rem;max-width:62ch;color:rgba(255,255,255,.88)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.lane{font:500 .75rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+section.band{padding-block:clamp(44px,6vw,72px)}
+.cols{display:grid;grid-template-columns:1.2fr .8fr;gap:40px}@media (max-width:760px){.cols{grid-template-columns:1fr}}
+ul.check{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-direction:column;gap:10px}
+ul.check li{display:flex;gap:10px}ul.check li::before{content:"";flex:none;width:10px;height:10px;margin-top:9px;border-radius:2px;background:var(--sign)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.card p{color:var(--muted)}
+details{border-bottom:1px solid var(--line);padding:16px 0}summary{font:800 1.05rem var(--display);cursor:pointer}details p{color:var(--muted);margin-top:8px}
+.rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:20px}
+.rel a{text-decoration:none}.rel a:hover h3{text-decoration:underline}
+.cta{background:var(--sign-deep);color:var(--sign-ink)}.cta .wrap{display:flex;flex-direction:column;gap:16px;align-items:flex-start}.cta p{color:rgba(255,255,255,.85);max-width:60ch}
+footer{padding-block:28px;font-size:.88rem;color:var(--muted)}footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+main{min-height:60vh}
+.pwrap{max-width:1040px;margin:0 auto;padding:28px max(20px,env(safe-area-inset-left,0px)) 64px;display:flex;flex-direction:column;gap:22px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+.panel h2{font-size:1.45rem;margin-bottom:12px}
+.eyebrow{font:500 .75rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.spread{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.hero-p{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center}@media(max-width:640px){.hero-p{grid-template-columns:1fr}}
+.gauge text{font-family:var(--display)}
+.tone-good{color:var(--good)}.tone-ok{color:var(--warn)}.tone-bad{color:var(--pin)}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(140px,220px) 1fr 44px;gap:12px;align-items:center;font-size:.95rem;cursor:pointer;background:none;border:0;color:inherit;text-align:left;padding:0;font-family:inherit}
+.track{height:12px;background:var(--line);border-radius:6px;overflow:hidden}.track i{display:block;height:100%;border-radius:6px}
+.fill-good{background:var(--good)}.fill-ok{background:var(--warn)}.fill-bad{background:var(--pin)}.fill-na{background:var(--muted)}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}table.t th{text-align:left;font:800 .82rem var(--display);color:var(--muted);padding:8px;border-bottom:2px solid var(--line)}
+table.t td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}table.t tr.me td{background:color-mix(in srgb,var(--amber) 14%,transparent);font-weight:700}
+.scroll{overflow-x:auto}
+.pill{display:inline-block;font:700 .75rem var(--body);padding:3px 9px;border-radius:999px;color:#fff;white-space:nowrap}
+.pill.good{background:var(--good)}.pill.ok{background:var(--warn)}.pill.bad{background:var(--pin)}.pill.na{background:var(--muted)}
+.finding{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:10px}
+.finding dl{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;margin:8px 0 0;font-size:.93rem}.finding dt{color:var(--muted);font-weight:700}.finding dd{margin:0}
+@media(max-width:560px){.finding dl{grid-template-columns:1fr}}
+.tags{font:500 .75rem var(--mono);color:var(--muted);margin-top:8px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.check input{width:22px;height:22px;margin-top:2px;accent-color:var(--good);flex:none}
+.check.done .ct{text-decoration:line-through;color:var(--muted)}
+.progress{height:14px;background:var(--line);border-radius:7px;overflow:hidden}.progress i{display:block;height:100%;background:var(--good)}
+.next{background:var(--sign);color:#fff;border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:10px}.next p{color:rgba(255,255,255,.88)}
+.next .price{font:900 1.1rem var(--display);color:var(--amber)}
+.rw{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:10px}
+.rw .lbl{font-weight:700}.rw .now{color:var(--muted);text-decoration:line-through;font-size:.9rem}
+.copy{font:600 .8rem var(--body);padding:4px 10px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.field{display:flex;flex-direction:column;gap:6px}.field input,.field textarea{font:inherit;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)}
+.msg-ok{color:var(--good);font-weight:600}.msg-err{color:var(--pin);font-weight:600}
+.login{max-width:460px;margin:40px auto}
+.spark{width:100%;height:120px}
+[hidden]{display:none!important}
+button.btn{cursor:pointer}
+.brand-logo{display:block;height:64px;width:auto;margin-block:-8px}@media (max-width:560px){.brand-logo{height:48px;margin-block:0}}
+
+/* ---- light, branded look (2026-11-09) ---- */
+body{background:var(--bg);color:var(--ink)}
+.pwrap{gap:24px;padding-top:34px}
+.panel{background:#fff;border:1px solid #E3E9E5;border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+.panel h2{color:var(--sign-deep)}
+h1{color:var(--sign-deep);letter-spacing:-.01em}
+.eyebrow{color:var(--sign);font-weight:500}
+.btn{border-radius:10px;transition:transform .12s ease,box-shadow .12s ease}
+.btn-amber{box-shadow:0 2px 0 #D99A00}.btn-amber:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(217,154,0,.35)}
+.btn-ghost{color:var(--sign);border-color:var(--sign);background:#fff}.btn-ghost:hover{background:#EEF5F1}
+.copy{border-radius:8px;border-color:#D3DDD7;color:var(--sign);font-weight:700;background:#fff}.copy:hover{background:#EEF5F1}
+table.t th{background:#F3F6F4;border-bottom:1px solid #E3E9E5;color:var(--sign-deep);text-transform:uppercase;letter-spacing:.04em;font-size:.74rem}
+table.t td{border-bottom:1px solid #EDF1EE}table.t tr:hover td{background:#FAFCFB}
+.finding,.rw{background:#fff;border-color:#E3E9E5;border-radius:10px}
+.rw{background:#F8FAF9}
+.track,.progress{background:#E7ECE9}
+.next{background:linear-gradient(135deg,var(--sign-deep),var(--sign));border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+.hero-p{border-top:4px solid var(--sign)}
+.login{margin-top:56px}
+.login.panel{border-top:4px solid var(--sign)}
+.field input,.field textarea{background:#fff;border-color:#D3DDD7;border-radius:10px}.field input:focus,.field textarea:focus{outline:3px solid rgba(255,190,0,.45);border-color:var(--sign)}
+.pfoot{border-top:1px solid #E3E9E5;background:#fff;margin-top:40px}
+.pfoot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding-block:22px;font-size:.88rem;color:var(--muted)}
+.pfoot img{height:40px;width:auto;display:block}
+.pfoot a{color:var(--sign);font-weight:700;text-decoration:none}
+.next .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}.next .btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+/* ---- free score report inside the dashboard ---- */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:8px}
+.metric{border:1px solid #E3E9E5;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:2px;background:#F8FAF9}.metric b{font:900 1.4rem var(--display)}.metric small{color:var(--muted)}
+.tone-good{color:var(--good)}.tone-ok{color:var(--warn)}.tone-bad{color:var(--pin)}
+.ladders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.ladder{border:1px solid #E3E9E5;border-radius:10px;padding:14px;background:#F8FAF9}.ladder ol{margin:8px 0 0;padding-left:20px;font-size:.92rem}
+.ladder .you{margin-top:8px;font-weight:800;border-radius:8px;padding:6px 10px}.ladder .you.in{background:#E6F4EC;color:var(--good)}.ladder .you.out{background:#FBEAE6;color:var(--pin)}
+.pins{list-style:none;padding:0;margin:6px 0 0;font-size:.9rem}.pins li{padding:4px 0;border-bottom:1px solid #EDF1EE}
+.quote{border-left:4px solid var(--sign);background:#F8FAF9;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:12px}.quote p:last-child{margin-top:6px;white-space:pre-line}
+mark{background:#FFE9A8;color:inherit;border-radius:3px;padding:0 2px}
+.finding.s-review{border-left:4px solid var(--muted)}.finding.s-fail{border-left:4px solid var(--pin)}.finding.s-warn{border-left:4px solid var(--warn)}.finding.s-pass{border-left:4px solid var(--good)}
+.nudge{margin-top:14px;border:1px solid #E3E9E5;border-left:4px solid var(--amber);border-radius:10px;padding:12px 14px;background:#FFFBEA}.nudge a{color:var(--sign);font-weight:700}
+.how{margin-top:8px;font-size:.85rem;color:var(--muted)}.how summary{cursor:pointer;font-weight:700;color:var(--sign)}.how ul{margin:6px 0 0;padding-left:18px}
+.fix{margin-top:8px;background:#EEF5F1;border-radius:8px;padding:8px 10px}.fix b{color:var(--sign)}
+.bar{grid-template-columns:minmax(120px,170px) 1fr 44px}
+.pr-only{display:none}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff}header,.pfoot,.noprint{display:none!important}
+  .pr-only{display:block}.pr-head{display:flex!important;justify-content:space-between;align-items:center;border-bottom:3px solid var(--sign);padding-bottom:10px;font-size:.8rem;color:var(--muted);text-align:right}
+  .pwrap{padding:0;gap:14px}.panel{box-shadow:none;break-inside:auto}.finding,.metric,.ladder,.quote,.hero-p{break-inside:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="/"><img class="brand-logo" src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="179" height="64"></a>
+  <a class="top-call" href="tel:+15184601010" data-event="click_to_call" aria-label="Call (518) 460-1010"><span class="tc-full">(518) 460-1010</span><span class="tc-short">Call</span></a>
+  <a class="btn btn-amber" href="/#check" style="padding:9px 16px">Free score</a>
+</div></header>
+<main><div class="pwrap" id="app" aria-live="polite"><p style="color:var(--muted)">Loading your portal…</p></div></main>
+<footer class="pfoot"><div class="wrap"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" width="112" height="40"><span>Questions? Call Michael at <a href="tel:+15184601010">(518) 460-1010</a> or reply to any email from us.</span><span>© Local Rank Authority · <a href="/privacy">Privacy</a></span></div></footer>
+<script>window.fetch=async(u)=>new Response(JSON.stringify({"report": {"id": "x", "createdAt": "2026-11-10T10:00:00Z", "method": "2026-11-09.2", "input": {"url": "https://sample-plumbing.example", "host": "sample-plumbing.example", "business": "Sample Plumbing Co", "service": "plumber", "city": "Troy, NY"}, "overall": 57, "sections": [{"key": "website", "label": "Website score", "score": 62, "summary": "Mobile speed 62/100", "available": true, "extra": {"metrics": {"lcp": 4100, "fcp": 1700, "tbt": 420, "cls": 0.02, "si": 4800}}, "findings": [{"status": "warn", "title": "Mobile speed score", "detail": "62/100 on Google's mobile test (goal: 90+).", "fix": "Compress large images and remove unused scripts.", "w": 3}, {"status": "pass", "title": "Accessibility score (not in your score)", "detail": "94/100 on Google's accessibility test.", "fix": "", "w": 0}]}, {"key": "seo", "label": "SEO audit", "score": 81, "summary": "16 on-page checks, 3 need work", "available": true, "findings": [{"status": "warn", "title": "Dedicated page for your service", "detail": "We didn't find a link from your homepage to a page about plumber.", "fix": "Create a page just for each main service and link to it from your homepage.", "w": 3}, {"status": "pass", "title": "Meta description", "detail": "Present (171 characters). Google may shorten it in results, which is normal.", "fix": "", "w": 1}, {"status": "pass", "title": "Image descriptions (alt text)", "detail": "0 of 24 images have no alt attribute. 6 use an empty alt, which is correct for decorative images.", "fix": "", "w": 1}]}, {"key": "rankings", "label": "Search rankings", "score": 16, "summary": "Found on 1 of 2 search engines for \"plumber troy, ny\"", "available": true, "extra": {"keyword": "plumber troy, ny", "engines": [{"engine": "Google", "position": null, "competitors": [{"domain": "leader.example"}, {"domain": "angi.example"}, {"domain": "tworivers.example"}], "places": ["Leader Plumbing & Drain", "Two Rivers Plumbing", "Capital Drain Co"], "pack": [{"rank": 1, "title": "Leader Plumbing & Drain", "website": "https://leader.example", "rating": 4.9, "reviews": 212, "you": false}, {"rank": 2, "title": "Two Rivers Plumbing", "website": "https://tworivers.example", "rating": 4.7, "reviews": 96, "you": false}, {"rank": 3, "title": "Capital Drain Co", "website": "", "rating": 4.4, "reviews": 31, "you": false}], "mapsTop3": false}, {"engine": "Bing", "position": 7, "competitors": [{"domain": "leader.example"}, {"domain": "yelp.example"}]}]}, "findings": [{"status": "fail", "title": "Google Maps (local pack)", "detail": "Not found in the map results checked for this search (searched from Troy,New York,United States, 2026-11-10). Showing instead: Leader Plumbing & Drain, Two Rivers Plumbing, Capital Drain Co.", "fix": "Optimize your Google Business Profile: categories, services, photos, and steady new reviews.", "w": 3, "evidence": {"provider": "SerpApi", "engine": "Google", "query": "plumber troy, ny", "ranking_type": "Google Maps (top 3)", "location": "Troy,New York,United States", "depth": 10, "checked_at": "2026-11-10T10:00:00Z"}}, {"status": "fail", "title": "Google organic ranking", "detail": "Not found within the top 10 results checked for \"plumber troy, ny\" (searched from Troy,New York,United States, 2026-11-10).", "fix": "Build a dedicated page for this service and city.", "w": 2, "evidence": {"provider": "SerpApi", "engine": "Google", "query": "plumber troy, ny", "location": "Troy,New York,United States", "depth": 10, "checked_at": "2026-11-10T10:00:00Z"}}, {"status": "warn", "title": "Bing organic ranking", "detail": "#7 for \"plumber troy, ny\" (searched from Troy,New York,United States, 2026-11-10), below the top 3 where most clicks go.", "fix": "Strengthen your service page.", "w": 2}]}, {"key": "reputation", "label": "Reputation", "score": 63, "summary": "4.6\u2605 from 38 Google reviews", "available": true, "findings": [{"status": "pass", "title": "Google rating", "detail": "4.6\u2605 on Google; the top map result (Leader Plumbing & Drain) has 4.9\u2605.", "fix": "", "w": 2, "evidence": {"source": "Google business profile (name search)"}}, {"status": "warn", "title": "Number of Google reviews", "detail": "38 reviews; the businesses in the map results have a median of 96.", "fix": "Set up an automatic review request after every job.", "w": 2}]}, {"key": "gbp", "label": "Google Business Profile", "score": 40, "summary": "Plumbing supply store \u00b7 3 of 5 basics", "available": true, "extra": {"nudge": "We checked 5 of the 14 profile details the Comprehensive Growth Audit reviews, which compares all of them with your top 3 competitors and gives you the fixes in order.", "checked": ["primary category", "rating", "review count", "hours", "website link"]}, "findings": [{"status": "warn", "title": "Primary category", "detail": "Your primary category is \"Plumbing supply store\". The businesses in the map results for \"plumber\" use \"Plumber\", \"Drainage service\".", "fix": "Make your primary category match your main service. It's the strongest single signal for map rankings.", "w": 3, "evidence": {"source": "Google business profile panel (name search)", "query": "sample plumbing co troy, ny", "checked_at": "2026-11-10T10:00:00Z"}}, {"status": "warn", "title": "Profile basics", "detail": "3 of 5 basics found. Missing: hours, website link.", "fix": "Add your hours, website link so customers (and Google) have the facts they need to choose you.", "w": 2}]}, {"key": "ai", "label": "AI visibility", "score": 20, "summary": "Named in 1 of 3 AI answers checked", "available": true, "extra": {"answers": {"recommend": "For plumbing in Troy, **Leader Plumbing & Drain** and Two Rivers Plumbing are often recommended. Sample Plumbing Co is also mentioned for weekend service.", "about": "Sample Plumbing Co is a plumbing company serving Troy, NY, offering drain cleaning and water heater installation."}}, "findings": [{"status": "warn", "title": "Named in Google's AI answers", "detail": "Google's Gemini (with live search) named your business in 1 of 3 customer questions we asked on 2026-11-10. A sample of answers, not every customer's experience.", "fix": "Earn reviews and mentions on sites AI tools trust.", "w": 4, "evidence": {"provider": "Google Gemini", "model": "gemini-3.5-flash-lite", "search": "Google Search grounding on", "checked_at": "2026-11-10T10:00:00Z"}}, {"status": "pass", "title": "AI describes your business accurately", "detail": "Asked about your business by name, Gemini's answer matches how your website describes you (plumbing, drain, troy).", "fix": "", "w": 2, "evidence": {"matched_facts": ["plumbing", "drain", "troy"]}}, {"status": "review", "title": "Known to AI models without search (not scored)", "detail": "Exploratory, not counted in your score.", "fix": "", "w": 0}]}], "benchmark": {"status": "ok", "at": "2026-11-10T10:01:00Z", "keys": ["seo", "rankings", "reputation", "ai"], "you": {"scores": {"seo": 81, "rankings": 16, "reputation": 63, "ai": 20}, "overall": 45}, "leader": {"name": "Leader Plumbing & Drain", "mapsRank": 1, "overall": 84, "scores": {"seo": 77, "rankings": 100, "reputation": 100, "ai": 60}}, "competitors": [{"name": "Leader Plumbing & Drain", "mapsRank": 1, "rating": 4.9, "reviews": 212, "scores": {"seo": 77, "rankings": 100, "reputation": 100, "ai": 60}}, {"name": "Two Rivers Plumbing", "mapsRank": 2, "rating": 4.7, "reviews": 96, "scores": {"seo": 69, "rankings": 84, "reputation": 90, "ai": 40}}, {"name": "Capital Drain Co", "mapsRank": 3, "rating": 4.4, "reviews": 31, "scores": {"seo": null, "rankings": 60, "reputation": 49, "ai": 0}}], "standing": {"key": "far", "label": "Well behind the leaders", "gap": -39}, "check": {"pairs": 3, "agree": 3, "rate": 1}}}, "key": "sample"}),{status:200,headers:{'content-type':'application/json'}});history.replaceState(null,'','?score=sample&k=sample');</script><script>
+(()=>{
+const $=s=>document.querySelector(s), app=$("#app");
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const tone100=n=>n==null?"na":n>=80?"good":n>=50?"ok":"bad", tone10=n=>n==null?"na":n>=8?"good":n>=5?"ok":"bad";
+const COLORS={good:"var(--good)",ok:"var(--warn)",bad:"var(--pin)",na:"var(--muted)"};
+async function api(path,opts={}){const r=await fetch("/api/portal/"+path,{credentials:"same-origin",headers:{"Content-Type":"application/json"},...opts});const d=await r.json().catch(()=>({}));if(r.status===401)throw Object.assign(new Error("signin"),{signin:true});if(!r.ok)throw new Error(d.error||"Something went wrong.");return d;}
+
+function gauge(score){const t=tone100(score),L=Math.PI*80,v=score==null?0:Math.max(0,Math.min(100,score));
+return `<svg class="gauge" width="200" height="120" viewBox="0 0 200 120" role="img" aria-label="Overall score ${score??"not available"} out of 100">
+<path d="M20 110 A80 80 0 0 1 180 110" fill="none" stroke="var(--line)" stroke-width="16" stroke-linecap="round"/>
+<path d="M20 110 A80 80 0 0 1 180 110" fill="none" stroke="${COLORS[t]}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${L*v/100} ${L}"/>
+<text x="100" y="98" text-anchor="middle" font-size="44" font-weight="900" fill="var(--ink)">${score??"–"}</text><text x="100" y="116" text-anchor="middle" font-size="12" fill="var(--muted)">out of 100</text></svg>`;}
+
+function spark(scans){if(!scans.length)return `<p style="color:var(--muted)">Your first monthly quick scan is running now. Check back in a few minutes to see it here, then every month to see your progress.</p>`;
+const last=scans[scans.length-1],first=scans[0],diff=(last.overall??0)-(first.overall??0),when=d=>new Date(d).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+const head=`<div class="row" style="align-items:baseline;gap:12px"><b style="font:900 2.6rem var(--display);color:var(--${tone100(last.overall)==="good"?"good":tone100(last.overall)==="ok"?"warn":"pin"})">${last.overall??"–"}</b><span style="color:var(--muted)">out of 100 · ${esc(when(last.date))}</span>${scans.length>1?`<span class="pill ${diff>=0?"good":"bad"}">${diff>=0?"+":""}${diff} since ${esc(when(first.date))}</span>`:""}</div>`;
+if(scans.length<2)return head+`<p style="color:var(--muted);margin-top:6px">This is your first quick scan. We re-check monthly when you visit, so you can watch it improve as you work through your plan.</p>`;
+const W=320,H=130,P=22,pts=scans.map((s,i)=>[P+i*(W-2*P)/(scans.length-1),H-P-((s.overall??0)/100)*(H-2*P),s]);
+return head+`<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly quick scan scores"><line x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}" stroke="var(--line)"/>
+<polyline points="${pts.map(p=>p[0]+","+p[1]).join(" ")}" fill="none" stroke="var(--sign)" stroke-width="3"/>
+${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--amber)"/><text x="${p[0]}" y="${p[1]-10}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">${p[2].overall??"–"}</text><text x="${p[0]}" y="${H-5}" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(new Date(p[2].date).toLocaleDateString(undefined,{month:"short"}))}</text>`).join("")}</svg>`;}
+
+function loginView(note){app.innerHTML=`<div class="login panel"><p class="eyebrow">Your dashboard</p><h2>Sign in to see your scores and audits</h2>
+${note?`<p class="msg-err">${esc(note)}</p>`:""}<p style="color:var(--muted);margin:6px 0 16px">Enter the email you gave us. We'll send a one-time sign-in link, so there's no password to remember.</p>
+<form id="lf" class="field"><label for="le">Email</label><input id="le" type="email" autocomplete="email" required><button class="btn btn-amber" type="submit" id="lb" style="justify-content:center;margin-top:8px">Email me a sign-in link</button><p id="lm" role="status"></p></form>
+<p style="color:var(--muted);font-size:.9rem;margin-top:14px">Haven't run a score yet? <a href="/#check">Get your free score</a> (about a minute), or <a href="/comprehensive-audit">see the Comprehensive Growth Audit</a>.</p></div>`;
+$("#lf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#lb"),m=$("#lm");b.disabled=true;b.textContent="Sending…";
+try{const d=await api("login",{method:"POST",body:JSON.stringify({email:$("#le").value})});m.className="msg-ok";m.textContent=d.message;}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;b.textContent="Email me a sign-in link";}});}
+
+function scoresPanel(scores){const when=d=>d?new Date(d).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";
+const first=scores[scores.length-1],last=scores[0],diff=scores.length>1&&first.overall!=null&&last.overall!=null?last.overall-first.overall:null;
+const again=s=>"/?"+new URLSearchParams({url:s.url||s.host||"",biz:s.business||"",svc:s.service||"",city:s.city||""}).toString()+"#check";
+return section("Your Local Visibility Scores","Free scores",`${diff!=null?`<p style="margin-bottom:10px"><span class="pill ${diff>=0?"good":"bad"}">${diff>=0?"+":""}${diff} points</span> <span style="color:var(--muted)">since your first score</span></p>`:""}
+<div class="scroll"><table class="t"><tr><th>Date</th><th>Business</th><th>Search</th><th>Score</th><th></th></tr>${scores.map(s=>`<tr><td>${esc(when(s.at))}</td><td><b>${esc(s.business||s.host)}</b><br><span style="color:var(--muted);font-size:.85rem">${esc(s.host||"")}</span></td><td>${esc([s.service,s.city].filter(Boolean).join(" in "))}</td><td><span class="pill ${tone100(s.overall)}">${s.overall??"–"}/100</span></td><td style="white-space:nowrap"><a class="copy" href="/portal/?score=${encodeURIComponent(s.id)}&k=${encodeURIComponent(s.key||"")}">View &amp; save PDF</a></td></tr>`).join("")}</table></div>
+<div class="row" style="margin-top:16px"><a class="btn btn-amber" href="${esc(again(last))}">Check my score again</a><span style="color:var(--muted);font-size:.92rem">Run it again after you make changes to see your progress. It's free and takes about a minute.</span></div>`);}
+
+function scoresView(me){const s=me.scores,last=s[0];
+let h=`<div class="row spread"><div><p class="eyebrow">Your dashboard</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(me.business||last.business||"Your scores")}</h1><p style="color:var(--muted)">${esc(me.email)}</p></div>
+<div class="row"><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael &nbsp;·&nbsp; (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
+h+=`<section class="panel hero-p"><div>${gauge(last.overall)}<p style="text-align:center;font-weight:700">Latest score</p></div><div><h2>${esc(last.business||last.host)}</h2><p style="color:var(--muted);margin-top:6px">${esc([last.host,[last.service,last.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p>
+<p style="margin-top:12px"><a class="btn btn-ghost" href="/portal/?score=${encodeURIComponent(last.id)}&k=${encodeURIComponent(last.key||"")}">See the full report</a></p></div></section>`;
+h+=scoresPanel(s);
+h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Go deeper</p><h2 style="color:#fff">Want the full picture?</h2><p>The Comprehensive Growth Audit goes far beyond the free score: your whole site, your Google Business Profile, your listings, your competitors, and what AI assistants say, with a fixes-first action plan and a walkthrough call with Michael.</p><div class="row"><a class="btn btn-amber" href="/comprehensive-audit">See the Growth Audit</a><a class="btn btn-ghost" style="color:#fff" href="/#book">Book a 20-minute call</a></div></section>`;
+app.innerHTML=h;$("#so").addEventListener("click",async()=>{await fetch("/api/portal/logout",{method:"POST"});location.href="/portal/";});}
+
+function section(title,eyebrow,inner,id=""){return `<section class="panel"${id?` id="${id}"`:""}><p class="eyebrow">${esc(eyebrow)}</p><h2>${esc(title)}</h2>${inner}</section>`;}
+
+function render(me,a){const d=a.data||{},biz=d.business||{},plan=d.action_plan||[],done=a.progress||{};
+const doneN=plan.filter(x=>done[x.id]).length,pct=plan.length?Math.round(doneN/plan.length*100):0;
+const PH={critical:"Fix first",quick:"Quick wins",30:"Days 1–30",60:"Days 31–60",90:"Days 61–90"};
+let h=`<div class="row spread"><div><p class="eyebrow">Comprehensive Growth Audit · ${esc(d.date||"")}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(biz.name||me.business)}</h1><p style="color:var(--muted)">${esc([biz.website,biz.city].filter(Boolean).join(" · "))}</p></div>
+<div class="row">${a.has_pdf?`<a class="btn btn-ghost" href="/api/portal/pdf?id=${encodeURIComponent(a.id)}">Download PDF</a>`:""}<a class="btn btn-amber" href="tel:+15184601010">Book a call &nbsp;·&nbsp; (518) 460-1010</a><button class="copy" id="so">Sign out</button></div></div>`;
+h+=`<section class="panel hero-p"><div>${gauge(d.overall?.score)}<p style="text-align:center;font-weight:700">${d.overall?.standing?esc(d.overall.standing):`Grade ${esc(d.overall?.grade||"–")}`}</p></div><div><h2>${esc(d.summary?.headline||"Your audit")}</h2>
+<div class="grid2" style="margin-top:12px"><div><h3>What's working</h3><ul>${(d.summary?.strengths||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>
+<div><h3>Biggest opportunities</h3><ol>${(d.summary?.opportunities||[]).map(o=>`<li><b>${esc(o.title)}</b>${o.outcome?`: ${esc(o.outcome)}`:""}</li>`).join("")}</ol></div></div></div></section>`;
+if(a.next_step){const n=a.next_step;h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Recommended next step</p><h2 style="color:#fff">${esc(n.title)}</h2><p>${esc(n.body)}</p>${n.price_label?`<p class="price">${esc(n.price_label)}</p>`:""}<a class="btn btn-amber" style="align-self:flex-start" href="${esc(n.cta_href||"/#contact")}">${esc(n.cta_label||"Book a call with Michael")}</a></section>`;}
+h+=`<div class="grid2"><section class="panel"><p class="eyebrow">Your action plan</p><h2>${doneN} of ${plan.length} done</h2><div class="progress"><i style="width:${pct}%"></i></div><p style="color:var(--muted);margin-top:8px"><a href="#plan">Go to your checklist →</a></p></section>
+<section class="panel"><p class="eyebrow">Monthly quick scan</p><h2>Your score over time</h2>${spark(a.scans||[])}</section></div>`;
+if((d.areas||[]).length)h+=section("How each area scored","Scorecard",`<div class="bars">${d.areas.map(x=>`<button class="bar" data-go="area-${esc(x.key)}"><span>${esc(x.label)}</span><span class="track"><i class="fill-${esc(x.status||tone10(x.score))}" style="width:${(x.score??0)*10}%"></i></span><b>${x.score??"–"}/10</b></button>`).join("")}</div>`);
+if((d.competitors||[]).length){const max=Math.max(1,...d.competitors.map(c=>c.reviews||0));
+h+=section("How you compare to the businesses winning the calls","Competitors",`<div class="scroll"><table class="t"><tr><th>Business</th><th>Map rank</th><th>Rating</th><th>Reviews</th><th>Last 90 days</th><th>Mobile speed</th><th>Service pages</th></tr>${d.competitors.map(c=>`<tr class="${c.is_client?"me":""}"><td>${esc(c.name)}${c.is_client?" (you)":""}</td><td>${c.map_rank??"–"}</td><td>${c.rating??"–"}</td><td><div style="display:flex;gap:8px;align-items:center"><span style="display:inline-block;height:8px;border-radius:4px;background:${c.is_client?"var(--amber)":"var(--sign)"};width:${Math.round((c.reviews||0)/max*90)}px"></span>${c.reviews??"–"}</div></td><td>${c.reviews_90d??"–"}</td><td>${c.mobile_speed??"–"}</td><td>${c.service_pages??"–"}</td></tr>`).join("")}</table></div>`);}
+if((d.ranking_grid||[]).length)h+=section("Where you show up in search","Rankings",`<div class="scroll"><table class="t"><tr><th>Search</th><th>Google Maps</th><th>Google results</th><th>Who's on top</th></tr>${d.ranking_grid.map(r=>`<tr><td>${esc(r.query)}</td><td>${r.in_map_pack?'<span class="pill good">In the top 3</span>':'<span class="pill bad">Not in top 3</span>'}</td><td>${r.organic?"#"+esc(r.organic):"Not in top 10"}</td><td>${esc((r.leaders||[]).join(", "))}</td></tr>`).join("")}</table></div>`);
+if((d.ai||[]).length)h+=section("What AI assistants say when customers ask","AI visibility",`<div class="scroll"><table class="t"><tr><th>Question</th><th>Named you?</th><th>Who they recommended</th></tr>${d.ai.map(q=>`<tr><td>${esc(q.question)}</td><td>${q.named?'<span class="pill good">Yes</span>':'<span class="pill bad">No</span>'}</td><td>${esc((q.recommended||[]).join(", "))}</td></tr>`).join("")}</table></div>${(d.ai_sources||[]).length?`<p style="margin-top:10px"><b>Sources AI keeps citing:</b> ${esc(d.ai_sources.join(", "))}</p>`:""}`);
+if((d.listings||[]).length){const ck=v=>v===true?'<span class="pill good">✓</span>':v===false?'<span class="pill bad">✗</span>':'<span class="pill na">–</span>';
+h+=section("Is your information the same everywhere?","Business listings",`<div class="scroll"><table class="t"><tr><th>Directory</th><th>Listed</th><th>Name</th><th>Address</th><th>Phone</th><th>Website</th><th>Fix</th></tr>${d.listings.map(l=>`<tr><td>${esc(l.source)}</td><td>${ck(l.listed)}</td><td>${ck(l.name_ok)}</td><td>${ck(l.address_ok)}</td><td>${ck(l.phone_ok)}</td><td>${ck(l.website_ok)}</td><td>${esc(l.fix||"")}</td></tr>`).join("")}</table></div>`);}
+if((d.areas||[]).length)h+=section("Everything we found, and how to fix it","Findings",d.areas.map(x=>`<details id="area-${esc(x.key)}" style="margin-top:12px"><summary style="cursor:pointer;font:800 1.1rem var(--display)">${esc(x.label)} <span class="pill ${esc(x.status||tone10(x.score))}">${x.score??"–"}/10</span></summary><p style="margin:8px 0">${esc(x.summary||"")}</p>${(x.findings||[]).map(f=>`<div class="finding"><b>${esc(f.title)}</b><dl><dt>What we found</dt><dd>${esc(f.found)}</dd><dt>Evidence</dt><dd>${esc(f.evidence)}</dd><dt>Why it matters</dt><dd>${esc(f.why)}</dd><dt>Fix</dt><dd>${esc(f.fix)}</dd></dl><div class="tags">Impact: ${esc(f.impact||"–")} · Effort: ${esc(f.effort||"–")} · Who: ${esc(f.owner||"–")}</div></div>`).join("")}</details>`).join(""));
+if(plan.length)h+=section("Your action plan","Checklist",Object.keys(PH).filter(p=>plan.some(x=>String(x.phase)===p)).map(p=>`<h3 style="margin-top:14px">${PH[p]}</h3>${plan.filter(x=>String(x.phase)===p).map(x=>`<label class="check${done[x.id]?" done":""}"><input type="checkbox" data-item="${esc(x.id)}"${done[x.id]?" checked":""}><span class="ct"><b>${esc(x.title)}</b><br><span style="color:var(--muted);font-size:.92rem">${esc(x.why||"")}${x.owner?` · Who: ${esc(x.owner)}`:""}${x.effort?` · Effort: ${esc(x.effort)}`:""}</span></span></label>`).join("")}`).join(""),"plan");
+if((d.rewrites||[]).length)h+=section("Copy you can paste in today","Rewrites",d.rewrites.map((r,i)=>`<div class="rw"><div class="row spread"><span class="lbl">${esc(r.label)}${r.chars?` <span style="color:var(--muted);font-weight:400">(${esc(r.chars)} characters)</span>`:""}</span><button class="copy" data-copy="${i}">Copy</button></div>${r.current?`<div class="now">${esc(r.current)}</div>`:""}<div>${esc(r.new)}</div></div>`).join(""));
+h+=section("Questions? Ask Michael","Messages",`<form id="mf" class="field"><label for="mt">Your message</label><textarea id="mt" rows="4" placeholder="Ask about a finding, your plan, or next steps"></textarea><button class="btn btn-amber" type="submit" id="mb" style="align-self:flex-start;margin-top:6px">Send to Michael</button><p id="mm" role="status"></p></form><p style="color:var(--muted);margin-top:8px">Or call (518) 460-1010.</p>`);
+if((d.limitations||[]).length)h+=section("How we did this","Notes",`<ul>${d.limitations.map(l=>`<li>${esc(l)}</li>`).join("")}</ul><p style="color:var(--muted);font-size:.9rem">Rankings and AI answers change daily and vary by location. No one can guarantee rankings or AI recommendations.</p>`);
+app.innerHTML=h;
+$("#so").addEventListener("click",async()=>{await fetch("/api/portal/logout",{method:"POST"});location.href="/portal/";});
+app.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{const t=document.getElementById(b.dataset.go);if(t){t.open=true;t.scrollIntoView({behavior:"smooth"});}}));
+app.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{await navigator.clipboard.writeText(d.rewrites[+b.dataset.copy].new);b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1500);}));
+app.querySelectorAll("[data-item]").forEach(cb=>cb.addEventListener("change",async()=>{const lab=cb.closest(".check");lab.classList.toggle("done",cb.checked);
+try{const r=await api("check",{method:"POST",body:JSON.stringify({id:a.id,item:cb.dataset.item,done:cb.checked})});a.progress=r.progress;const n=plan.filter(x=>a.progress[x.id]).length;
+app.querySelector(".progress i").style.width=(plan.length?Math.round(n/plan.length*100):0)+"%";app.querySelector(".progress").previousElementSibling.textContent=`${n} of ${plan.length} done`;}catch(x){cb.checked=!cb.checked;lab.classList.toggle("done",cb.checked);alert(x.message);}}));
+$("#mf").addEventListener("submit",async e=>{e.preventDefault();const b=$("#mb"),m=$("#mm");b.disabled=true;
+try{await api("message",{method:"POST",body:JSON.stringify({text:$("#mt").value})});m.className="msg-ok";m.textContent="Sent. Michael will reply by email.";$("#mt").value="";}catch(x){m.className="msg-err";m.textContent=x.message;}finally{b.disabled=false;}});}
+
+
+/* ---------- a free Local Visibility Score, inside the dashboard: /portal/?score=<id>&k=<key> ---------- */
+const STL={pass:"Good",warn:"Needs work",fail:"Problem",review:"Needs review"},STC={pass:"good",warn:"ok",fail:"bad",review:"na"},ORDER={fail:0,warn:1,review:2,pass:3};
+const METRICS=[["lcp","Main content loads",2500,4000,"ms"],["fcp","First content appears",1800,3000,"ms"],["tbt","Page frozen",200,600,"ms"],["cls","Layout shift",.1,.25,""],["si","Visual load speed",3400,5800,"ms"]];
+const fmtM=(v,u)=>u==="ms"?(v>=1000?(v/1000).toFixed(1)+" s":Math.round(v)+" ms"):(+v).toFixed(2);
+const plainT=x=>String(x||"").replace(/\*\*/g,"").replace(/^\s*[\*\-]\s+/gm,"• ");
+function vizFor(s,biz){const x=s.extra||{};
+  if(s.key==="website"&&x.metrics){const rows=METRICS.filter(([k])=>x.metrics[k]!=null).map(([k,label,good,poor,u])=>{const v=x.metrics[k],c=v<=good?"good":v<=poor?"ok":"bad";
+    return `<div class="metric"><span>${esc(label)}</span><b class="tone-${c}">${fmtM(v,u)}</b><small>Goal: under ${fmtM(good,u)}</small></div>`;});
+    return rows.length?`<p class="eyebrow" style="margin-top:16px">Mobile speed, measured by Google</p><div class="mgrid">${rows.join("")}</div>`:"";}
+  if(s.key==="rankings"&&x.engines){const live=x.engines.filter(e=>!e.error);if(!live.length)return "";
+    return `<p class="eyebrow" style="margin-top:16px">Who shows up for “${esc(x.keyword||"")}”</p><div class="ladders">${live.map(e=>`<div class="ladder"><h3>${esc(e.engine)}</h3><ol>${(e.competitors||[]).map(c=>`<li>${esc(c.domain)}</li>`).join("")}</ol><p class="you ${e.position?"in":"out"}">${e.position?`You: #${e.position}`:"You: not in the top 10"}</p>${e.places&&e.places.length?`<p class="eyebrow" style="margin-top:10px">Google Maps top 3</p><ul class="pins">${e.places.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}</div>`).join("")}</div>`;}
+  if(s.key==="ai"&&x.answers){const re=biz?new RegExp(biz.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"):null,hl=q=>{const e=esc(plainT(q));return re?e.replace(re,m=>`<mark>${m}</mark>`):e;};
+    const items=[["recommend","We asked Google's AI: who would you recommend?"],["about",`We asked Google's AI: what is ${biz}?`]].filter(([k])=>x.answers[k]);
+    return items.map(([k,l])=>`<div class="quote"><p class="eyebrow">${esc(l)}</p><p>${hl(x.answers[k])}</p></div>`).join("");}
+  return "";}
+function evHtml(e){if(!e)return "";const when=e.checked_at?new Date(e.checked_at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";
+  const bits=[e.provider&&`Source: ${e.provider}${e.engine?" · "+e.engine:""}${e.model?" · "+e.model:""}`,e.query&&`Search: “${e.query}”`,e.ranking_type&&`Result type: ${e.ranking_type}`,e.location&&`Location: ${e.location}`,e.depth&&`Results checked: top ${e.depth}`,e.prompt&&`Question asked: “${e.prompt}”`,e.search&&e.search,when&&`Checked: ${when}`,(e.matched_facts||[]).length&&`Matched your site's own description: ${e.matched_facts.join(", ")}`].filter(Boolean);
+  return bits.length?`<details class="how"><summary>How we checked</summary><ul>${bits.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></details>`:"";}
+function compareHtml(b,secs){if(!b||b.status!=="ok")return "";const L={seo:"SEO",rankings:"Search visibility",reputation:"Reputation",ai:"AI visibility"};
+  const cell=n=>n==null?'<span style="color:var(--muted)">–</span>':`<span class="pill ${tone100(n)}">${n}</span>`;
+  const rows=Object.keys(L).map(k=>`<tr><td>${L[k]}</td><td>${cell(b.you.scores[k])}</td>${b.competitors.map(c=>`<td>${cell(c.scores[k])}</td>`).join("")}</tr>`).join("");
+  const st=b.standing;
+  return section("How you compare with the businesses Google shows first","Your standing",`${st?`<p style="font-size:1.1rem"><b>${esc(st.label)}.</b> Compared on ${b.keys.length} categories measured for both: you ${b.you.overall??"–"}, ${esc(b.leader.name)} (#${b.leader.mapsRank} on Google Maps) ${b.leader.overall??"–"}.</p>`:""}
+  <div class="scroll" style="margin-top:12px"><table class="t"><tr><th>Category</th><th>You</th>${b.competitors.map(c=>`<th>${esc(c.name)}<br><span style="font-weight:400;text-transform:none">#${c.mapsRank} on Maps${c.rating!=null?` · ${c.rating}★ (${c.reviews??"?"})`:""}</span></th>`).join("")}</tr>${rows}</table></div>
+  <p style="color:var(--muted);font-size:.85rem;margin-top:10px">Competitors are the businesses in Google's map results for the same search, checked the same way on ${esc(new Date(b.at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}))}. Website speed isn't compared because it takes too long to test for every business.</p>`);}
+function scoreView(r){const i=r.input||{},secs=r.sections||[],when=new Date(r.createdAt||Date.now()).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
+let h=`<div class="pr-only pr-head"><img src="/assets/lra-primary-color.svg" alt="Local Rank Authority" height="44"><span>localrankauthority.com · (518) 460-1010<br>Local Visibility Score · ${esc(when)}</span></div>
+<div class="row spread"><div><p class="eyebrow">Local Visibility Score · ${esc(when)}</p><h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">${esc(i.business||i.host)}</h1><p style="color:var(--muted)">${esc([i.host,[i.service,i.city].filter(Boolean).join(" in ")].filter(Boolean).join(" · "))}</p></div>
+<div class="row noprint"><a class="copy" href="/portal/">← All my scores</a><button class="btn btn-ghost" id="pdf" type="button">Save as PDF</button><a class="btn btn-amber" href="tel:+15184601010">Talk to Michael &nbsp;·&nbsp; (518) 460-1010</a></div></div>`;
+h+=`<section class="panel hero-p"><div>${gauge(r.overall)}<p style="text-align:center;font-weight:700">${r.benchmark&&r.benchmark.standing?esc(r.benchmark.standing.label):"Overall score"}</p></div><div><h2>How you scored</h2><div class="bars" style="margin-top:12px">${secs.map(s=>`<button class="bar" data-go="sec-${esc(s.key)}"><span>${esc(s.label)}</span><span class="track"><i class="fill-${tone100(s.score)}" style="width:${s.score??0}%"></i></span><b>${s.score??"–"}</b></button>`).join("")}</div>
+<p style="color:var(--muted);margin-top:14px;font-size:.95rem">Tap a score to jump to its findings. Every problem includes how to fix it.</p></div></section>`;
+h+=compareHtml(r.benchmark,secs);
+for(const s of secs){const f=(s.findings||[]).slice().sort((a,b)=>ORDER[a.status]-ORDER[b.status]),c={pass:0,warn:0,fail:0,review:0};f.forEach(x=>c[x.status]=(c[x.status]||0)+1);
+  const inner=`<p style="color:var(--muted)">${esc(s.summary||"")}</p>${s.available===false?`<p style="margin-top:10px">${esc(s.note||"")}</p>`:""}
+  ${f.length?`<p class="row" style="gap:8px;margin-top:12px"><span class="pill bad">${c.fail} ${c.fail===1?"problem":"problems"}</span><span class="pill ok">${c.warn} need work</span><span class="pill good">${c.pass} good</span>${c.review?`<span class="pill na">${c.review} need review</span>`:""}</p>`:""}
+  ${vizFor(s,i.business)}${f.map(x=>`<div class="finding s-${x.status}"><div class="row" style="gap:10px"><span class="pill ${STC[x.status]}">${STL[x.status]}</span><b>${esc(x.title)}</b></div><p style="margin-top:6px">${esc(x.detail)}</p>${x.fix&&(x.status==="fail"||x.status==="warn")?`<p class="fix"><b>How to fix:</b> ${esc(x.fix)}</p>`:""}${evHtml(x.evidence)}</div>`).join("")}${s.extra&&s.extra.nudge&&f.some(x=>x.status==="fail"||x.status==="warn")?`<div class="nudge"><p>${esc(s.extra.nudge)}</p><p style="margin-top:6px"><a href="/comprehensive-audit">See the Comprehensive Growth Audit</a> · $2,000, credited in full toward any package you start within 30 days.</p></div>`:""}`;
+  h+=`<section class="panel" id="sec-${esc(s.key)}"><div class="row spread"><div><p class="eyebrow">${esc(s.label)}</p><h2>${esc(s.label)}: ${s.score??"–"}/100</h2></div><span class="pill ${tone100(s.score)}" style="font-size:.9rem">${s.score??"–"}/100</span></div>${inner}</section>`;}
+h+=`<section class="next"><p class="eyebrow" style="color:rgba(255,255,255,.75)">Next step</p><h2 style="color:#fff">Want these fixed for you?</h2><p>Book a free 20-minute call. Michael will walk through this report with you and show you the three fastest wins. Or get the Comprehensive Growth Audit for the full picture: your whole site, Google Business Profile, listings, competitors, and a fixes-first plan.</p><div class="row noprint"><a class="btn btn-amber" href="/#book">Book a 20-minute call</a><a class="btn btn-ghost" href="/comprehensive-audit">See the Growth Audit</a></div><p class="pr-only" style="color:#fff">Call Michael at (518) 460-1010 · localrankauthority.com</p></section>
+<p style="color:var(--muted);font-size:.85rem">Rankings and AI answers change daily and vary by location. No one can guarantee rankings or AI recommendations.</p>`;
+app.innerHTML=h;$("#pdf").addEventListener("click",()=>window.print());
+app.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{const t=document.getElementById(b.dataset.go);if(t)t.scrollIntoView({behavior:"smooth"});}));}
+async function openScore(q){const r=await fetch(`/api/score?id=${encodeURIComponent(q.get("score"))}&k=${encodeURIComponent(q.get("k")||"")}`,{credentials:"same-origin"});const d=await r.json().catch(()=>({}));
+  if(r.status===403){loginView("Sign in to see this report. Use the email you unlocked it with.");return;}
+  if(!r.ok){app.innerHTML=section("We couldn't open that report","Local Visibility Score",`<p>${esc(d.error||"Something went wrong.")}</p><p style="margin-top:12px"><a class="btn btn-amber" href="/#check">Run a new free score</a></p>`);return;}
+  document.title=`${d.report.input?.business||"Your"} Local Visibility Score | Local Rank Authority`;scoreView(d.report);}
+async function start(){const q=new URLSearchParams(location.search);
+if(q.get("score")){try{await openScore(q);}catch(x){app.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p></div>`;}return;}
+try{const me=await api("me");if(!me.audits.length&&(me.scores||[]).length){scoresView(me);return;}
+if(!me.audits.length){app.innerHTML=section("Your audit is on its way","Client portal",`<p>We'll email you as soon as it's ready. Questions? Call (518) 460-1010.</p>`);return;}
+const id=q.get("a")&&me.audits.some(x=>x.id===q.get("a"))?q.get("a"):me.audits[me.audits.length-1].id;
+let pick="";if(me.audits.length>1)pick=`<div class="row">${me.audits.map(x=>`<a class="copy" href="?a=${encodeURIComponent(x.id)}">${esc(x.date||"Audit")} · ${x.overall??"–"}/100</a>`).join("")}</div>`;
+const a=await api("audit?id="+encodeURIComponent(id));render(me,a);if(pick)app.insertAdjacentHTML("afterbegin",pick);
+if((me.scores||[]).length)app.insertAdjacentHTML("beforeend",scoresPanel(me.scores));}
+catch(x){if(x.signin)loginView(q.get("e")==="expired"?"That sign-in link has expired or was already used. Request a new one below.":"");else app.innerHTML=`<div class="panel"><p class="msg-err">${esc(x.message)}</p></div>`;}}
+start();})();
+</script>
+</body>
+</html>
