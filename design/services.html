@@ -420,7 +420,14 @@ html .lv .btn-amber{box-shadow:inset 0 0 0 1.5px #fff}
 .btn-primary,html .lv .btn-amber,.btn-ghost,html .lv .btn-ghost{padding-right:52px}
 .btn-ghost,html .lv .btn-ghost{outline:1.5px solid var(--amber);outline-offset:2px}
 .btn-primary::after,html .lv .btn-amber::after,.btn-ghost::after,html .lv .btn-ghost::after{content:"";position:absolute;right:16px;top:50%;width:21px;height:19px;transform:translateY(-50%);background:var(--sign);-webkit-mask:var(--sign-arrow) center/contain no-repeat;mask:var(--sign-arrow) center/contain no-repeat;transition:transform .15s ease}
-.on-sign .btn-ghost::after,.ctaband .btn-ghost::after,html .lv .sign .btn-ghost::after{background:var(--amber)}
+.on-sign .btn-ghost::after,.ctaband .btn-ghost::after,.final .btn-ghost::after,html .lv .sign .btn-ghost::after{background:var(--amber)}
+/* outlined buttons draw their line inside the edge, so they're exactly as tall as the yellow ones */
+.btn-ghost{border-width:0!important;box-shadow:inset 0 0 0 1.5px var(--line)}
+.hero .ctas .btn-ghost{box-shadow:inset 0 0 0 2px currentColor}
+.final .btn-ghost{box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+.on-sign .btn-ghost{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35)}
+.ctaband .btn-ghost{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4)}
+.final .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px}
 .btn:hover::after,html .lv .btn:hover::after{transform:translate(2px,calc(-50% - 2px))}
 .btn-primary:focus-visible,html .lv .btn-amber:focus-visible,.btn-ghost:focus-visible,html .lv .btn-ghost:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
 .nav .btn{padding-right:44px}.nav .btn::after{right:13px;width:18px;height:16px}
