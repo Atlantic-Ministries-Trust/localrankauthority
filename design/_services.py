@@ -18,7 +18,9 @@ e = lambda t: html.escape(t, quote=False)
 
 LANES = {"found": "Get found", "win": "Win the conversation", "remember": "Stay remembered"}
 # The three customer-facing categories (Services Update, 2026-11-10). Lanes stay as the journey explanation.
-CATS = {"online": "Online Presence", "ai": "AI Automation", "growth": "Customer Growth"}
+CATS = {"online": "Online Presence", "ai": "AI Automation", "growth": "Customer Growth",
+        # outside the three categories: the monthly layer under everything, and a different arrangement (we own the site)
+        "care": "After launch", "leads": "Lead sites"}
 
 SERVICES = [
  dict(slug="local-seo-ai-search", lane="found", category="online", name="Local SEO & AI Search",
@@ -106,7 +108,7 @@ SERVICES = [
   ],
   related=["local-seo-ai-search", "review-systems", "ongoing-care"], demo=None),
 
- dict(slug="rank-and-rent", lane="found", category="online", name="Rank & Rent Lead Sites",
+ dict(slug="rank-and-rent", lane="found", category="leads", name="Rank & Rent Lead Sites",
   service_type="Rank and rent lead generation",
   title="Rank & Rent Lead Sites: Exclusive Local Leads | Local Rank Authority",
   desc="We build and rank a lead site for one service in one market, then send its calls and inquiries to one business in that territory.",
@@ -423,7 +425,7 @@ SERVICES = [
   demo=("custom jingle", "Play the finished “Make Your Moment Shine” jingle for Marquee Moments in the demo section."),
   cta=("Discuss My Jingle", "Branding or a jingle")),
 
- dict(slug="ongoing-care", lane="remember", category="growth", name="Ongoing Care & Reporting",
+ dict(slug="ongoing-care", lane="remember", category="care", name="Ongoing Care & Reporting",
   service_type="Website care, local SEO maintenance, and monthly reporting",
   title="Website Care & Monthly SEO Reporting | Local Rank Authority",
   desc="Monthly updates, fixes, backups, and plain-English reports on your rankings, AI mentions, reviews, and leads, so your site and listings keep working after launch.",
@@ -826,10 +828,11 @@ description: {s['desc']}
 
 # The /services overview: three categories, a need-based chooser, and a Talk With Michael route.
 ORDER = {
- "online": ["website-design", "local-seo-ai-search", "google-business-profile-listings", "content-marketing-podcasts", "branding-brand-identity", "rank-and-rent"],
+ "online": ["website-design", "local-seo-ai-search", "google-business-profile-listings", "content-marketing-podcasts", "branding-brand-identity"],
  "ai": ["ai-receptionist", "ai-chat-agents", "lead-capture-follow-up"],
- "growth": ["marketing-business-consulting", "google-search-ads", "youtube-video-advertising", "landing-pages", "custom-jingles", "review-systems", "ongoing-care"],
+ "growth": ["marketing-business-consulting", "google-search-ads", "youtube-video-advertising", "landing-pages", "custom-jingles", "review-systems"],
 }
+OUTSIDE = ["ongoing-care", "rank-and-rent"]
 CAT_COPY = {
  "online": ("Help customers find you and understand what you offer", "Search, maps, AI assistants, listings, and your own website, plus steady content that answers the questions your customers ask."),
  "ai": ("Answer, capture, and follow up, even when you're busy", "AI tools configured around the information you approve, with agreed limits, testing, and a route to a person when a conversation needs one."),
@@ -866,7 +869,7 @@ def overview():
     <div class="cards" style="margin-top:22px">{cards}</div>
   </div>
 </section>"""
-    items = [x for c in ORDER.values() for x in c]
+    items = [x for c in ORDER.values() for x in c] + OUTSIDE
     assert sorted(items) == sorted(BY_SLUG), "every service appears once on the overview"
     ld = {"@context": "https://schema.org", "@graph": [
         {"@type": "CollectionPage", "@id": LIVE + "/services#page", "name": "Services", "url": LIVE + "/services",
@@ -897,6 +900,21 @@ description: Websites, search and AI visibility, content and podcasts, AI recept
     <div class="cards" style="margin-top:22px">{needs}</div>
   </div>
 </section>{cats}
+<section class="sec-tight" id="after-launch">
+  <div class="wrap two">
+    <div class="stack">
+      <p class="eyebrow">After launch</p>
+      <h2 class="h2">Ongoing Care keeps it all working</h2>
+      <p class="lede">Whatever we build together, Ongoing Care is the monthly plan that keeps it working: updates and fixes, review replies, listing upkeep, ad and AI upkeep where you have them, and a plain-English report each month.</p>
+      <div class="ctas"><a class="btn btn-ghost" href="svc-ongoing-care.html">About Ongoing Care</a><a class="textlink" href="packages.html#care">See the monthly plans →</a></div>
+    </div>
+    <div class="panel" id="lead-sites">
+      <h3>Rather buy leads than build your own?</h3>
+      <p style="color:var(--muted)">With Rank &amp; Rent, we build and run a lead site for a service and territory, and rent the leads it brings in to one business. It's a different arrangement from everything above: we own that site, and terms are agreed separately.</p>
+      <a class="textlink" href="svc-rank-and-rent.html">Ask about Rank &amp; Rent lead sites →</a>
+    </div>
+  </div>
+</section>
 <section class="sec-tight" id="journey">
   <div class="wrap two">
     <div class="stack">
