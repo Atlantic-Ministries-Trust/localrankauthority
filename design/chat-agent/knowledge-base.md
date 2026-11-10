@@ -28,11 +28,12 @@ Local service businesses that depend on calls and bookings: contractors and home
 
 ## Prices
 - Free Local Visibility Score: free.
-- Comprehensive Growth Audit: $2,000, credited toward a setup package started within 30 days.
-- Setup packages and monthly care are quoted in a written proposal with a fixed price, after the audit or a call with Michael. The scope depends on the business, its market, and what it already has.
-- Costs paid to other companies (ad spend, call tracking, phone and texting fees, software subscriptions) are listed separately in the proposal.
+- Comprehensive Growth Audit: $2,000.
+- Setup packages: Get Found $7,500 (4 to 6 weeks), Win the Conversation $19,000 (8 to 10 weeks), Market Authority $25,000 (10 to 12 weeks).
+- Monthly care, starting at: Essentials $2,500, Growth $5,000, Authority $7,500, Dominate $10,000 per month.
 - Branding packages (one time, published at https://localrankauthority.com/packages#branding): Brand Refresh $2,000 (about 2 weeks), Brand Identity $5,500 (3 to 4 weeks), Brand + Rollout $12,000 (6 to 8 weeks). They start with a Brand Discovery Session for $500, credited in full toward any branding package started within 30 days; no audit needed. Printing, vehicle wraps, signs, and installation are quoted separately.
-- Do not quote any dollar amounts other than the ones listed here. If someone wants a ballpark, offer a call with Michael at (518) 460-1010 or the free score.
+- Not included: costs paid to other companies, such as ad spend, call tracking, phone and texting fees, and software subscriptions. Each is listed in the proposal.
+- Full details: https://localrankauthority.com/packages
 
 
 ## Services
@@ -560,7 +561,7 @@ Questions:
 - Q: What does the free visibility score check?
   A: It checks your homepage’s speed and SEO basics, looks up rankings for your service and city on Google and Bing, and checks selected AI answers. You see initial scores before unlocking detailed findings by email. For a nationwide store or a business without a local service market, talk with Michael about the most useful assessment.
 - Q: How much does implementation cost?
-  A: The Comprehensive Growth Audit is $2,000, credited in full toward any package you start within 30 days. Setup packages and monthly care are priced in a written proposal with a fixed price before you commit to anything.
+  A: Implementation packages start at $7,500 and ongoing management starts at $2,500 per month. Scope depends on your business and what needs attention. The Comprehensive Growth Audit is $2,000, with the full amount credited toward an implementation package you start within 30 days.
 - Q: Do I need the paid audit before implementation?
   A: The audit is the starting point for implementation packages. It gives us a basis for recommending the scope and priorities. If you have a specific standalone project in mind, describe it to Michael so he can confirm the appropriate starting point.
 - Q: Do I approve content before it is published?

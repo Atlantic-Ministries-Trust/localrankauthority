@@ -17,7 +17,7 @@ D = Path(__file__).resolve().parent
 OUT = D / "chat-agent" / "knowledge-base.md"
 
 # Flip to True once Michael confirms package prices; until then the agent quotes only the audit.
-PRICES_CONFIRMED = False
+PRICES_CONFIRMED = True   # Michael confirmed the package prices 2026-11-10
 
 
 def clean(s):
