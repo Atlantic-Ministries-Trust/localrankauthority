@@ -10,6 +10,7 @@ The chat bubble on localrankauthority.com is a DM Champ AI agent trained on the 
 ## Status (set up 2026-11-06)
 - Agent: **Miles** (DM Champ agent named Local Rank Authority Assistant (id `JFz5XsehDM9jTN7C5mfG`), published. AI quality Max, "Human Like" speed, replies after 3 to 8 seconds, at most 2 message bubbles per reply and 30 AI messages per chat, AI disclosure on.
 - Instructions: `dmchamp-instructions.txt` (DM Champ's text format). Knowledge: the knowledge base pasted into **FAQs & Knowledge → Legacy text**.
+- **Legacy text holds at most 50,000 characters.** `knowledge-base.md` is now longer (about 56,600). The copy in DM Champ (2026-11-10) drops every service's "Good fit for" line and the general FAQ answers that repeat service answers, and uses `Q:`/`A:` lines without the leading dash. Apply future changes as targeted edits to the DM Champ copy, or trim the same way before pasting the whole file.
 - Widget: brand green `#0B5D3F`, our greeting, 4 starter questions, a "Call (518) 460-1010" button, attachments off, pop-up after 20 seconds, no pre-chat form, allowed on localrankauthority.com, www.localrankauthority.com and redesign.localrankauthority.pages.dev (so it won't show on localhost).
 - Lead alerts: email for new contacts, human alerts, chat summaries and low credits (already on by default).
 - On staging: all 37 new pages. `widget.html` also keeps the chat bubble above the phone Call / Free score bar.
