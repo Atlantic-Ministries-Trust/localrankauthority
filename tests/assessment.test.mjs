@@ -204,7 +204,7 @@ test("GBP: missing basics are named; wrong website link is flagged", () => {
   const s = gbpSection({ found: true, type: "Plumber", hours: null, phone: null, website: "https://facebook.com/joes", address: "Troy", query: "q", checked_at: "t" }, PACK, { service: "plumber", city: "Troy, NY" }, "joesplumbing.test");
   const basics = s.findings.find(f => f.title === "Profile basics");
   assert.equal(basics.status, "warn");
-  assert.match(basics.detail, /3 of 5 basics found\. Missing: hours, phone/);
+  assert.match(basics.detail, /2 of 4 basics found\. Missing: hours, phone/);
   assert.equal(s.findings.find(f => f.title === "Profile links to your website").status, "warn");
   assert.ok(s.extra.nudge.includes("5 of the 14"), "the free check states its scope honestly");
 });
@@ -216,4 +216,10 @@ test("GBP: no profile found, or not checked yet", () => {
   const locked = gbpSection(null);
   assert.equal(locked.available, false);
   assert.equal(locked.score, null, "not checked yet never counts as zero");
+});
+
+test("GBP: a website link that redirects to your site counts as your site; address isn't required", () => {
+  const s = gbpSection({ found: true, type: "Marquee hire service", hours: true, phone: "x", website: "https://marqueeletterrentals.com/", websiteFinal: "https://marqueemoments.net/", address: null, query: "q", checked_at: "t" }, PACK, IN, "marqueemoments.net");
+  assert.equal(s.findings.find(f => f.title === "Profile links to your website").status, "pass");
+  assert.equal(s.findings.find(f => f.title === "Profile basics").status, "pass", "a hidden address (service-area business) isn't a missing basic");
 });
