@@ -8,7 +8,10 @@
 - Based in New York's Capital Region (Albany area). Works with local businesses across the United States; most clients are in and around Albany, Schenectady, Troy, Saratoga Springs, and Clifton Park.
 - Owner: Michael Carlson. Clients work with Michael directly, with no account managers.
 - Michael has owned Atlantic Flagpole (flagpole sales and installation, now a national online store) since 2008, and co-founded The Christmas Guys (holiday lighting installation, Clifton Park) in 2009. He sold his share of The Christmas Guys in 2023.
-- Slogan: Get found. Win the conversation. Stay remembered.
+- Slogan: Get found. Win the conversation. Stay remembered. That's the customer journey; services are grouped in three categories.
+- Service categories: Online Presence (website design and improvements, SEO and AI search visibility, Google Business Profile and listings, content marketing and podcast syndication, branding). AI Automation (AI receptionist, AI chat agents, lead capture, estimate builders, inquiry routing and follow-up). Customer Growth (marketing and business consulting, Google Search Ads, YouTube video advertising, landing pages and video landing pages, custom jingles and audio branding, review systems, ongoing care). All at https://localrankauthority.com/services
+- Not sure which service fits: Michael starts with a conversation (marketing and business consulting) to find what to fix first. The Comprehensive Growth Audit stays the starting point for setup packages.
+- New services (content, Search Ads, YouTube ads, landing pages beyond the audit's one, consulting, jingles) are priced in a written proposal; there is no published price for them. Ad spend is billed by Google directly to the client where agreed, in an account the client owns. Never quote a price for these.
 - How to get in touch: call (518) 460-1010, send a message at https://localrankauthority.com/contact, or start with the free score at https://localrankauthority.com/#book
 - No long contracts. Clients own their website, content, domain, and Google Business Profile. Rank-and-rent lead sites are the exception: Local Rank Authority owns those.
 
@@ -300,34 +303,36 @@ Questions:
 - Q: How does branding help with Google and AI search?
   A: Search engines and AI assistants trust businesses whose name, details, and description match everywhere. A clear, consistent brand makes your listings, website, and profiles agree, which supports the rest of your local SEO.
 
-### Custom Jingles
+### Custom Jingles & Audio Branding
 Page: https://localrankauthority.com/services/custom-jingles
 
-A short, original jingle built around your business name or phone number, for radio, video, social ads, and your on-hold message.
+An original jingle or short sound built around your business name, what you do, and how to reach you, for videos, ads, podcasts, and landing pages.
 
 What's included:
-- Original melody and lyrics: Written around your business name, phone number, or slogan, with no stock music.
-- Professional vocals and production: Recorded and mixed so it sounds right on radio, phones, and social media.
-- Short and long cuts: 5, 15, and 30-second versions to fit different ads, plus an instrumental bed.
-- Revision rounds: You hear a sketch first and help shape it before final production.
-- Ready-to-use files: Delivered in the formats radio stations, video editors, and phone systems need.
-- Usage rights: You get the rights to use your jingle in your own advertising, spelled out in writing.
+- A creative brief together: We start with your name or a distinctive phrase, what you do, and the response you want, such as visiting your website or calling.
+- Original lyrics and melody: Written for your business, with no stock music.
+- Production: Vocals, instruments, and mixing so it sounds right on phones, speakers, and video.
+- Short hooks and longer versions: A short opening hook for ads and podcast intros, and longer versions, as agreed in your scope.
+- Your approval at each step: You hear the direction before final production and approve the finished version. Revisions are set in your proposal.
+- Final files and documented rights: Files for your ads, videos, podcast, and website, with your usage rights written down.
 
-Good fit for: Businesses running radio, TV, or streaming ads; Brands posting video on social media; Companies with a phone number worth remembering; Family businesses with a story to tell; Anyone who wants to be remembered, not just found.
+Good fit for: Businesses running video, YouTube, radio, or streaming ads; Brands with a podcast or regular video; Businesses with a name or phone number worth remembering; Family businesses with a story to tell; Anyone who wants to be recognized, not just found.
 
-Timing: Most jingles are finished in two to four weeks, from first call to final files.
+Timing: We'll agree on a schedule in your proposal, from first conversation to final files.
 
 Questions:
-- Q: Do jingles still work?
-  A: Sound is one of the most memorable parts of an ad. A short tune built around your name or number can help people remember you long after the ad ends.
-- Q: Will it sound cheesy?
-  A: Not unless you want it to. Styles range from classic radio jingles to modern, understated sound logos, and you hear a sketch before anything is final.
-- Q: Who owns the jingle?
-  A: You get the rights to use it in your own advertising, set out in writing in your agreement.
 - Q: Where can I use it?
-  A: Radio, TV and streaming ads, social video, your website, trade shows, and your phone's on-hold message.
-- Q: Can it include my phone number?
-  A: Yes. Building the number into the melody is one of the most effective ways to make it stick.
+  A: In video ads, YouTube, radio and streaming ads, your podcast, your website, landing-page videos, and other uses written into your agreement.
+- Q: What files do I get?
+  A: The versions and formats agreed in your proposal, ready for your ads, videos, and website.
+- Q: Are revisions included?
+  A: Yes, as set out in your proposal. You hear the direction before final production so changes happen early.
+- Q: Who owns it, and how are rights documented?
+  A: Your usage rights are written into your agreement before production starts.
+- Q: Will it sound cheesy?
+  A: Not unless you want it to. Styles range from classic jingles to short, understated sound logos, and you approve the direction first.
+- Q: Will a jingle increase sales?
+  A: We aim to make your name easier to remember. We can't promise recall, rankings, or sales from a jingle alone.
 
 ### Ongoing Care & Reporting
 Page: https://localrankauthority.com/services/ongoing-care
@@ -357,6 +362,163 @@ Questions:
   A: Usually, yes. We review it first and tell you about anything that needs fixing before we take it on.
 - Q: How quickly are changes made?
   A: Small updates are usually made within a couple of business days.
+
+### Content Marketing & Podcast Syndication
+Page: https://localrankauthority.com/services/content-marketing-podcasts
+
+Share what you know with the customers who are looking for it. We plan, write, produce, and publish articles and matching podcast episodes for your business, with you approving every word.
+
+What's included:
+- Topic planning from real questions: We build your topics from the questions customers ask, the concerns that slow their decision, and the products, services, and markets you want more of.
+- Articles on your website: Each topic becomes a useful article published on your own site, written in your voice and checked with you for accuracy.
+- Matching podcast episodes: Each article gets a corresponding audio episode with its own episode page and useful written text, so listeners and readers find the same answer.
+- Distribution to podcast apps: Episodes go out through a podcast feed (called RSS) to the services we agree on, such as Apple Podcasts, Spotify, Amazon Music, and YouTube, where setup and publishing are supported.
+- Narration options, with your permission: Episodes can use a narrator or, only with your explicit permission, an approved AI version of your voice. We never present generated audio as something you recorded yourself. Options are set in your proposal.
+- A monthly check-in: Each month you see what was published, the evidence of reach and response we can measure, the next topics, and anything we suggest changing.
+
+Good fit for: Owners with real expertise and little time to write; Businesses whose customers research before they buy; Local service companies answering the same questions daily; Product and nationwide businesses explaining what they sell; Anyone who wants a steady voice online without hiring a writer.
+
+Timing: Your publishing schedule and volume are set in your proposal to fit your business and how much you want to say. Search visibility from content builds over time and isn't guaranteed.
+
+Questions:
+- Q: Do I have to record anything?
+  A: No. You share your knowledge in a short conversation or written notes. Episodes can be narrated for you, or use an approved AI version of your voice if you give explicit permission.
+- Q: How do you choose topics?
+  A: From the questions your customers actually ask, the concerns that hold them back, and the services or products you want to sell more of. You approve the plan.
+- Q: Will anything publish without my approval?
+  A: No. You approve the facts and the script for every article and episode before it goes out.
+- Q: Where will my podcast appear?
+  A: On the services we agree on, such as Apple Podcasts, Spotify, Amazon Music, and YouTube, where setup and publishing are supported. Each service has its own review and rules, so being submitted isn't the same as being accepted everywhere.
+- Q: What do you need from me?
+  A: Your business information, your expertise on each topic, access to publish on your website where needed, and your approval of each piece. How much time that takes depends on the schedule you choose.
+- Q: Who owns the content?
+  A: Your articles and episodes are published for your business. Ownership and any licensing are written into your agreement.
+- Q: Will this get me more customers?
+  A: It gives buyers useful answers from you, which can help them find and choose you over time. We report what we can measure and don't promise rankings, AI mentions, or a number of leads.
+
+### Google Search Ads
+Page: https://localrankauthority.com/services/google-search-ads
+
+Search ads built around the searches that mean someone wants to buy, sent to a page that answers them, with tracking and plain reporting on what you got for your money.
+
+What's included:
+- Searches with buying intent: We choose keyword themes around what buyers search, such as "water heater repair near me," rather than research questions like "how to fix a water heater yourself." Broad terms aren't wrong by default; the right mix depends on your business.
+- Match types and negative keywords: We set how closely searches must match and add negative keywords so your budget isn't spent on searches you don't want.
+- Location and schedule settings: Ads show to people in the areas and at the times you serve. Location targeting is based on Google's signals, so it's close, not an exact fence.
+- Ads that match the search: Ad copy written for each group of searches, so the promise in the ad matches what the person typed and what they'll find.
+- A destination that answers the click: Each campaign points to a relevant page. If a focused landing page is needed, we scope it as part of your plan.
+- Tracking and reporting: Conversion tracking for calls, forms, and bookings where it can be set up, and a plain report that separates clicks from real inquiries.
+
+Good fit for: Businesses that know which jobs or products they want more of; Owners who have tried ads and want clearer reporting; Seasonal businesses that need inquiries at a specific time; Local service areas and nationwide sellers alike; Anyone who wants to own their ad account and see the numbers.
+
+Timing: Setup time depends on the campaign and whether pages or tracking need to be built. Results depend on your market, budget, and offer, and aren't guaranteed.
+
+Questions:
+- Q: Who owns the ad account?
+  A: You do. Where we agree to it, the account is in your name and you keep it and its history if we stop working together.
+- Q: Who pays Google?
+  A: Your ad spend is billed by Google directly to you, where agreed. Our setup and management are separate and listed in your proposal.
+- Q: How is my budget set?
+  A: We agree on a monthly ad budget with you before launch. Google spends against that budget, and we review it with you before changing it.
+- Q: What do you report?
+  A: Spend, clicks, the searches that triggered your ads, and the calls, forms, or bookings we can track. We keep clicks and real inquiries separate so the picture is honest.
+- Q: What happens after someone clicks?
+  A: They land on a page that matches what they searched, with a clear way to call, ask, or book. That page matters as much as the ad.
+- Q: Is a high click rate good?
+  A: Click rate is clicks divided by impressions; five clicks per thousand impressions is 0.5%. A high rate on the wrong searches can still waste money, so we judge success by qualified inquiries and sales, not clicks alone.
+- Q: Can you guarantee leads or lower costs?
+  A: No. We focus spending on relevant searches and show you exactly what happened, but results depend on your market, competition, and offer.
+
+### YouTube Video Advertising
+Page: https://localrankauthority.com/services/youtube-video-advertising
+
+Short video ads that open with your name and a clear message, shown to the right people in the places you serve, with honest reporting on views, clicks, and inquiries.
+
+What's included:
+- The first five seconds: We plan the opening around your business name, a short audio hook, and a relevant message, so viewers get the point even if they skip.
+- Script and video production: Scripts and production within the agreed scope, from simple edits of your footage to new short ads.
+- Optional jingle integration: Your jingle or a short sound from it can open the ad. A full jingle isn't required before your offer is explained.
+- Audience and location settings: We choose the audiences and locations that fit your business rather than showing ads to everyone everywhere.
+- A page that continues the message: Viewers who click land on a relevant page with a clear next step.
+- Monitoring and reporting: Views, clicks, and device reporting, including television screens where ads appear there, with inquiries tracked where possible.
+
+Good fit for: Businesses building a recognizable local or regional name; Owners with a clear message and a defined service area or audience; Brands with a jingle or sound worth hearing; Businesses that want to support their search and referral marketing; Owners who want honest reporting, not just view counts.
+
+Timing: Production and setup time depend on the creative you need. We'll give you a schedule in your proposal.
+
+Questions:
+- Q: Do I pay when someone skips?
+  A: It depends on the bidding strategy. Viewers can skip after five seconds. With cost-per-view bidding, you're typically charged when someone watches 30 seconds (or the whole ad if it's shorter) or interacts with it, whichever comes first. Other bidding strategies charge for impressions. We'll explain the option we recommend for you.
+- Q: Will my ad show on TV?
+  A: YouTube ads can appear on television screens through the YouTube app, and reports show device types. That's one possible placement, not the same as buying traditional TV, and we can't promise a specific share of TV viewing.
+- Q: Do I need a jingle?
+  A: No. A short audio hook can help people recognize you, but your ad can open with your name and a clear message without one.
+- Q: How much should I spend?
+  A: We agree on a monthly ad budget with you before launch. Ad spend is billed by Google directly where agreed, separate from our production and management.
+- Q: How will I know if it worked?
+  A: We report views, clicks, and the inquiries we can track, and keep them separate. Views alone don't prove sales, so we look at what happened after.
+- Q: Can you target just my town?
+  A: We can target locations and audiences that fit your business. Location targeting uses Google's signals, so it's close, not an exact boundary.
+
+### Landing Pages & Video Landing Pages
+Page: https://localrankauthority.com/services/landing-pages
+
+A focused page for each offer, ad, or campaign that answers exactly what the visitor came for and makes the next step clear.
+
+What's included:
+- A headline that matches the need: The page opens with the specific problem and service the visitor searched or clicked for.
+- A clear offer and practical benefits: What you do, who it's for, what it includes, and any conditions that matter, in plain language.
+- Real proof in context: Reviews, examples, and credentials placed where the visitor is deciding, using only what's real. We never invent a guarantee or a review.
+- One clear action: A call button, form, booking link, or purchase option, made obvious on every screen size.
+- Optional video, done right: A short video when it helps, with captions, visible controls, no forced autoplay, and the key facts also written on the page.
+- Tracking and testing: Tracking for calls and forms where it can be set up, and tests to improve the page over time.
+
+Good fit for: Businesses running search, YouTube, or social ads; Owners promoting one service, product, or season; Campaigns that need a clear offer and a single action; Businesses with or without an existing website; Anyone paying for clicks that aren't turning into inquiries.
+
+Timing: Most pages need a few weeks from approved plan to launch, depending on copy, video, and tracking needs. Your proposal sets the schedule.
+
+Questions:
+- Q: Does it work with my existing website?
+  A: Usually, yes. The page can live on your current site or a connected page, depending on your platform. We'll check before we start.
+- Q: Who owns the page?
+  A: Your landing pages are built for your business and are yours, as set out in your agreement. Any platform or software costs are listed in your proposal.
+- Q: Will a video make it convert better?
+  A: Not automatically. Video helps when it answers a real question faster than text. The page has to work without it too.
+- Q: Should every landing page be hidden from Google?
+  A: No. Some campaign pages are best kept out of search results and others are useful to index. We decide page by page, and we don't mass-produce near-identical town pages.
+- Q: Do you offer a guarantee?
+  A: We'll only show a guarantee your business actually offers. We won't invent one to make a page look stronger.
+- Q: Is this the same as the landing page in the Growth Audit?
+  A: The Growth Audit includes one finished landing page for your top service. Additional pages, campaign pages, and video pages are scoped separately.
+
+### Marketing & Business Consulting
+Page: https://localrankauthority.com/services/marketing-business-consulting
+
+Work out what to fix first. Michael reviews how customers find you, decide, and get followed up, then helps you set priorities and a practical plan.
+
+What's included:
+- A look at the whole customer journey: How people find you, what they see, how they contact you, and what happens next.
+- Diagnosis of the real constraints: Where customers are getting stuck, based on what we can observe and what you tell us, separated clearly.
+- Priorities you can act on: A short list of what to do first, what can wait, and what to stop, with the reasoning.
+- A practical plan: Who does what, what it costs, and how you'll measure it, written down.
+- Scoped implementation, if you want it: Some work you'll do yourself. For larger work, the Comprehensive Growth Audit is the established starting point for implementation packages; a standalone project can be discussed separately.
+- Optional ongoing review: Regular check-ins to review progress, adjust priorities, and keep the plan honest.
+
+Good fit for: Owners unsure where to spend next; Businesses that have tried marketing and want an honest second look; Teams whose inquiries and follow-up feel disorganized; Local service companies and nationwide sellers alike; Anyone who wants a plan they understand before buying services.
+
+Timing: The scope and schedule depend on your business and what you want to decide. We agree on them before starting.
+
+Questions:
+- Q: What kind of consulting is this?
+  A: Practical consulting on marketing, getting customers, handling inquiries, and the workflows around them. It isn't legal, tax, or financial advice.
+- Q: Will you just recommend your own services?
+  A: We start with your goals and what you already have. Sometimes the best answer is a small fix you can make yourself, or keeping a tool you already pay for.
+- Q: How is this different from the Growth Audit?
+  A: The Comprehensive Growth Audit is a fixed $2,000 review with a detailed report, delivered in 5 business days. Consulting is a conversation-led way to set priorities and can cover more of how your business handles customers. Michael will suggest which fits.
+- Q: Do I have to commit to a monthly plan?
+  A: No. Ongoing review is optional and agreed separately.
+- Q: Can you work with my current team and tools?
+  A: Yes. We'll look at what you have before recommending anything new, and be clear about what any change would require.
 
 
 ## General questions
@@ -400,14 +562,33 @@ Questions:
   A: The Comprehensive Growth Audit is $2,000, credited in full toward any package you start within 30 days. Setup packages and monthly care are priced in a written proposal with a fixed price before you commit to anything.
 - Q: Do I need the paid audit before implementation?
   A: The audit is the starting point for implementation packages. It gives us a basis for recommending the scope and priorities. If you have a specific standalone project in mind, describe it to Michael so he can confirm the appropriate starting point.
+- Q: Do I approve content before it is published?
+  A: Yes. You review the facts and the wording of every article and episode script before anything goes out. Nothing publishes without your approval.
+- Q: Can podcast episodes use an AI version of my voice?
+  A: Only with your explicit permission, and only as defined in your proposal. Episodes can also use a narrator. We never present generated audio as something you recorded yourself.
+- Q: Where will my podcast be distributed?
+  A: Episodes go out through a podcast feed to the services we agree on, such as Apple Podcasts, Spotify, Amazon Music, and YouTube, where setup and publishing are supported. Each service has its own review and rules, so acceptance on every service is not guaranteed.
+- Q: What is included each month, and can the scope change?
+  A: Your publishing schedule, volume, and any add-ons are set in your proposal. Each month you see what was published and the next topics. The scope can be changed by agreement, and nothing extra is added without your approval.
+- Q: How much do ads cost, and who pays Google?
+  A: You set the monthly ad budget with us before launch. Where agreed, Google bills your ad spend directly to you in an account you own. Our setup, management, and any production are separate and listed in your proposal.
+- Q: How do you track whether ads are working?
+  A: We set up conversion tracking for calls, forms, and bookings where it can be set up, and report clicks separately from real inquiries. Click rate is clicks divided by impressions, so five clicks per thousand impressions is 0.5%. There is no universal good number, so we judge results by qualified inquiries and sales.
+- Q: How do YouTube ads charge, and do I need a video?
+  A: Viewers can skip after five seconds. With cost-per-view bidding you are typically charged when someone watches 30 seconds (or the whole ad if it is shorter) or interacts with it. Other bidding strategies charge for impressions. If you don't have a video, we can script and produce one within the agreed scope.
+- Q: What does a custom jingle include?
+  A: A creative brief, original lyrics and melody, production, and the versions you agree on for ads, videos, podcasts, and your website. You hear the direction before final production, and revisions and usage rights are written into your proposal.
+- Q: Who owns the ad accounts, landing pages, and jingles?
+  A: Ad accounts are set up in your name where agreed, so you keep them and their history. Landing pages built for your business and jingle usage rights are yours as set out in your agreement.
 - Q: What is rank and rent?
   A: Local Rank Authority develops a lead-generating website for a defined service and territory and rents the resulting leads to a business. This is a different arrangement from building a website you own. Site ownership, territory, lead handling, and pricing must be agreed separately.
 
 ## Finding your way around the website
 Help visitors find pages like a support assistant on a store website: say where to tap or click, and share the direct link.
 - On a phone: the menu button is at the top right (three short lines). The magnifying glass next to it searches the site. Two buttons stay at the bottom of the screen: Call and Free score.
-- On a computer: the top bar has Services, Audits, Packages, Results, About, and FAQ, plus Client login, the phone number, and a Book a call button.
-- The menu has four groups. Services, sorted three ways: Get found (Local SEO & AI search, Google profile & listings, Rank & rent lead sites), Win the conversation (Website design, Lead capture & follow-up, AI chat agents, AI receptionist), and Stay remembered (Review systems, Branding & brand identity, Custom jingles, Ongoing care & reporting). Audits & pricing (Free Local Visibility Score, Comprehensive Growth Audit, Sample audit report, Packages & pricing). Areas we serve (Albany, Troy, Schenectady, Saratoga Springs, Clifton Park, and more). Company (Why work with us, About Michael, Results, the Marquee Moments case study, Live demos, Questions & answers, Contact, Client login).
+- On a computer: the top bar has Services, Audits, Demos, Our Work, About, and FAQs, plus Client login, the phone number, and a Get My Free Score button.
+- All services on one page, grouped three ways and with a "start with what you need" list: https://localrankauthority.com/services
+- The menu has four groups. Services, in three categories: Online Presence (Website design, SEO & AI search, Google profile & listings, Content marketing & podcasts, Branding & brand identity, Rank & rent lead sites), AI Automation (AI receptionist, AI chat agents, Lead capture & follow-up), and Customer Growth (Marketing & business consulting, Google Search Ads, YouTube video ads, Landing pages, Custom jingles & audio branding, Review systems, Ongoing care & reporting), then All services. Audits & pricing (Free Local Visibility Score, Comprehensive Growth Audit, Sample audit report, Packages & pricing). Areas we serve (Albany, Troy, Schenectady, Saratoga Springs, Clifton Park, and more). Company (Why work with us, About Michael, Results, the Marquee Moments case study, Live demos, Questions & answers, Contact, Client login).
 - Every page's footer repeats these links, plus Privacy, Terms, SMS terms, and Accessibility.
 - Clients sign in at Client login (https://localrankauthority.com/portal/) with a link sent to their email; there's no password.
 - Never say you can't help with the website or don't have access to it.

@@ -406,6 +406,11 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 
 
 /* ---- homepage rebuild 2026-11-09 ---- */
+.svc-feature{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,28px);margin-top:48px}
+.svc-feature>div{display:grid;gap:12px;align-content:start;padding:26px;border:1px solid var(--line);border-radius:var(--r,14px);background:var(--card,#fff)}
+.svc-feature .tag{font:700 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--sign)}
+.svc-feature h3{font-size:24px;font-weight:800}.svc-feature p{color:var(--muted)}
+@media (max-width:860px){.svc-feature{grid-template-columns:1fr}}
 /* header: links never wrap; as space runs out, Client login then the phone step out (both stay in the menu and footer) */
 .nav ul a{white-space:nowrap}
 @media (min-width:1101px){.nav{gap:20px}.nav ul{gap:22px;margin-left:8px}}
@@ -495,12 +500,13 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       <div class="drawer-head"><a class="logo" href="homepage-redesign.html"><img src="../docs/assets/lra-primary-color.svg" alt="Local Rank Authority" width="134" height="48"></a><button class="icon-btn" type="button" data-close-menu aria-label="Close menu"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
       <div class="drawer-body">
         <details open><summary>Services</summary>
-          <p class="dgroup">Get found</p>
-          <a href="svc-local-seo-ai-search.html">Local SEO &amp; AI search</a><a href="svc-google-business-profile-listings.html">Google profile &amp; listings</a><a href="svc-rank-and-rent.html">Rank &amp; rent lead sites</a>
-          <p class="dgroup">Win the conversation</p>
-          <a href="svc-website-design.html">Website design</a><a href="svc-lead-capture-follow-up.html">Lead capture &amp; follow-up</a><a href="svc-ai-chat-agents.html">AI chat agents</a><a href="svc-ai-receptionist.html">AI receptionist</a>
-          <p class="dgroup">Stay remembered</p>
-          <a href="svc-review-systems.html">Review systems</a><a href="svc-branding-brand-identity.html">Branding &amp; brand identity</a><a href="svc-custom-jingles.html">Custom jingles</a><a href="svc-ongoing-care.html">Ongoing care &amp; reporting</a>
+          <p class="dgroup">Online Presence</p>
+          <a href="svc-website-design.html">Website design</a><a href="svc-local-seo-ai-search.html">SEO &amp; AI search</a><a href="svc-google-business-profile-listings.html">Google profile &amp; listings</a><a href="svc-content-marketing-podcasts.html">Content marketing &amp; podcasts</a><a href="svc-branding-brand-identity.html">Branding &amp; brand identity</a><a href="svc-rank-and-rent.html">Rank &amp; rent lead sites</a>
+          <p class="dgroup">AI Automation</p>
+          <a href="svc-ai-receptionist.html">AI receptionist</a><a href="svc-ai-chat-agents.html">AI chat agents</a><a href="svc-lead-capture-follow-up.html">Lead capture &amp; follow-up</a>
+          <p class="dgroup">Customer Growth</p>
+          <a href="svc-marketing-business-consulting.html">Marketing &amp; business consulting</a><a href="svc-google-search-ads.html">Google Search Ads</a><a href="svc-youtube-video-advertising.html">YouTube video ads</a><a href="svc-landing-pages.html">Landing pages</a><a href="svc-custom-jingles.html">Custom jingles &amp; audio branding</a><a href="svc-review-systems.html">Review systems</a><a href="svc-ongoing-care.html">Ongoing care &amp; reporting</a>
+          <a href="services.html"><b>All services →</b></a>
         </details>
         <details><summary>Audits &amp; pricing</summary>
           <a href="homepage-redesign.html#book">Free Local Visibility Score</a><a href="https://localrankauthority.com/comprehensive-audit">Comprehensive Growth Audit</a><a href="sample-report.html">Sample audit report</a><a href="packages.html">Packages &amp; pricing</a>
@@ -572,29 +578,43 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
     <div class="stack">
       <p class="eyebrow">What we do</p>
       <h2 class="h2">Get found. Win the conversation. Stay remembered.</h2>
-      <p class="lede">The recommendation starts with your business goals and what you already have. We review what is working before proposing new tools, more content, or a replacement website.</p>
+      <p class="lede">That's the journey every customer takes, and our services fall into three groups that support it. The recommendation starts with your business goals and what you already have. We review what is working before proposing new tools, more content, or a replacement website.</p>
     </div>
     <div class="pillars">
       <div class="pillar">
-        <span class="tag">Get found</span>
-        <h3>Get found</h3>
-        <p>Give potential customers more ways to discover you. Search optimization, clear business information, useful content, and relevant listings help your business appear and make sense when people compare their options.</p>
-        <p class="explore">Explore: <a href="svc-local-seo-ai-search.html">SEO and AI search visibility</a> · <a href="svc-google-business-profile-listings.html">Google Business Profile and listings</a></p>
+        <span class="tag">Online Presence</span>
+        <h3>Be easy to find and understand</h3>
+        <p>Help customers discover you and make sense of what you offer. Website improvements, search and AI search visibility, a complete Google Business Profile, and useful content all work together when people compare their options.</p>
+        <p class="explore">Explore: <a href="svc-website-design.html">Website design and improvements</a> · <a href="svc-local-seo-ai-search.html">SEO and AI search visibility</a> · <a href="svc-google-business-profile-listings.html">Google Business Profile and listings</a> · <a href="svc-content-marketing-podcasts.html">Content marketing and podcasts</a></p>
       </div>
       <div class="pillar">
-        <span class="tag">Win the conversation</span>
-        <h3>Win the conversation</h3>
-        <p>Turn “I’m interested” into a clearer path to action. Improve the message and buying process, collect the details you need, and use AI assistance to answer approved questions or route inquiries when you are busy.</p>
-        <p class="explore">Explore: <a href="svc-lead-capture-follow-up.html">Lead capture and follow-up</a> · <a href="svc-ai-chat-agents.html">AI chat agents</a> · <a href="svc-ai-receptionist.html">AI receptionist</a> · <a href="svc-website-design.html">Website improvements</a></p>
+        <span class="tag">AI Automation</span>
+        <h3>Answer every inquiry, even when you're busy</h3>
+        <p>Turn “I’m interested” into a clearer path to action. AI assistance can answer approved questions by phone or chat, collect the details you need, build an estimate, and route inquiries so follow-up doesn't depend on you being available.</p>
+        <p class="explore">Explore: <a href="svc-ai-receptionist.html">AI receptionist</a> · <a href="svc-ai-chat-agents.html">AI chat agents</a> · <a href="svc-lead-capture-follow-up.html">Lead capture, estimates, and follow-up</a></p>
       </div>
       <div class="pillar">
-        <span class="tag">Stay remembered</span>
-        <h3>Stay remembered</h3>
-        <p>Give customers a reason to come back and a name they can recommend. Consistent branding, review requests, and follow-up help you stay in touch after the first inquiry or sale. A custom jingle can give your business a recognizable sound, too.</p>
-        <p class="explore">Explore: <a href="svc-review-systems.html">Review systems</a> · <a href="svc-branding-brand-identity.html">Branding</a> · <a href="svc-custom-jingles.html">Custom jingles</a> · <a href="svc-ongoing-care.html">Ongoing support</a></p>
+        <span class="tag">Customer Growth</span>
+        <h3>Bring in the right customers and keep them</h3>
+        <p>Set priorities, then reach buyers with Google Search and YouTube ads that lead to focused landing pages. Review requests and a recognizable sound, like a custom jingle, help people remember your name and recommend you.</p>
+        <p class="explore">Explore: <a href="svc-marketing-business-consulting.html">Marketing and business consulting</a> · <a href="svc-google-search-ads.html">Google Search Ads</a> · <a href="svc-youtube-video-advertising.html">YouTube video ads</a> · <a href="svc-landing-pages.html">Landing pages</a> · <a href="svc-custom-jingles.html">Custom jingles</a> · <a href="svc-review-systems.html">Review systems</a></p>
       </div>
     </div>
-    <p class="pkgnote">AI tools are configured around the information you approve, with agreed limits, testing, and a route to a person when a conversation needs one.</p>
+    <div class="svc-feature">
+      <div>
+        <span class="tag">New</span>
+        <h3>Content Marketing &amp; Podcast Syndication</h3>
+        <p>You already answer smart customer questions every week. We turn those answers into articles on your website and matching podcast episodes, published where your customers listen and search. You share what you know and approve every script. We handle the writing, production, and publishing.</p>
+        <a class="textlink" href="svc-content-marketing-podcasts.html">See how it works →</a>
+      </div>
+      <div>
+        <span class="tag">Not sure where to start?</span>
+        <h3>Start with a conversation</h3>
+        <p>Michael begins with consulting: how customers find you, decide, and get answered, and which part is costing you the most. You get clear priorities, whether that's a small fix you can make yourself, an ad campaign, or a larger project that starts with the Growth Audit.</p>
+        <a class="textlink" href="#contact" data-topic="Marketing and business consulting">Talk With Michael →</a>
+      </div>
+    </div>
+    <p class="pkgnote">AI tools are configured around the information you approve, with agreed limits, testing, and a route to a person when a conversation needs one. <a href="services.html">See all services →</a></p>
   </div>
 </section>
 
@@ -744,7 +764,7 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
       <p>Based in New York's Capital Region.<br>Working with local businesses across the US.</p>
       <p class="freach"><span>(518) 460-1010</span><a href="contact.html">Send a message →</a></p>
     </div>
-    <nav class="fcol" aria-label="Services"><b>Services</b><a href="svc-local-seo-ai-search.html">Local SEO &amp; AI search</a><a href="svc-google-business-profile-listings.html">Google profile &amp; listings</a><a href="svc-website-design.html">Website design</a><a href="svc-lead-capture-follow-up.html">Lead capture &amp; follow-up</a><a href="svc-ai-chat-agents.html">AI chat agents</a><a href="svc-ai-receptionist.html">AI receptionist</a><a href="svc-review-systems.html">Review systems</a><a href="svc-rank-and-rent.html">Rank and rent leads</a><a href="svc-branding-brand-identity.html">Branding &amp; brand identity</a><a href="svc-custom-jingles.html">Custom jingles</a><a href="svc-ongoing-care.html">Ongoing care</a></nav>
+    <nav class="fcol" aria-label="Services"><b>Services</b><a href="svc-local-seo-ai-search.html">Local SEO &amp; AI search</a><a href="svc-google-business-profile-listings.html">Google profile &amp; listings</a><a href="svc-website-design.html">Website design</a><a href="svc-lead-capture-follow-up.html">Lead capture &amp; follow-up</a><a href="svc-ai-chat-agents.html">AI chat agents</a><a href="svc-ai-receptionist.html">AI receptionist</a><a href="svc-review-systems.html">Review systems</a><a href="svc-rank-and-rent.html">Rank and rent leads</a><a href="svc-branding-brand-identity.html">Branding &amp; brand identity</a><a href="svc-custom-jingles.html">Custom jingles</a><a href="svc-ongoing-care.html">Ongoing care</a><a href="services.html">All services →</a></nav>
     <nav class="fcol" aria-label="Audits &amp; pricing"><b>Audits &amp; pricing</b><a href="#book">Free Visibility Score</a><a href="https://localrankauthority.com/comprehensive-audit">Comprehensive Growth Audit</a><a href="sample-report.html">Sample report</a><a href="packages.html">Packages and pricing</a><a href="#demos">Live demos</a></nav>
     <nav class="fcol" aria-label="Company"><b>Company</b><a href="#about">About Michael</a><a href="why-us.html">Why us</a><a href="results.html">Results</a><a href="#faq">Questions</a><a href="#book">Book a call</a><a href="contact.html">Contact</a><a href="https://localrankauthority.com/portal/">Client login</a></nav>
     <nav class="fcol" aria-label="Areas we serve"><b>Areas we serve</b><a href="https://localrankauthority.com/local-seo-albany-ny">Local SEO in Albany, NY</a><a href="local-seo-troy-ny.html">Troy, NY</a><a href="local-seo-schenectady-ny.html">Schenectady, NY</a><a href="local-seo-saratoga-springs-ny.html">Saratoga Springs, NY</a><a href="local-seo-clifton-park-ny.html">Clifton Park, NY</a><a href="areas.html">All areas we serve →</a></nav>

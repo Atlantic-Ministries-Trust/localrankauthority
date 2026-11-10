@@ -147,12 +147,12 @@ PAGES = [
          "People need your service once a year and forget your name in between.",
          "Your phone number is hard to remember."],
   benefits=[("Built around your name", "Original melody and lyrics that make your name or number stick."),
-            ("Every length you need", "Short and long cuts for radio, video, social ads, and on-hold."),
+            ("Versions for each use", "Short hooks and longer versions for the uses you agree on, such as radio, video, podcasts, and on-hold."),
             ("Ready to run", "Delivered as finished audio files for your ads and phone system."),
             ("Fits your brand", "Upbeat, warm, or classic, written for your audience.")],
-  faqs=[("Do I own the jingle?", "Yes. You get the rights to use it in your advertising."),
-        ("Where can I use it?", "Radio, TV, video, social ads, your website, and your phone's on-hold message."),
-        ("How long does it take?", "Usually 2 to 3 weeks, including a round of changes."),
+  faqs=[("Do I own the jingle?", "Your usage rights are written into your agreement before production starts."),
+        ("Where can I use it?", "Radio, TV, video, YouTube, podcasts, social ads, your website, and your phone's on-hold message, as written into your agreement."),
+        ("How long does it take?", "We agree on a schedule in your proposal. You hear the direction before final production, and revisions are set in your proposal."),
         ("Can it include my phone number?", "Yes. Phone numbers are one of the best things to put in a jingle."),
         ("What does the free score have to do with a jingle?", "A jingle brings people to search for you. The free score shows whether they'll find you when they do.")]),
  dict(slug="growth-audit-albany-ny", service="Comprehensive Growth Audit", keyword="marketing audit for small business",
@@ -241,7 +241,7 @@ def visual(p):
         return """<div class="pages" aria-label="Sample report pages"><div class="pg p1"><div class="t">Comprehensive<br>Growth Audit</div><div class="s">Harbor Point Plumbing · sample</div><div class="bar"></div></div><div class="pg p2"><div class="mini-h">Where you stand</div><svg class="gauge" viewBox="0 0 120 70" aria-hidden="true"><path d="M10 62 A50 50 0 0 1 110 62" fill="none" stroke="#DCE2DD" stroke-width="12" stroke-linecap="round"/><path d="M10 62 A50 50 0 0 1 86 22" fill="none" stroke="#0B5D3F" stroke-width="12" stroke-linecap="round"/><text x="60" y="60" text-anchor="middle" font-family="Overpass,Arial" font-weight="900" font-size="24" fill="#10201A">61</text></svg><div class="rows"><div class="rowbar">Google profile<i style="--w:42%;--c:#C8432B"></i></div><div class="rowbar">AI visibility<i style="--w:30%;--c:#C8432B"></i></div><div class="rowbar">Website speed<i style="--w:78%"></i></div></div></div><div class="pg p3"><div class="mini-h">Top problems, ranked</div><div class="find"><b>No phone on the first screen</b><span class="blur">Mobile visitors see a headline first.</span></div><div class="find"><b>Missing from 3 "best of" lists</b><span class="blur">Competitors appear on every list.</span></div></div></div>"""
     if v == "jingle":
         bars = "".join(f'<i style="animation-delay:{(i*0.09)%1.2:.2f}s;height:{30+((i*37)%70)}%"></i>' for i in range(28))
-        return f'<div><div class="wave" aria-hidden="true">{bars}</div><p style="margin-top:14px;color:var(--muted);font-size:14px">Your jingle comes in 5, 15, and 30-second cuts</p></div>'
+        return f'<div><div class="wave" aria-hidden="true">{bars}</div><p style="margin-top:14px;color:var(--muted);font-size:14px">Short hooks and longer versions, as agreed in your scope</p></div>'
     chats = {
      "voice": ("AI receptionist", "Answering a call at 8:47 pm", [("them","Thanks for calling Harbor Point Plumbing. How can I help tonight?"),("me","My water heater is leaking."),("them","I'm sorry to hear that. I can book a technician for 8 am tomorrow. Is the leak near the top or the bottom?"),("sum","Booked 8 am. Summary texted to the owner at 8:49 pm.")]),
      "chat": ("Website assistant", "Usually replies instantly", [("them","Hi! I can help with pricing, scheduling, or questions."),("me","Do you do drain cleaning in Troy?"),("them","Yes, we serve Troy. Most drains are $149–$229. Want the first opening tomorrow?"),("sum","Lead sent to the owner: drain cleaning, Troy, phone collected.")]),

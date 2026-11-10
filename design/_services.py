@@ -9,6 +9,7 @@ plain English, and every page different from the others and from the ad landing 
 """
 import html
 import json
+from urllib.parse import quote
 from pathlib import Path
 
 D = Path(__file__).resolve().parent / "content"
@@ -16,9 +17,11 @@ LIVE = "https://localrankauthority.com"
 e = lambda t: html.escape(t, quote=False)
 
 LANES = {"found": "Get found", "win": "Win the conversation", "remember": "Stay remembered"}
+# The three customer-facing categories (Services Update, 2026-11-10). Lanes stay as the journey explanation.
+CATS = {"online": "Online Presence", "ai": "AI Automation", "growth": "Customer Growth"}
 
 SERVICES = [
- dict(slug="local-seo-ai-search", lane="found", name="Local SEO & AI Search",
+ dict(slug="local-seo-ai-search", lane="found", category="online", name="Local SEO & AI Search",
   service_type="Local search engine optimization and AI search visibility",
   title="Local SEO & AI Search Visibility | Local Rank Authority",
   desc="Show up in Google's map results, organic search, and the answers ChatGPT, Gemini, and Google AI give when customers ask who to hire.",
@@ -65,7 +68,7 @@ SERVICES = [
    platforms=["Google AI Overviews", "Google AI Mode", "ChatGPT search", "Perplexity", "Bing Copilot"],
    note="This work is often called generative engine optimization (GEO) or answer engine optimization (AEO). It overlaps with SEO, clear content, consistent business facts, and credible references elsewhere online. No one can guarantee an AI recommendation. We improve the signals these tools rely on and report what changes.")),
 
- dict(slug="google-business-profile-listings", lane="found", name="Google Business Profile & Listings",
+ dict(slug="google-business-profile-listings", lane="found", category="online", name="Google Business Profile & Listings",
   service_type="Google Business Profile optimization and local citation management",
   title="Google Business Profile & Local Listings | Local Rank Authority",
   desc="Your Google Business Profile, Apple Maps, Bing, Yelp, and directory listings set up, matched, and kept current, so customers and AI tools get the same facts everywhere.",
@@ -103,7 +106,7 @@ SERVICES = [
   ],
   related=["local-seo-ai-search", "review-systems", "ongoing-care"], demo=None),
 
- dict(slug="rank-and-rent", lane="found", name="Rank & Rent Lead Sites",
+ dict(slug="rank-and-rent", lane="found", category="online", name="Rank & Rent Lead Sites",
   service_type="Rank and rent lead generation",
   title="Rank & Rent Lead Sites: Exclusive Local Leads | Local Rank Authority",
   desc="We build and rank a lead site for one service in one market, then send its calls and inquiries to one business in that territory.",
@@ -141,7 +144,7 @@ SERVICES = [
   ],
   related=["local-seo-ai-search", "ai-receptionist", "lead-capture-follow-up"], demo=None),
 
- dict(slug="website-design", lane="win", name="Website Design",
+ dict(slug="website-design", lane="win", category="online", name="Website Design",
   service_type="Website design for local service businesses",
   title="Website Design for Local Service Businesses | Local Rank Authority",
   desc="Fast, mobile-first websites that explain what you do, where you do it, and how to book, built to rank on Google and be understood by AI assistants.",
@@ -180,7 +183,7 @@ SERVICES = [
   ],
   related=["local-seo-ai-search", "lead-capture-follow-up", "ai-chat-agents"], demo=None),
 
- dict(slug="lead-capture-follow-up", lane="win", name="Lead Capture & Follow-Up",
+ dict(slug="lead-capture-follow-up", lane="win", category="ai", name="Lead Capture & Follow-Up",
   service_type="Lead capture, estimate builders, and automated follow-up",
   title="Lead Capture & Follow-Up Systems | Local Rank Authority",
   desc="Estimate builders, instant lead alerts, booking, and follow-up texts and emails you approve, so more inquiries become booked jobs without chasing them by hand.",
@@ -219,7 +222,7 @@ SERVICES = [
   related=["ai-chat-agents", "ai-receptionist", "website-design"],
   demo=("estimate builder", "Try the sample estimate builder for a fictional plumbing company: pick a job, adjust the size, and watch the price range update.")),
 
- dict(slug="ai-chat-agents", lane="win", name="AI Chat Agents",
+ dict(slug="ai-chat-agents", lane="win", category="ai", name="AI Chat Agents",
   service_type="AI website chat agent for local businesses",
   title="AI Chat Agents for Local Business Websites | Local Rank Authority",
   desc="A website assistant trained on your services, prices, and service area. It answers questions any time of day, qualifies the job, and sends you the lead.",
@@ -258,7 +261,7 @@ SERVICES = [
   related=["ai-receptionist", "lead-capture-follow-up", "website-design"],
   demo=("AI chat agent", "Ask the sample chat agent for a fictional plumbing company a question and see how it answers and captures the lead.")),
 
- dict(slug="ai-receptionist", lane="win", name="AI Receptionist",
+ dict(slug="ai-receptionist", lane="win", category="ai", name="AI Receptionist",
   service_type="AI voice receptionist for missed and after-hours calls",
   title="AI Receptionist: Answer Every Call | Local Rank Authority",
   desc="An AI voice receptionist that answers the calls you'd otherwise miss, books appointments, flags urgent jobs, and texts you the details.",
@@ -297,7 +300,7 @@ SERVICES = [
   related=["ai-chat-agents", "lead-capture-follow-up", "review-systems"],
   demo=("AI receptionist", "Read a sample after-hours call with a fictional plumbing company and the text summary the owner receives.")),
 
- dict(slug="review-systems", lane="remember", name="Review Systems",
+ dict(slug="review-systems", lane="remember", category="growth", name="Review Systems",
   service_type="Customer review request and response system",
   title="Review Systems: More Google Reviews | Local Rank Authority",
   desc="Automatic review requests after every job, simple links for Google and other sites, and alerts with reply drafts, all within Google's rules.",
@@ -335,7 +338,7 @@ SERVICES = [
   ],
   related=["google-business-profile-listings", "local-seo-ai-search", "lead-capture-follow-up"], demo=None),
 
- dict(slug="branding-brand-identity", lane="remember", name="Branding & Brand Identity",
+ dict(slug="branding-brand-identity", lane="remember", category="online", name="Branding & Brand Identity",
   service_type="Brand identity design and brand strategy for local businesses",
   title="Branding & Brand Identity for Local Businesses | Local Rank Authority",
   desc="A cohesive, professional brand: logo, colors, type, voice, and guidelines used the same way everywhere, so customers trust you before they call and choose you when they compare.",
@@ -374,51 +377,53 @@ SERVICES = [
   ],
   related=["website-design", "google-business-profile-listings", "custom-jingles"], demo=None),
 
- dict(slug="custom-jingles", lane="remember", name="Custom Jingles",
-  service_type="Custom advertising jingles and audio branding",
-  title="Custom Ad Jingles for Local Businesses | Local Rank Authority",
-  desc="A short, original jingle built around your business name or phone number, for radio, video, social ads, and your on-hold message.",
-  h1="A jingle people hum on the way to calling you",
-  lede="A good jingle puts your name in people's heads before they need you, so when the pipe bursts or the roof leaks, yours is the business they remember. We write and produce original jingles built around your name or number.",
+ dict(slug="custom-jingles", lane="remember", category="growth", name="Custom Jingles & Audio Branding",
+  service_type="Custom jingles and audio branding",
+  title="Custom Jingles & Audio Branding | Local Rank Authority",
+  desc="An original jingle or short sound built around your business name, what you do, and how to reach you, for videos, ads, podcasts, and landing pages.",
+  h1="A sound that helps people remember your name",
+  lede="When a customer finally needs what you do, the business they remember has the advantage. We write and produce original jingles and short audio hooks built around your name, what you do, and how to reach you, so your ads, videos, and podcast can sound like you.",
   problems=[
-   ("Your ads blend in", "Radio and video ads that sound like everyone else's are forgotten as soon as they end."),
-   ("Nobody remembers the number", "Customers saw your ad but can't remember your name or number when they need you."),
-   ("Stock music sounds generic", "Licensed background music doesn't say anything about your business."),
-   ("No sound for your brand", "Your on-hold message, videos, and social posts have no consistent sound tying them together."),
+   ("Your ads blend in", "Video and audio ads that sound like everyone else's are forgotten as soon as they end."),
+   ("People don't remember the name", "Customers saw your ad but can't recall your name or how to reach you when they need you."),
+   ("Stock music says nothing about you", "Licensed background music doesn't tell anyone who you are."),
+   ("No consistent sound", "Your videos, podcast, and ads have nothing audible tying them together."),
   ],
-  fit=["Businesses running radio, TV, or streaming ads", "Brands posting video on social media", "Companies with a phone number worth remembering", "Family businesses with a story to tell", "Anyone who wants to be remembered, not just found"],
+  fit=["Businesses running video, YouTube, radio, or streaming ads", "Brands with a podcast or regular video", "Businesses with a name or phone number worth remembering", "Family businesses with a story to tell", "Anyone who wants to be recognized, not just found"],
   included=[
-   ("Original melody and lyrics", "Written around your business name, phone number, or slogan, with no stock music."),
-   ("Professional vocals and production", "Recorded and mixed so it sounds right on radio, phones, and social media."),
-   ("Short and long cuts", "5, 15, and 30-second versions to fit different ads, plus an instrumental bed."),
-   ("Revision rounds", "You hear a sketch first and help shape it before final production."),
-   ("Ready-to-use files", "Delivered in the formats radio stations, video editors, and phone systems need."),
-   ("Usage rights", "You get the rights to use your jingle in your own advertising, spelled out in writing."),
+   ("A creative brief together", "We start with your name or a distinctive phrase, what you do, and the response you want, such as visiting your website or calling."),
+   ("Original lyrics and melody", "Written for your business, with no stock music."),
+   ("Production", "Vocals, instruments, and mixing so it sounds right on phones, speakers, and video."),
+   ("Short hooks and longer versions", "A short opening hook for ads and podcast intros, and longer versions, as agreed in your scope."),
+   ("Your approval at each step", "You hear the direction before final production and approve the finished version. Revisions are set in your proposal."),
+   ("Final files and documented rights", "Files for your ads, videos, podcast, and website, with your usage rights written down."),
   ],
   steps=[
-   ("Learn your business", "A short call about your business, your customers, and the feeling you want people to have."),
-   ("Write and sketch", "We write lyrics and a melody sketch for you to hear and react to."),
-   ("Produce", "Final vocals, instruments, and mixing, with a round of revisions."),
-   ("Deliver every cut", "All lengths and formats delivered, ready for ads, video, and on-hold."),
+   ("Brief", "A conversation about your business, your customers, and how you want to be remembered."),
+   ("Write", "Lyrics and a melody direction for you to hear and react to."),
+   ("Produce", "Recording and mixing, with revisions as agreed."),
+   ("Deliver", "Final versions and files, ready for your ads, videos, podcast, and pages."),
   ],
-  timeline="Most jingles are finished in two to four weeks, from first call to final files.",
-  deliverables=["An original jingle", "5, 15, and 30-second versions", "An instrumental version", "Files for radio, video, social, and on-hold", "Written usage rights"],
+  timeline="We'll agree on a schedule in your proposal, from first conversation to final files.",
+  deliverables=["An original jingle or audio hook", "Versions for the uses you agree on", "Files for video, ads, podcasts, and your website", "Written usage rights"],
   faqs=[
-   ("Do jingles still work?", "Sound is one of the most memorable parts of an ad. A short tune built around your name or number can help people remember you long after the ad ends."),
-   ("Will it sound cheesy?", "Not unless you want it to. Styles range from classic radio jingles to modern, understated sound logos, and you hear a sketch before anything is final."),
-   ("Who owns the jingle?", "You get the rights to use it in your own advertising, set out in writing in your agreement."),
-   ("Where can I use it?", "Radio, TV and streaming ads, social video, your website, trade shows, and your phone's on-hold message."),
-   ("Can it include my phone number?", "Yes. Building the number into the melody is one of the most effective ways to make it stick."),
+   ("Where can I use it?", "In video ads, YouTube, radio and streaming ads, your podcast, your website, landing-page videos, and other uses written into your agreement."),
+   ("What files do I get?", "The versions and formats agreed in your proposal, ready for your ads, videos, and website."),
+   ("Are revisions included?", "Yes, as set out in your proposal. You hear the direction before final production so changes happen early."),
+   ("Who owns it, and how are rights documented?", "Your usage rights are written into your agreement before production starts."),
+   ("Will it sound cheesy?", "Not unless you want it to. Styles range from classic jingles to short, understated sound logos, and you approve the direction first."),
+   ("Will a jingle increase sales?", "We aim to make your name easier to remember. We can't promise recall, rankings, or sales from a jingle alone."),
   ],
   example=dict(title="“Make Your Moment Shine” for Marquee Moments",
     text="Marquee Moments, owned by Laiala Margonar, rents 4-foot light-up marquee letters for weddings, birthdays, and events across Albany and the Capital Region. We created this jingle around the name and the promise behind it.",
     audio="../docs/assets/audio/marquee-moments-make-your-moment-shine.mp3", length="14 seconds", link=("marqueemoments.net", "https://marqueemoments.net"),
     quote="One of my favorite parts was the custom jingle they created for us! “MarqueeMoments.net — make your moment shine” captures our business perfectly. It’s catchy, memorable, and gives our marketing so much personality. I still catch myself singing it!",
     quote_by="Laiala Margonar, Marquee Moments", quote_note="Marquee Moments is my wife Laiala’s business.", case="case-marquee-moments.html"),
-  related=["review-systems", "ongoing-care", "website-design"],
-  demo=("custom jingle", "Play the finished “Make Your Moment Shine” jingle for Marquee Moments in the demo section.")),
+  related=["youtube-video-advertising", "content-marketing-podcasts", "branding-brand-identity"],
+  demo=("custom jingle", "Play the finished “Make Your Moment Shine” jingle for Marquee Moments in the demo section."),
+  cta=("Discuss My Jingle", "Branding or a jingle")),
 
- dict(slug="ongoing-care", lane="remember", name="Ongoing Care & Reporting",
+ dict(slug="ongoing-care", lane="remember", category="growth", name="Ongoing Care & Reporting",
   service_type="Website care, local SEO maintenance, and monthly reporting",
   title="Website Care & Monthly SEO Reporting | Local Rank Authority",
   desc="Monthly updates, fixes, backups, and plain-English reports on your rankings, AI mentions, reviews, and leads, so your site and listings keep working after launch.",
@@ -455,6 +460,207 @@ SERVICES = [
    ("How quickly are changes made?", "Small updates are usually made within a couple of business days."),
   ],
   related=["local-seo-ai-search", "website-design", "review-systems"], demo=None),
+
+ dict(slug="content-marketing-podcasts", lane="found", category="online", name="Content Marketing & Podcast Syndication",
+  service_type="Managed content marketing: website articles, podcast episodes, and distribution",
+  title="Content Marketing & Podcast Syndication | Local Rank Authority",
+  desc="Share what you know with the customers who are looking for it. We plan, write, produce, and publish articles and matching podcast episodes for your business, with you approving every word.",
+  h1="Your expertise, published every month, without you writing it",
+  lede="You already answer the same smart questions every week on the phone and on the job. We turn those answers into articles on your website and matching podcast episodes, then publish them where your customers listen and search. You share what you know and approve what goes out. We handle the rest.",
+  problems=[
+   ("You know more than your website says", "Customers ask you thoughtful questions every day, but none of those answers are on your site where the next customer could find them."),
+   ("Publishing never makes the list", "You mean to write articles or start a podcast, but running the business always comes first, so nothing goes out."),
+   ("Content that sounds like anyone's", "Generic blog posts don't help a buyer choose you, because they could have been written for any business."),
+   ("No idea what's working", "If you've paid for content before, you probably never heard what happened to it after it was posted."),
+  ],
+  fit=["Owners with real expertise and little time to write", "Businesses whose customers research before they buy", "Local service companies answering the same questions daily", "Product and nationwide businesses explaining what they sell", "Anyone who wants a steady voice online without hiring a writer"],
+  included=[
+   ("Topic planning from real questions", "We build your topics from the questions customers ask, the concerns that slow their decision, and the products, services, and markets you want more of."),
+   ("Articles on your website", "Each topic becomes a useful article published on your own site, written in your voice and checked with you for accuracy."),
+   ("Matching podcast episodes", "Each article gets a corresponding audio episode with its own episode page and useful written text, so listeners and readers find the same answer."),
+   ("Distribution to podcast apps", "Episodes go out through a podcast feed (called RSS) to the services we agree on, such as Apple Podcasts, Spotify, Amazon Music, and YouTube, where setup and publishing are supported."),
+   ("Narration options, with your permission", "Episodes can use a narrator or, only with your explicit permission, an approved AI version of your voice. We never present generated audio as something you recorded yourself. Options are set in your proposal."),
+   ("A monthly check-in", "Each month you see what was published, the evidence of reach and response we can measure, the next topics, and anything we suggest changing."),
+  ],
+  steps=[
+   ("Plan the topics", "We gather your business details and your best customer questions, then agree on a topic plan and a publishing schedule that fits you."),
+   ("Write and you approve", "We write each article and episode script from your input. Nothing publishes until you approve the facts and the wording."),
+   ("Produce and publish", "We produce the audio, publish the article and episode pages on your site, and send the episode out through your podcast feed."),
+   ("Review and adjust", "We review what reached people and what got a response, then adjust the next topics with you."),
+  ],
+  timeline="Your publishing schedule and volume are set in your proposal to fit your business and how much you want to say. Search visibility from content builds over time and isn't guaranteed.",
+  deliverables=["A topic plan built from real customer questions", "Articles published on your website", "Matching podcast episodes with episode pages", "Distribution through your podcast feed to agreed services", "A monthly summary of work, reach, and next topics", "Optional add-ons, quoted separately: newsletters, social excerpts, graphics, a YouTube version, and short video clips"],
+  faqs=[
+   ("Do I have to record anything?", "No. You share your knowledge in a short conversation or written notes. Episodes can be narrated for you, or use an approved AI version of your voice if you give explicit permission."),
+   ("How do you choose topics?", "From the questions your customers actually ask, the concerns that hold them back, and the services or products you want to sell more of. You approve the plan."),
+   ("Will anything publish without my approval?", "No. You approve the facts and the script for every article and episode before it goes out."),
+   ("Where will my podcast appear?", "On the services we agree on, such as Apple Podcasts, Spotify, Amazon Music, and YouTube, where setup and publishing are supported. Each service has its own review and rules, so being submitted isn't the same as being accepted everywhere."),
+   ("What do you need from me?", "Your business information, your expertise on each topic, access to publish on your website where needed, and your approval of each piece. How much time that takes depends on the schedule you choose."),
+   ("Who owns the content?", "Your articles and episodes are published for your business. Ownership and any licensing are written into your agreement."),
+   ("Will this get me more customers?", "It gives buyers useful answers from you, which can help them find and choose you over time. We report what we can measure and don't promise rankings, AI mentions, or a number of leads."),
+  ],
+  related=["local-seo-ai-search", "website-design", "custom-jingles"], demo=None,
+  cta=("Discuss My Content Plan", "Content marketing and podcasts")),
+
+ dict(slug="google-search-ads", lane="found", category="growth", name="Google Search Ads",
+  service_type="Google Search advertising management",
+  title="Google Search Ads Management | Local Rank Authority",
+  desc="Search ads built around the searches that mean someone wants to buy, sent to a page that answers them, with tracking and plain reporting on what you got for your money.",
+  h1="Pay for the searches that bring buyers, not just clicks",
+  lede="When someone searches for exactly what you do, an ad can put you in front of them right away. The hard part is not paying for the wrong searches. We build your campaign around searches with real buying intent, write ads that match them, send each click to a page that answers it, and show you plainly what happened.",
+  problems=[
+   ("Money spent on the wrong searches", "Broad settings can show your ads to people researching a do-it-yourself fix, looking for a job, or searching for something you don't offer."),
+   ("Clicks that land nowhere useful", "An ad for one service that sends people to a general homepage makes them hunt for the answer, and many leave."),
+   ("Reports you can't read", "You get impressions, clicks, and percentages, but no clear answer to how many calls or inquiries the ads produced."),
+   ("Nobody watching the account", "Campaigns left alone keep paying for the same poor searches month after month."),
+  ],
+  fit=["Businesses that know which jobs or products they want more of", "Owners who have tried ads and want clearer reporting", "Seasonal businesses that need inquiries at a specific time", "Local service areas and nationwide sellers alike", "Anyone who wants to own their ad account and see the numbers"],
+  included=[
+   ("Searches with buying intent", "We choose keyword themes around what buyers search, such as \"water heater repair near me,\" rather than research questions like \"how to fix a water heater yourself.\" Broad terms aren't wrong by default; the right mix depends on your business."),
+   ("Match types and negative keywords", "We set how closely searches must match and add negative keywords so your budget isn't spent on searches you don't want."),
+   ("Location and schedule settings", "Ads show to people in the areas and at the times you serve. Location targeting is based on Google's signals, so it's close, not an exact fence."),
+   ("Ads that match the search", "Ad copy written for each group of searches, so the promise in the ad matches what the person typed and what they'll find."),
+   ("A destination that answers the click", "Each campaign points to a relevant page. If a focused landing page is needed, we scope it as part of your plan."),
+   ("Tracking and reporting", "Conversion tracking for calls, forms, and bookings where it can be set up, and a plain report that separates clicks from real inquiries."),
+  ],
+  steps=[
+   ("Agree on goals and budget", "We agree on the jobs or products to promote, the areas to cover, your monthly ad budget, and what counts as a result."),
+   ("Build the campaign", "Keyword themes, negative keywords, ads, location settings, destination pages, and conversion tracking."),
+   ("Launch and watch closely", "We monitor the search terms that trigger your ads and cut the ones that waste money."),
+   ("Report and adjust", "You see what you spent, what it produced, and what we're changing next."),
+  ],
+  timeline="Setup time depends on the campaign and whether pages or tracking need to be built. Results depend on your market, budget, and offer, and aren't guaranteed.",
+  deliverables=["A campaign plan with goals, budget, and areas", "Keyword themes, match types, and negative keywords", "Search ads written for each theme", "Conversion tracking where it can be set up", "Ongoing monitoring and adjustment", "Plain reports on spend, clicks, and inquiries"],
+  faqs=[
+   ("Who owns the ad account?", "You do. Where we agree to it, the account is in your name and you keep it and its history if we stop working together."),
+   ("Who pays Google?", "Your ad spend is billed by Google directly to you, where agreed. Our setup and management are separate and listed in your proposal."),
+   ("How is my budget set?", "We agree on a monthly ad budget with you before launch. Google spends against that budget, and we review it with you before changing it."),
+   ("What do you report?", "Spend, clicks, the searches that triggered your ads, and the calls, forms, or bookings we can track. We keep clicks and real inquiries separate so the picture is honest."),
+   ("What happens after someone clicks?", "They land on a page that matches what they searched, with a clear way to call, ask, or book. That page matters as much as the ad."),
+   ("Is a high click rate good?", "Click rate is clicks divided by impressions; five clicks per thousand impressions is 0.5%. A high rate on the wrong searches can still waste money, so we judge success by qualified inquiries and sales, not clicks alone."),
+   ("Can you guarantee leads or lower costs?", "No. We focus spending on relevant searches and show you exactly what happened, but results depend on your market, competition, and offer."),
+  ],
+  related=["landing-pages", "youtube-video-advertising", "marketing-business-consulting"], demo=None,
+  cta=("Discuss My Search Campaign", "Search or YouTube ads")),
+
+ dict(slug="youtube-video-advertising", lane="remember", category="growth", name="YouTube Video Advertising",
+  service_type="YouTube video advertising: creative, campaign setup, and reporting",
+  title="YouTube Video Advertising | Local Rank Authority",
+  desc="Short video ads that open with your name and a clear message, shown to the right people in the places you serve, with honest reporting on views, clicks, and inquiries.",
+  h1="Get your name and message in front of the right viewers",
+  lede="A short video ad can introduce your business to people before they ever search for you. We help you make the first few seconds count, with your name, a short sound or line people can recognize, and a reason to care, then set up the campaign so it reaches the people and places you serve.",
+  problems=[
+   ("Nobody knows your name yet", "Search ads only reach people already looking. Video can introduce you before the need arises."),
+   ("Ads people skip before the point", "Viewers can skip after five seconds, so an ad that saves the business name for the end often never gets heard."),
+   ("Video feels expensive and vague", "You're not sure what a campaign costs, who sees it, or how you'd know it worked."),
+   ("No video to run", "You don't have a script, footage, or a sound that's recognizably yours."),
+  ],
+  fit=["Businesses building a recognizable local or regional name", "Owners with a clear message and a defined service area or audience", "Brands with a jingle or sound worth hearing", "Businesses that want to support their search and referral marketing", "Owners who want honest reporting, not just view counts"],
+  included=[
+   ("The first five seconds", "We plan the opening around your business name, a short audio hook, and a relevant message, so viewers get the point even if they skip."),
+   ("Script and video production", "Scripts and production within the agreed scope, from simple edits of your footage to new short ads."),
+   ("Optional jingle integration", "Your jingle or a short sound from it can open the ad. A full jingle isn't required before your offer is explained."),
+   ("Audience and location settings", "We choose the audiences and locations that fit your business rather than showing ads to everyone everywhere."),
+   ("A page that continues the message", "Viewers who click land on a relevant page with a clear next step."),
+   ("Monitoring and reporting", "Views, clicks, and device reporting, including television screens where ads appear there, with inquiries tracked where possible."),
+  ],
+  steps=[
+   ("Agree on the message", "Who you want to reach, where, what you want them to remember, and your monthly budget."),
+   ("Make the ad", "Script, production, and an opening built for the first five seconds, with optional audio branding."),
+   ("Launch the campaign", "Audience, location, and bidding settings, plus the destination page and tracking."),
+   ("Review and improve", "We report views, clicks, and inquiries, and test changes to the creative and targeting."),
+  ],
+  timeline="Production and setup time depend on the creative you need. We'll give you a schedule in your proposal.",
+  deliverables=["A campaign plan with audience, areas, and budget", "Ad script and video production within scope", "Optional jingle or audio hook integration", "Campaign setup and destination page", "Monitoring, testing, and plain reporting"],
+  faqs=[
+   ("Do I pay when someone skips?", "It depends on the bidding strategy. Viewers can skip after five seconds. With cost-per-view bidding, you're typically charged when someone watches 30 seconds (or the whole ad if it's shorter) or interacts with it, whichever comes first. Other bidding strategies charge for impressions. We'll explain the option we recommend for you."),
+   ("Will my ad show on TV?", "YouTube ads can appear on television screens through the YouTube app, and reports show device types. That's one possible placement, not the same as buying traditional TV, and we can't promise a specific share of TV viewing."),
+   ("Do I need a jingle?", "No. A short audio hook can help people recognize you, but your ad can open with your name and a clear message without one."),
+   ("How much should I spend?", "We agree on a monthly ad budget with you before launch. Ad spend is billed by Google directly where agreed, separate from our production and management."),
+   ("How will I know if it worked?", "We report views, clicks, and the inquiries we can track, and keep them separate. Views alone don't prove sales, so we look at what happened after."),
+   ("Can you target just my town?", "We can target locations and audiences that fit your business. Location targeting uses Google's signals, so it's close, not an exact boundary."),
+  ],
+  related=["custom-jingles", "google-search-ads", "landing-pages"], demo=None,
+  cta=("Discuss My Video Campaign", "Search or YouTube ads")),
+
+ dict(slug="landing-pages", lane="win", category="growth", name="Landing Pages & Video Landing Pages",
+  service_type="Focused landing pages for ads and campaigns, with optional video",
+  title="Landing Pages & Video Landing Pages | Local Rank Authority",
+  desc="A focused page for each offer, ad, or campaign that answers exactly what the visitor came for and makes the next step clear.",
+  h1="One page, one offer, one clear next step",
+  lede="If you're paying for attention, the page people land on decides what you get for it. We build focused pages that match the promise in your ad or campaign, explain the offer plainly, show real proof, and make it easy to call, ask, or buy. Video can help when it fits, and the page still works without it.",
+  problems=[
+   ("Ads that land on the homepage", "Someone clicks an ad for faucet repair and lands on a page about everything you do, so they have to search for the answer."),
+   ("Visitors who don't take the next step", "People arrive, read a little, and leave without calling or asking, because the next step isn't clear."),
+   ("A message that doesn't match", "The ad says one thing and the page says another, and the visitor stops trusting either."),
+   ("Video that gets in the way", "A video that autoplays or hides the key facts frustrates people who just want the answer."),
+  ],
+  fit=["Businesses running search, YouTube, or social ads", "Owners promoting one service, product, or season", "Campaigns that need a clear offer and a single action", "Businesses with or without an existing website", "Anyone paying for clicks that aren't turning into inquiries"],
+  included=[
+   ("A headline that matches the need", "The page opens with the specific problem and service the visitor searched or clicked for."),
+   ("A clear offer and practical benefits", "What you do, who it's for, what it includes, and any conditions that matter, in plain language."),
+   ("Real proof in context", "Reviews, examples, and credentials placed where the visitor is deciding, using only what's real. We never invent a guarantee or a review."),
+   ("One clear action", "A call button, form, booking link, or purchase option, made obvious on every screen size."),
+   ("Optional video, done right", "A short video when it helps, with captions, visible controls, no forced autoplay, and the key facts also written on the page."),
+   ("Tracking and testing", "Tracking for calls and forms where it can be set up, and tests to improve the page over time."),
+  ],
+  steps=[
+   ("Match the page to the intent", "We look at the ad or campaign and what the visitor wants, and decide what the page must answer."),
+   ("Write and design", "Copy, layout, proof, and the action, built in your brand and tested on phones first."),
+   ("Launch with tracking", "We connect it to your ad or campaign and set up measurement."),
+   ("Test and improve", "We review results and test changes to the headline, offer, or layout."),
+  ],
+  timeline="Most pages need a few weeks from approved plan to launch, depending on copy, video, and tracking needs. Your proposal sets the schedule.",
+  deliverables=["A page written for one offer and audience", "Design that matches your brand, built for phones first", "Optional video with captions and controls", "Call, form, booking, or purchase action", "Tracking and a testing plan"],
+  faqs=[
+   ("Does it work with my existing website?", "Usually, yes. The page can live on your current site or a connected page, depending on your platform. We'll check before we start."),
+   ("Who owns the page?", "Your landing pages are built for your business and are yours, as set out in your agreement. Any platform or software costs are listed in your proposal."),
+   ("Will a video make it convert better?", "Not automatically. Video helps when it answers a real question faster than text. The page has to work without it too."),
+   ("Should every landing page be hidden from Google?", "No. Some campaign pages are best kept out of search results and others are useful to index. We decide page by page, and we don't mass-produce near-identical town pages."),
+   ("Do you offer a guarantee?", "We'll only show a guarantee your business actually offers. We won't invent one to make a page look stronger."),
+   ("Is this the same as the landing page in the Growth Audit?", "The Growth Audit includes one finished landing page for your top service. Additional pages, campaign pages, and video pages are scoped separately."),
+  ],
+  related=["google-search-ads", "youtube-video-advertising", "website-design"], demo=None,
+  cta=("Discuss My Landing Page", "Landing pages")),
+
+ dict(slug="marketing-business-consulting", lane="win", category="growth", name="Marketing & Business Consulting",
+  service_type="Marketing and business consulting for customer acquisition and inquiry handling",
+  title="Marketing & Business Consulting | Local Rank Authority",
+  desc="Work out what to fix first. Michael reviews how customers find you, decide, and get followed up, then helps you set priorities and a practical plan.",
+  h1="Know what to fix first, and why",
+  lede="If you've spent money on marketing and still aren't sure what's working, the problem is usually not one missing tool. It's knowing which part of the customer journey is losing you business. Michael looks at how people find you, decide, and get answered, helps you set priorities, and turns them into a plan you can carry out yourself or with us.",
+  problems=[
+   ("Too many options, no priority", "Ads, SEO, social, a new website, AI tools: everyone has a pitch, and you can't tell which one matters for your business right now."),
+   ("Marketing that didn't pay off", "You've paid for marketing before and couldn't tell what it did."),
+   ("Leads that slip through", "People call, email, or fill out forms, but follow-up is uneven and nobody knows what happened to them."),
+   ("No clear owner or measure", "It isn't clear who's responsible for what, or how anyone would know if things improved."),
+  ],
+  fit=["Owners unsure where to spend next", "Businesses that have tried marketing and want an honest second look", "Teams whose inquiries and follow-up feel disorganized", "Local service companies and nationwide sellers alike", "Anyone who wants a plan they understand before buying services"],
+  included=[
+   ("A look at the whole customer journey", "How people find you, what they see, how they contact you, and what happens next."),
+   ("Diagnosis of the real constraints", "Where customers are getting stuck, based on what we can observe and what you tell us, separated clearly."),
+   ("Priorities you can act on", "A short list of what to do first, what can wait, and what to stop, with the reasoning."),
+   ("A practical plan", "Who does what, what it costs, and how you'll measure it, written down."),
+   ("Scoped implementation, if you want it", "Some work you'll do yourself. For larger work, the Comprehensive Growth Audit is the established starting point for implementation packages; a standalone project can be discussed separately."),
+   ("Optional ongoing review", "Regular check-ins to review progress, adjust priorities, and keep the plan honest."),
+  ],
+  steps=[
+   ("Discovery", "A conversation about your goals, your customers, and what you already have."),
+   ("Diagnosis", "We review your customer journey, current tools, budget, and responsibilities."),
+   ("Recommendations", "A clear set of priorities and a plan, with the trade-offs explained."),
+   ("Implementation and review", "You carry out the plan, or we scope the work together, then review progress."),
+  ],
+  timeline="The scope and schedule depend on your business and what you want to decide. We agree on them before starting.",
+  deliverables=["A review of your customer journey", "Priorities with the reasoning behind them", "A written plan with responsibilities and measures", "Options to implement it yourself or with us", "Optional ongoing review"],
+  faqs=[
+   ("What kind of consulting is this?", "Practical consulting on marketing, getting customers, handling inquiries, and the workflows around them. It isn't legal, tax, or financial advice."),
+   ("Will you just recommend your own services?", "We start with your goals and what you already have. Sometimes the best answer is a small fix you can make yourself, or keeping a tool you already pay for."),
+   ("How is this different from the Growth Audit?", "The Comprehensive Growth Audit is a fixed $2,000 review with a detailed report, delivered in 5 business days. Consulting is a conversation-led way to set priorities and can cover more of how your business handles customers. Michael will suggest which fits."),
+   ("Do I have to commit to a monthly plan?", "No. Ongoing review is optional and agreed separately."),
+   ("Can you work with my current team and tools?", "Yes. We'll look at what you have before recommending anything new, and be clear about what any change would require."),
+  ],
+  related=["google-search-ads", "landing-pages", "lead-capture-follow-up"], demo=None,
+  cta=("Talk With Michael", "Marketing and business consulting")),
 ]
 
 BY_SLUG = {s["slug"]: s for s in SERVICES}
@@ -468,7 +674,7 @@ def ld_for(s):
          "areaServed": [{"@type": "AdministrativeArea", "name": "New York's Capital Region"}, {"@type": "Country", "name": "United States"}]},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": LIVE + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Services", "item": LIVE + "/#services"},
+            {"@type": "ListItem", "position": 2, "name": "Services", "item": LIVE + "/services"},
             {"@type": "ListItem", "position": 3, "name": s["name"], "item": url}]},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in s["faqs"]]}]}
 
@@ -480,7 +686,7 @@ def page(s):
     steps = "".join(f'<div class="point"><span class="k">{i}</span><div><h3>{e(h)}</h3><p>{e(p)}</p></div></div>' for i, (h, p) in enumerate(s["steps"], 1))
     dels = "".join(f"<li>{e(x)}</li>" for x in s["deliverables"])
     faqs = "".join(f"<details{' open' if i == 0 else ''}><summary>{e(q)}</summary><p>{e(a)}</p></details>" for i, (q, a) in enumerate(s["faqs"]))
-    rel = "".join(f'<a class="card svc-rel" href="svc-{r}.html"><span class="eyebrow">{e(LANES[BY_SLUG[r]["lane"]])}</span><h3>{e(BY_SLUG[r]["name"])}</h3><p>{e(BY_SLUG[r]["desc"])}</p><span class="textlink">Learn more →</span></a>' for r in s["related"])
+    rel = "".join(f'<a class="card svc-rel" href="svc-{r}.html"><span class="eyebrow">{e(CATS[BY_SLUG[r]["category"]])}</span><h3>{e(BY_SLUG[r]["name"])}</h3><p>{e(BY_SLUG[r]["desc"])}</p><span class="textlink">Learn more →</span></a>' for r in s["related"])
     example = ""
     if s.get("example"):
         x = s["example"]
@@ -539,6 +745,14 @@ def page(s):
     <div class="btns"><a class="btn btn-primary" href="homepage-redesign.html#demos">Open the demo</a></div>
   </div>
 </section>"""
+    if s.get("cta"):
+        label, topic = s["cta"]
+        href = "/?topic=" + quote(topic) + "#contact"
+        hero_ctas = f'<a class="btn btn-primary" href="{href}" data-topic="{e(topic)}">{e(label)}</a><a class="textlink" href="homepage-redesign.html#book">or get your free score first</a>'
+        end_ctas = f'<a class="btn btn-primary" href="{href}">{e(label)}</a><a class="btn btn-ghost" href="homepage-redesign.html#book">Get your free score</a>'
+    else:
+        hero_ctas = '<a class="btn btn-primary" href="homepage-redesign.html#book">Get your free score</a><a class="textlink" href="contact.html">or talk to Michael</a>'
+        end_ctas = '<a class="btn btn-primary" href="homepage-redesign.html#book">Get your free score</a><a class="btn btn-ghost" href="contact.html">Talk to Michael</a>'
     return f"""<!--
 title: {s['title']}
 description: {s['desc']}
@@ -546,11 +760,11 @@ description: {s['desc']}
 <script type="application/ld+json">{json.dumps(ld_for(s), ensure_ascii=False)}</script>
 <section class="phero">
   <div class="wrap">
-    <p class="crumbs"><a href="homepage-redesign.html">Home</a> / <a href="homepage-redesign.html#services">Services</a> / {e(s['name'])}</p>
-    <p class="eyebrow">{e(LANES[s['lane']])} · {e(s['name'])}</p>
+    <p class="crumbs"><a href="homepage-redesign.html">Home</a> / <a href="services.html">Services</a> / {e(s['name'])}</p>
+    <p class="eyebrow">{e(CATS[s['category']])} · {e(s['name'])}</p>
     <h1 style="margin-top:14px">{e(s['h1'])}</h1>
     <p class="lede">{e(s['lede'])}</p>
-    <div class="ctas"><a class="btn btn-primary" href="homepage-redesign.html#book">Get your free score</a><a class="textlink" href="contact.html">or talk to Michael</a></div>
+    <div class="ctas">{hero_ctas}</div>
   </div>
 </section>
 <section class="sec-tight">
@@ -584,7 +798,7 @@ description: {s['desc']}
       <h3>What you get</h3>
       <ul style="margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)">{dels}</ul>
       <p style="color:var(--muted)"><b style="color:var(--ink)">Timing:</b> {e(s['timeline'])}</p>
-      <a class="textlink" href="packages.html{'#branding' if s['slug'] == 'branding-brand-identity' else ''}">See packages and pricing →</a>
+      <a class="textlink" href="packages.html{'#branding' if s['slug'] == 'branding-brand-identity' else '#other-services' if s.get('cta') else ''}">{'How this service is scoped →' if s.get('cta') else 'See packages and pricing →'}</a>
     </div>
   </div>
 </section>{deep}{example}{demo}
@@ -604,7 +818,107 @@ description: {s['desc']}
 <section class="ctaband sec-tight">
   <div class="wrap">
     <div><h2>Not sure where to start?</h2><p>Your free score checks your website, your rankings, and what AI assistants say about you, in about a minute.</p></div>
-    <div class="btns"><a class="btn btn-primary" href="homepage-redesign.html#book">Get your free score</a><a class="btn btn-ghost" href="contact.html">Talk to Michael</a></div>
+    <div class="btns">{end_ctas}</div>
+  </div>
+</section>
+"""
+
+
+# The /services overview: three categories, a need-based chooser, and a Talk With Michael route.
+ORDER = {
+ "online": ["website-design", "local-seo-ai-search", "google-business-profile-listings", "content-marketing-podcasts", "branding-brand-identity", "rank-and-rent"],
+ "ai": ["ai-receptionist", "ai-chat-agents", "lead-capture-follow-up"],
+ "growth": ["marketing-business-consulting", "google-search-ads", "youtube-video-advertising", "landing-pages", "custom-jingles", "review-systems", "ongoing-care"],
+}
+CAT_COPY = {
+ "online": ("Help customers find you and understand what you offer", "Search, maps, AI assistants, listings, and your own website, plus steady content that answers the questions your customers ask."),
+ "ai": ("Answer, capture, and follow up, even when you're busy", "AI tools configured around the information you approve, with agreed limits, testing, and a route to a person when a conversation needs one."),
+ "growth": ("Bring in more of the right customers, and keep them", "Clear priorities, paid campaigns that match what buyers search, focused pages, and ways to be remembered and recommended."),
+}
+NEEDS = [
+ ("People can't find us online", ["local-seo-ai-search", "google-business-profile-listings"]),
+ ("Visitors don't turn into inquiries", ["website-design", "landing-pages"]),
+ ("We miss calls and messages", ["ai-receptionist", "ai-chat-agents"]),
+ ("Leads go cold before we follow up", ["lead-capture-follow-up", "ai-chat-agents"]),
+ ("We need inquiries sooner", ["google-search-ads", "landing-pages"]),
+ ("People don't know or remember our name", ["youtube-video-advertising", "custom-jingles"]),
+ ("We know a lot but never publish it", ["content-marketing-podcasts"]),
+ ("We need more reviews and repeat customers", ["review-systems", "ongoing-care"]),
+ ("We don't know what to fix first", ["marketing-business-consulting"]),
+]
+TALK = "/?topic=" + quote("Not sure yet") + "#contact"
+
+
+def overview():
+    needs = "".join(
+        f'<div class="card"><h3>{e(n)}</h3><p>Start with: ' + ", ".join(f'<a href="svc-{x}.html">{e(BY_SLUG[x]["name"])}</a>' for x in xs) + "</p></div>"
+        for n, xs in NEEDS)
+    cats = ""
+    for i, (c, slugs) in enumerate(ORDER.items()):
+        h, lede = CAT_COPY[c]
+        cards = "".join(f'<a class="card svc-rel" href="svc-{x}.html"><h3>{e(BY_SLUG[x]["name"])}</h3><p>{e(BY_SLUG[x]["desc"])}</p><span class="textlink">Learn more →</span></a>' for x in slugs)
+        cats += f"""
+<section class="{'route ' if i % 2 == 0 else ''}sec-tight" id="{c}">
+  <div class="wrap stack">
+    <p class="eyebrow">{e(CATS[c])}</p>
+    <h2 class="h2">{e(h)}</h2>
+    <p class="lede">{e(lede)}</p>
+    <div class="cards" style="margin-top:22px">{cards}</div>
+  </div>
+</section>"""
+    items = [x for c in ORDER.values() for x in c]
+    assert sorted(items) == sorted(BY_SLUG), "every service appears once on the overview"
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "CollectionPage", "@id": LIVE + "/services#page", "name": "Services", "url": LIVE + "/services",
+         "mainEntity": {"@type": "ItemList", "itemListElement": [
+             {"@type": "ListItem", "position": i, "name": BY_SLUG[x]["name"], "url": f"{LIVE}/services/{x}"} for i, x in enumerate(items, 1)]}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": LIVE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Services", "item": LIVE + "/services"}]}]}
+    return f"""<!--
+title: Services: Online Presence, AI Automation, Customer Growth | Local Rank Authority
+description: Websites, search and AI visibility, content and podcasts, AI receptionists and chat, search and YouTube ads, landing pages, consulting, jingles, and reviews. Start with what you need.
+-->
+<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
+<section class="phero">
+  <div class="wrap">
+    <p class="crumbs"><a href="homepage-redesign.html">Home</a> / Services</p>
+    <p class="eyebrow">Services</p>
+    <h1 style="margin-top:14px">Help customers find you, choose you, and come back</h1>
+    <p class="lede">Every customer finds you, decides whether to contact you, and then remembers you or forgets you. We call that getting found, winning the conversation, and staying remembered. Our services fall into three groups. Start with the need that's costing you the most, or talk with Michael and decide together.</p>
+    <div class="ctas"><a class="btn btn-primary" href="{TALK}" data-topic="Not sure yet">Talk With Michael</a><a class="textlink" href="homepage-redesign.html#book">or get your free score first</a></div>
+    <div class="chips-plain" style="margin-top:18px"><a class="chip-plain" href="#online">Online Presence</a><a class="chip-plain" href="#ai">AI Automation</a><a class="chip-plain" href="#growth">Customer Growth</a></div>
+  </div>
+</section>
+<section class="sec-tight" id="by-need">
+  <div class="wrap stack">
+    <p class="eyebrow">Start with what you need</p>
+    <h2 class="h2">What's getting in the way right now?</h2>
+    <div class="cards" style="margin-top:22px">{needs}</div>
+  </div>
+</section>{cats}
+<section class="sec-tight" id="journey">
+  <div class="wrap two">
+    <div class="stack">
+      <p class="eyebrow">How it fits together</p>
+      <h2 class="h2">One customer journey, not a pile of tools</h2>
+      <div class="points" style="margin-top:18px">
+        <div class="point"><span class="k">1</span><div><h3>Get found</h3><p>Customers search, ask an AI assistant, or see an ad, and your business shows up with clear, consistent information.</p></div></div>
+        <div class="point"><span class="k">2</span><div><h3>Win the conversation</h3><p>They land on a page that answers them and can get a reply, an estimate, or a booking, even when you're busy.</p></div></div>
+        <div class="point"><span class="k">3</span><div><h3>Stay remembered</h3><p>After the first job or sale, reviews, follow-up, content, and a recognizable sound keep your name in mind.</p></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Where larger projects start</h3>
+      <p style="color:var(--muted)">For a full review of your search visibility, website, listings, competitors, and AI search, with a written plan, the <a href="https://localrankauthority.com/comprehensive-audit">Comprehensive Growth Audit</a> is the starting point for our implementation packages.</p>
+      <a class="textlink" href="packages.html">See packages and pricing →</a>
+    </div>
+  </div>
+</section>
+<section class="ctaband sec-tight">
+  <div class="wrap">
+    <div><h2>Not sure which one you need?</h2><p>Michael will look at how customers find you, decide, and get answered, then tell you what to fix first. Sometimes that's a small change you can make yourself.</p></div>
+    <div class="btns"><a class="btn btn-primary" href="{TALK}">Talk With Michael</a><a class="btn btn-ghost" href="homepage-redesign.html#book">Get your free score</a></div>
   </div>
 </section>
 """
@@ -613,4 +927,5 @@ description: {s['desc']}
 if __name__ == "__main__":
     for s in SERVICES:
         (D / f"svc-{s['slug']}.html").write_text(page(s))
-    print(f"wrote {len(SERVICES)} service pages")
+    (D / "services.html").write_text(overview())
+    print(f"wrote {len(SERVICES)} service pages and the services overview")

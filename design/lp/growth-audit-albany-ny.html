@@ -360,6 +360,11 @@ footer a.todo{text-decoration:underline dotted #7F9489;text-underline-offset:3px
 
 
 /* ---- homepage rebuild 2026-11-09 ---- */
+.svc-feature{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,28px);margin-top:48px}
+.svc-feature>div{display:grid;gap:12px;align-content:start;padding:26px;border:1px solid var(--line);border-radius:var(--r,14px);background:var(--card,#fff)}
+.svc-feature .tag{font:700 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--sign)}
+.svc-feature h3{font-size:24px;font-weight:800}.svc-feature p{color:var(--muted)}
+@media (max-width:860px){.svc-feature{grid-template-columns:1fr}}
 /* header: links never wrap; as space runs out, Client login then the phone step out (both stay in the menu and footer) */
 .nav ul a{white-space:nowrap}
 @media (min-width:1101px){.nav{gap:20px}.nav ul{gap:22px;margin-left:8px}}
