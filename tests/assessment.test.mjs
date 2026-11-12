@@ -2,7 +2,7 @@
 // Each test can fail if the assessment draws the wrong conclusion, not just if text is missing.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { describeVerdict, searchRelevance, scoreFrom, completeRankings, reputationSection, overallOf, gbpSection, METHOD_VERSION } from "../lib/audit.js";
+import { describeVerdict, searchRelevance, scoreFrom, completeRankings, reputationSection, overallOf, gbpSection, METHOD_VERSION, profileMatches, phonesIn, realOrganic } from "../lib/audit.js";
 import { visibilityScore, organicPoints, reputationScore, aiShareScore, standing, rankAgreement, comparableOverall } from "../lib/scoring.js";
 
 // Real inputs from the Marquee Moments report (Oct 27, 2026) and its homepage (fetched Nov 9, 2026)
@@ -222,4 +222,62 @@ test("GBP: a website link that redirects to your site counts as your site; addre
   const s = gbpSection({ found: true, type: "Marquee hire service", hours: true, phone: "x", website: "https://marqueeletterrentals.com/", websiteFinal: "https://marqueemoments.net/", address: null, query: "q", checked_at: "t" }, PACK, IN, "marqueemoments.net");
   assert.equal(s.findings.find(f => f.title === "Profile links to your website").status, "pass");
   assert.equal(s.findings.find(f => f.title === "Profile basics").status, "pass", "a hidden address (service-area business) isn't a missing basic");
+});
+
+// 2026-11-12: "Redeemer Cyber" (redeemercyber.com) searched in Albany, NY matched Redeemer Church's profile (real panel below)
+const CHURCH = { found: true, rating: 4.8, reviews: 52, title: "Redeemer Church - Albany Campus", type: "Non-Denominational church in Albany County, New York",
+  hours: true, phone: "(518) 862-0944", website: "http://myredeemerchurch.com/", address: "183 Schoolhouse Rd, Albany, NY 12203", query: "redeemer cyber albany, ny", checked_at: "2026-11-12T22:05:50.370Z" };
+const RC = { url: "https://redeemercyber.com/", host: "redeemercyber.com", business: "Redeemer Cyber", service: "cyber security", city: "Albany, NY" };
+
+test("GBP: a profile is only yours if its website or phone matches your site", () => {
+  assert.equal(profileMatches(CHURCH, "redeemercyber.com").matched, false, "a different business's profile is rejected");
+  assert.equal(profileMatches(CHURCH, "redeemercyber.com", ["5185550100"]).matched, false, "a different phone doesn't match");
+  assert.deepEqual(profileMatches({ ...CHURCH, website: "https://www.redeemercyber.com/contact" }, "redeemercyber.com"), { matched: true, by: "website" });
+  assert.equal(profileMatches({ ...CHURCH, website: "https://old-name.com/", websiteFinal: "https://redeemercyber.com/" }, "redeemercyber.com").by, "website", "a redirect to your site counts");
+  assert.deepEqual(profileMatches({ ...CHURCH, website: "https://facebook.com/x" }, "redeemercyber.com", ["518-862-0944"]), { matched: true, by: "phone" });
+  assert.equal(profileMatches({ ...CHURCH, website: null, phone: null }, "redeemercyber.com", ["5188620944"]).matched, false, "nothing to check means no match");
+});
+
+test("homepage phone numbers are read from tel: links and written numbers", () => {
+  const html = '<a href="tel:+15184601010">Call</a> <p>Office: (518) 862-0944 · fax 518.555.0100</p> <p>Order #2026-11-12</p>';
+  assert.deepEqual(phonesIn(html).sort(), ["5184601010", "5185550100", "5188620944"]);
+});
+
+test("GBP: a rejected profile scores as no profile and names what came up instead", () => {
+  const s = gbpSection({ found: false, query: CHURCH.query, checked_at: CHURCH.checked_at, rejected: { title: CHURCH.title, website: CHURCH.website } }, [], RC, RC.host);
+  assert.equal(s.score, 0);
+  assert.equal(s.summary, "No Google Business Profile found");
+  assert.match(s.findings[0].detail, /^No Google Business Profile found\./);
+  assert.match(s.findings[0].detail, /Redeemer Church - Albany Campus" \(myredeemerchurch\.com\)/);
+});
+
+test("unlock: the wrong business's profile changes neither Reputation nor the profile score", async () => {
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async u => {
+    const url = new URL(String(u));
+    if (url.hostname.endsWith("myredeemerchurch.com")) return new Response("<html>church</html>");
+    if (url.hostname.endsWith("redeemercyber.com")) return new Response("<html><body>Redeemer Cyber. Email us.</body></html>");
+    throw new Error("unexpected fetch " + url.hostname);
+  };
+  try {
+    const kv = new Map([["kgcache2:redeemer-cyber-albany-ny", JSON.stringify(CHURCH)]]);
+    const env = { SERPAPI_KEY: "test", REPORTS: { get: async (k, t) => { const v = kv.get(k); return v == null ? null : t === "json" ? JSON.parse(v) : v; }, put: async (k, v) => kv.set(k, v) } };
+    const report = { input: RC, rankingsCompleted: false, sections: [
+      { key: "rankings", label: "Search rankings", available: true, score: 0, findings: [], extra: { engines: [{ engine: "Google", position: null, pack: [] }, { engine: "Bing", position: null, suspicious: true }] } },
+      { key: "reputation", label: "Reputation", available: false, score: null, findings: [] },
+      { key: "gbp", label: "Google Business Profile", available: false, score: null, findings: [] }] };
+    const out = await completeRankings(report, env);
+    const rep = out.sections.find(x => x.key === "reputation"), gbp = out.sections.find(x => x.key === "gbp");
+    assert.equal(rep.available, false, "the church's 52 reviews must not become this business's reputation");
+    assert.equal(rep.score, null);
+    assert.equal(gbp.score, 0);
+    assert.equal(gbp.summary, "No Google Business Profile found");
+  } finally { globalThis.fetch = realFetch; }
+});
+
+test("rankings skip Google's own links and list real organic domains", () => {
+  // 2026-11-12, "cyber security schenectady, ny": the first three organic links were Google's own
+  const list = [{ link: "https://www.google.com/maps/search/cyber+security" }, { link: "https://maps.google.com/?cid=1" }, { link: "https://www.google.co.uk/search?tbm=isch" },
+    { link: "https://www.albany.edu/cehc" }, { link: "https://www.progent.com/x" }, { link: "https://www.youtube.com/watch?v=1" }];
+  assert.deepEqual(realOrganic(list).map(o => new URL(o.link).hostname.replace(/^www\./, "")), ["albany.edu", "progent.com", "youtube.com"]);
 });
