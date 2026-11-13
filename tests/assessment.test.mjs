@@ -281,3 +281,10 @@ test("rankings skip Google's own links and list real organic domains", () => {
     { link: "https://www.albany.edu/cehc" }, { link: "https://www.progent.com/x" }, { link: "https://www.youtube.com/watch?v=1" }];
   assert.deepEqual(realOrganic(list).map(o => new URL(o.link).hostname.replace(/^www\./, "")), ["albany.edu", "progent.com", "youtube.com"]);
 });
+
+test("rankings summary names the real number of results checked", async () => {
+  const { rankingsSection } = await import("../lib/audit.js");
+  const eng = n => [{ engine: "Google", position: null, competitors: [], organicDomains: Array.from({ length: n }, (_, k) => ({ position: k + 1, domain: "x" + k + ".com" })) }];
+  assert.match(rankingsSection("it support albany", [], eng(8)).summary, /not found in the top 8 checked/);
+  assert.match(rankingsSection("it support albany", [], eng(0)).summary, /not found in the results checked/);
+});
